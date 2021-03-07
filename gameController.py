@@ -15,7 +15,7 @@ class GameController:
         y = node.player.y
         children = []
         for move in self.moves:
-            child = make_move(node, move) if can_move(node, move) else None
+            child = self.make_move(node, move) if self.can_move(node, move) else None
             if child:
                 children.append(child)
         return children
@@ -34,7 +34,7 @@ class GameController:
     def can_move(self, node, move):
         next_x = node.player.x + move[0]
         next_y = node.player.y + move[1]
-        if not self.board.valid_position(next_x, next_y):
+        if not self.board.is_valid_position(next_x, next_y):
             return False
         n_next_x = next_x + move[0]
         n_next_y = next_y + move[1]
@@ -42,7 +42,7 @@ class GameController:
         blocking_box = False
         for box in node.boxes:
             if box.x == next_x and box.y == next_y:
-                if blocking_box or not self.board.valid_position(n_next_x, n_next_y):
+                if blocking_box or not self.board.is_valid_position(n_next_x, n_next_y):
                     return False
                 moving_box = True
             if box.x == n_next_x and box.y == n_next_y:
