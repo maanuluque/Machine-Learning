@@ -59,3 +59,14 @@ class GameController:
         # TODO
         return False
 
+    def print_path(self, solution_node):
+        current_node = solution_node
+        while hasattr(current_node, 'parent'):
+            child = current_node
+            current_node = current_node.parent
+            current_node.child = child
+        while hasattr(current_node, 'child'):
+            self.board.print_state(current_node.player, current_node.boxes)
+            current_node = current_node.child
+            print('---------------')
+        self.board.print_state(current_node.player, current_node.boxes)
