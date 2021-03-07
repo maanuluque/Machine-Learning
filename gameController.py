@@ -53,8 +53,7 @@ class GameController:
         return True
 
     def is_solution(self, node):
-        # TODO
-        return False
+        return self.board.is_solution(node.boxes)
 
     def is_deadlock(self, node):
         # TODO

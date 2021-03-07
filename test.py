@@ -3,6 +3,7 @@ from box import Box
 from node import Node
 from board import Board
 from gameController import GameController
+from NonInformative.bfs import bfs
 
 player = Player(6, 2)
 box = Box(6, 1)
@@ -23,12 +24,5 @@ print(f'Box2: {box2.x},{box2.y}')
 
 print('Moves:')
 
-children = game.get_children(node)
-for child in children:
-    print(f'Player: {child.player.x}, {child.player.y}')
-    print(f'~board:  {board.board[child.player.x][child.player.y]}')
-    print(f'valid: {board.is_valid_position(child.player.x, child.player.y)}')
-    for b in child.boxes:
-        print(f'Box: {b.x}, {b.y}')
-        print(f'~board: {board.board[b.x][b.y]}')
-    print('-----------------------')
+solution = bfs(game, node)
+print(solution.solved)
