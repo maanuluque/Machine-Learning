@@ -3,9 +3,8 @@ import agent
 class Board:
 
     def __init__(self):
-        self.size = 10 # Puse cualquier cosa para que me saque un error
-
-    def generateBoard(self):
+        self.size = 8 # Puse cualquier cosa para que me saque un error
+        self.width = 14
         board = [
             ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"],
             ["1", "0", "0", "0", "0", "0", "+", "+", "0", "0", "0", "0", "0", "1"],
@@ -16,7 +15,6 @@ class Board:
             ["1", "0", "0", "0", "0", "0", "P", "0", "0", "0", "0", "0", "0", "1"],
             ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
         ]
-        return board
 
     def whereIsP(self, board):
         for x in range(len(board)):
@@ -24,3 +22,6 @@ class Board:
                 if board[x][y] == 'P':
                     return x, y
         return 0,0
+
+    def valid_position(self, x, y):
+        return x in range(0,self.size) and y in range(0,self.width) and self.board[x][y] != 1 

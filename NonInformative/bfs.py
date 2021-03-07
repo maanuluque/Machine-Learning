@@ -1,3 +1,5 @@
+import time
+from solution import Solution
 
 def bfs(controller, node):
     current_node = node
@@ -6,19 +8,26 @@ def bfs(controller, node):
     expanded = 0
     leaves = 0
     cost = 0
+    start_time = time.time()
 
     frontier.append(current_node) #check if deadlock?
     while len(frontier):
-        current_node = frontier.pop()
+        current_node = frontier.pop(0)
         expanded += 1
-        explored.add(current_node) #hash
-        children = current_node.getChildren()
+        explored.add(hash(current_node))
+        children = controller.getChildren(node)
         if not children:
             leaves +=1
         else:
             for child in children:
-                if not child.is_deadlock and child not in explored and child not in frontier:
-                    if child.is_solution:
-                        controller.moves.add(current_node)
-                        return solution
+                if not controller.is_deadlock(node) and hash(child) not in explored and child not in frontier:
+                    child.parent = current_node
+                    if controller.is_solution(node):
+                        end_time = time.time()
+                        processing_time = end_time - start_time
+                        return Solution(expanded, leaves, explored, child, True, cost, processing_time)
+                    
+                    frontier.append(child)
 
+    # No solution found :/
+    return Solution(solved=False)
