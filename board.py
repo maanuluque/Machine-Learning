@@ -27,3 +27,8 @@ class Board:
     def is_valid_position(self, x, y):
         return x in range(0, self.size) and y in range(0, self.width) and self.board[x][y] != "1"
 
+    def is_solution(self, boxes):
+        for box in boxes:
+            if self.board[box.x][box.y] != '+':
+                return False
+        return True

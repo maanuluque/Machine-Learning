@@ -32,4 +32,3 @@ for child in children:
         print(f'Box: {b.x}, {b.y}')
         print(f'~board: {board.board[b.x][b.y]}')
     print('-----------------------')
-
