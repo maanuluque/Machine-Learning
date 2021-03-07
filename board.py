@@ -1,11 +1,12 @@
 import agent
 
+
 class Board:
 
     def __init__(self):
-        self.size = 8 # Puse cualquier cosa para que me saque un error
+        self.size = 8  # Puse cualquier cosa para que me saque un error
         self.width = 14
-        board = [
+        self.board = [
             ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"],
             ["1", "0", "0", "0", "0", "0", "+", "+", "0", "0", "0", "0", "0", "1"],
             ["1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "1"],
@@ -21,7 +22,7 @@ class Board:
             for y in range(len(board[x])):
                 if board[x][y] == 'P':
                     return x, y
-        return 0,0
+        return 0, 0
 
     def valid_position(self, x, y):
-        return x in range(0,self.size) and y in range(0,self.width) and self.board[x][y] != 1 
+        return x in range(0, self.size) and y in range(0, self.width) and self.board[x][y] != 1

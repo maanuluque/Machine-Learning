@@ -4,4 +4,5 @@ class Node:
         self.player = player
         self.boxes = boxes
 
-    # TODO hash, eq
+    def __hash__(self):
+        pass

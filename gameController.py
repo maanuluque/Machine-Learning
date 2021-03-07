@@ -1,10 +1,11 @@
 import copy as cp
 from node import Node
 
+
 class GameController:
     def __init__(self, board):
         self.board = board
-        self.moves = [(-1, 0), (0, -1), (0, 1), (1, 0)] # up,  left, right, down
+        self.moves = [(-1, 0), (0, -1), (0, 1), (1, 0)]  # up,  left, right, down
     
     def get_children(self, node):
         # Is it worth it?
@@ -15,7 +16,7 @@ class GameController:
         y = node.player.y
         children = []
         for move in self.moves:
-            child = make_move(node, move) if can_move(node, move) else None
+            child = self.make_move(node, move) if self.can_move(node, move) else None
             if child:
                 children.append(child)
         return children
