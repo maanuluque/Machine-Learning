@@ -58,10 +58,10 @@ def main():
     board = Board(board, height, width)
     board.print_state(player=player, boxes=boxes)
 
-    node = Node(player, boxes)
+    initial_node = Node(player, boxes)
     game = GameController(board)
 
-    game_solution = bfs(game, node)
+    game_solution = bfs(game, initial_node)
 
     if game_solution.solved:
         print("Solution found!", end = '\n\n')

@@ -8,10 +8,6 @@ class GameController:
         self.moves = [(-1, 0), (0, -1), (0, 1), (1, 0)]  # up,  left, right, down
     
     def get_children(self, node):
-        # Is it worth it?
-        # if not self.board.valid_node(node):
-        #     return None
-        
         x = node.player.x
         y = node.player.y
         children = []
