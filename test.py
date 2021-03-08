@@ -50,7 +50,7 @@ game = GameController(board)
 
 game_solution = bfs(game, node)
 game.print_path(game_solution.path) if game_solution.solved else print("sad")
-
+print(game_solution.processing_time) if game_solution.solved else print("sad")
 
 def solve(algorithm, controller, root, heuristics):
     solution = Solution(None, None, None, None, False, None, None)
