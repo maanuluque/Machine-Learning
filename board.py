@@ -19,6 +19,11 @@ class Board:
 
         ]
 
+    def __init__(self, board, height, width):
+        self.board = board
+        self.size = height
+        self.width = width
+
     def whereIsP(self, board):
         for x in range(len(board)):
             for y in range(len(board[x])):
