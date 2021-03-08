@@ -48,12 +48,11 @@ class GameController:
                 blocking_box = True
         return True
 
+    def is_deadlock(self, node):
+        return self.board.is_deadlock(node.boxes)
+
     def is_solution(self, node):
         return self.board.is_solution(node.boxes)
-
-    def is_deadlock(self, node):
-        # TODO
-        return False
 
     def print_path(self, solution_node):
         current_node = solution_node
