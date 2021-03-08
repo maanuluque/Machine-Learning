@@ -7,7 +7,7 @@ from NonInformative.bfs import bfs
 from solution import Solution
 import json
 
-with open('config.json') as config_file:
+with open('testConfig.json') as config_file:
     data = json.load(config_file)
     config_file.close()
 
@@ -18,8 +18,6 @@ print(game_map)
 
 with open(game_map) as game_map_file:
     lines = game_map_file.readlines()
-    game_map_file.close()
-
 
 height = len(lines)
 width = len(lines[0])-1
@@ -52,12 +50,3 @@ game_solution = bfs(game, node)
 game.print_path(game_solution.path) if game_solution.solved else print("sad")
 
 
-def solve(algorithm, controller, root, heuristics):
-    solution = Solution(None, None, None, None, False, None, None)
-    if "bfs" in algorithm:
-        solution = bfs(controller, root)
-    elif "dfs" in algorithm:
-        solution = None  # dfs()
-    #
-    #
-    return solution
