@@ -37,6 +37,20 @@ class Board:
                 return False
         return True
 
+    def is_deadlock(self, boxes):
+        for box in boxes:
+            if self.board[box.x-1][box.y] == '+':
+                return False
+            if self.board[box.x-1][box.y] == '1' and self.board[box.x][box.y-1] == '1':
+                return True
+            if self.board[box.x+1][box.y] == '1' and self.board[box.x][box.y-1] == '1':
+                return True
+            if self.board[box.x-1][box.y] == '1' and self.board[box.x][box.y+1] == '1':
+                return True
+            if self.board[box.x+1][box.y] == '1' and self.board[box.x][box.y+1] == '1':
+                return True
+        return False
+
     def print_state(self, player, boxes):
         for x, line in enumerate(self.board):
             for y, column in enumerate(line):
