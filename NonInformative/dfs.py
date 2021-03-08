@@ -1,58 +1,29 @@
-from gameController import GameController as gc
+import time
+from solution import Solution
 
-# Needs a board (not the class, only the list) and the current player position
+def dfs(controller, node):
+    explored = set()
+    stack = []
+    expanded = 0
+    cost = 0
+    leaves = 0
+    stack.append(node)
+    start_time = time.time()
 
-def dfs(board, row, col):
-    visited = {}
-    boardRows = len(board)
-    boardCols = len(board[0])
+    while stack:
+        current_node = stack.pop()
+        explored.add(hash(current_node))
+        children = controller.get_children(current_node)
+        if not children:
+            leaves += 1
+        else:
+            for child in children:
+                if not controller.is_deadlock(child) and hash(child) not in explored and child not in stack:
+                    child.parent = current_node
+                    if(controller.is_solution(child)):
+                        end_time = time.time()
+                        processing_time = end_time - start_time
+                        return Solution(expanded, leaves, explored, child, True, cost, processing_time)
+                    stack.append(child)
 
-    for x in range(boardRows):
-        for y in range(boardCols):
-            visited[(x,y)] = False          # TODO: CHECK
-
-    visited[(row, col)] = True
-
-    # Left Move
-    if not outOfBoundry(boardRows, boardCols, row, col-1):
-        leftBoard = gc.makeMove(board, row, col, row, col-1)
-        #visited[(row, col-1)] = True
-        dfsRec(leftBoard, row, col-1)
-
-    # Up Move
-    if not outOfBoundry(boardRows, boardCols, row-1, col):
-        upBoard = gc.makeMove(board, row, col, row-1, col)
-        #visited[(row-1, col)] = True
-
-        dfsRec(upBoard, row-1, col)
-
-    # Right Move
-    if not outOfBoundry(boardRows, boardCols, row, col+1):
-        rightBoard = gc.makeMove(board, row, col, row, col+1)
-        #visited[(row, col+1)] = True
-
-        dfsRec(rightBoard, row, col+1)
-
-    # Down Move
-    if not outOfBoundry(boardRows, boardCols, row+1, col):
-        downBoard = gc.makeMove(board, row, col, row+1, col)
-        #visited[(row+1, col)] = True
-
-        dfsRec(downBoard, row+1, col)
-
-
-def dfsRec(board, row, col):
-    if outOfBoundry(len(board), len(board[0]), row, col):
-        return
-    if board[row][col] == "1":
-        return
- #   if board[row][col] == "0":
- #       gc.
- #   if walls(len(board), len(board[0]), row, col):
-
-def outOfBoundry(rowsNumber, colsNumber, row, col):
-    if (row >= rowsNumber) or (row < 0) or (col >= colsNumber) or (col < 0):
-        return True
-
-#def walls(rowsNumber, colsNumber, row, col):
-   # if (row >= rowsNumber) or (row < 0) or (col >= colsNumber)
+    return Solution(None, None, None, None, False, None, None)
