@@ -1,6 +1,3 @@
-import agent
-
-
 class Board:
 
     def __init__(self):
@@ -56,3 +53,4 @@ class Board:
                     else:
                         print(column, end=' ')
             print()
+        print()
