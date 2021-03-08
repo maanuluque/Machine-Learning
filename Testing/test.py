@@ -60,7 +60,6 @@ elif algorithm == "dfs":
     if game_solution.solved:
         game.print_path(game_solution.path)
         print("Processing time: ", game_solution.processing_time)
-        print("Deepness: ", game_solution.expanded)
     else:
         print("Solution not found.")
 
