@@ -48,6 +48,7 @@ board = Board(board, height, width)
 node = Node(player, boxes)
 game = GameController(board)
 
+
 if algorithm == "bfs":
     game_solution = bfs(game, node)
     if game_solution.solved:
