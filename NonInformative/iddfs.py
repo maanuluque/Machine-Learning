@@ -26,7 +26,7 @@ def iddfs(controller, node, limit):
                     current_depth += 1
                     for child in children:
                         child.depth = current_depth
-                        if not controller.is_deadlock(child) and hash(child) not in explored and child not in stack:
+                        if hash(child) not in explored and child not in stack:
                             child.parent = current_node
                             if (controller.is_solution(child)):
                                 end_time = time.time()

@@ -18,7 +18,7 @@ def dfs(controller, node):
             leaves += 1
         else:
             for child in children:
-                if not controller.is_deadlock(child) and hash(child) not in explored and child not in stack:
+                if hash(child) not in explored and child not in stack:
                     child.parent = current_node
                     if(controller.is_solution(child)):
                         end_time = time.time()
@@ -26,4 +26,6 @@ def dfs(controller, node):
                         return Solution(expanded, leaves, explored, child, True, cost, processing_time)
                     stack.append(child)
 
-    return Solution(None, None, None, None, False, None, None)
+    end_time = time.time()
+    processing_time = end_time - start_time
+    return Solution(expanded, leaves, explored, None, False, cost, processing_time)

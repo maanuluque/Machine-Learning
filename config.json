@@ -1,5 +1,5 @@
 {
-  "algorithm": "bfs",
-  "heuristics": "none",
-  "map": "Maps/map3.txt"
+    "algorithm": "bfs",
+    "heuristics": "none",
+    "map": "Maps/map3.txt"
 }

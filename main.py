@@ -8,15 +8,17 @@ from NonInformative.dfs import dfs
 from solution import Solution
 import json
 
-def solve(algorithm, controller, root, heuristics):
-    solution = Solution(None, None, None, None, False, None, None)
-    if "bfs" in algorithm:
-        solution = bfs(controller, root)
-    elif "dfs" in algorithm:
-        solution = None  # dfs()
-    #
-    #
-    return solution
+
+#  TODO delete??
+# def solve(algorithm, controller, root, heuristics):
+#     solution = Solution(None, None, None, None, False, None, None)
+#     if "bfs" in algorithm:
+#         solution = bfs(controller, root)
+#     elif "dfs" in algorithm:
+#         solution = None  # dfs()
+#     #
+#     #
+#     return solution
 
 def main():
     # Game Setup
@@ -50,12 +52,6 @@ def main():
             else:
                 board[x][y] = char
 
-    # Debugging
-    # -------------------------
-    # print(height)
-    # print(width)
-    # ------------------------
-
     board = Board(board, height, width)
     board.print_state(player=player, boxes=boxes)
 
@@ -64,19 +60,20 @@ def main():
 
     if algorithm == "bfs":
         game_solution = bfs(game, initial_node)
-        if game_solution.solved:
-            game.print_path(game_solution.path)
-            print("Processing time: ", game_solution.processing_time)
-        else:
-            print("Solution not found.")
     elif algorithm == "dfs":
         game_solution = dfs(game, initial_node)
-        if game_solution.solved:
-            game.print_path(game_solution.path)
-            print("Processing time: ", game_solution.processing_time)
-        else:
-            print("Solution not found.")
 
+    if game_solution.solved:
+        print('Solution found:')
+        game.print_path(game_solution.path)
+        print("Solution depth: ", game_solution.depth)
+        print("Solution cost: ", game_solution.cost)
+    else:
+        print("Solution not found.")
+
+    print("Processing time: ", game_solution.processing_time)
+    print("Expanded nodes: ", game_solution.expanded)
+    print("Frontier nodes: ", game_solution.leaves)
 
 if __name__ == "__main__":
     main()

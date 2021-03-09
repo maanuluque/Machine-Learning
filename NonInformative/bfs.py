@@ -21,13 +21,13 @@ def bfs(controller, node):
             leaves += 1
         else:
             for child in children:
-                if not controller.is_deadlock(node) and hash(child) not in explored and child not in frontier:
+                if hash(child) not in explored and child not in frontier:
                     child.parent = current_node
                     if controller.is_solution(child):
-                        end_time = time.time()
-                        processing_time = end_time - start_time
+                        processing_time = time.time() - start_time
                         return Solution(expanded, leaves, explored, child, True, cost, processing_time)
                     frontier.append(child)
 
     # No solution found :/
-    return Solution(None, None, None, None, False, None, None)
+    processing_time = time.time() - start_time
+    return Solution(expanded, leaves, explored, None, False, None, processing_time)
