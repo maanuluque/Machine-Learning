@@ -13,10 +13,21 @@ def bfs(controller, node):
 
     frontier.append(current_node)  # check if deadlock?
     while len(frontier):
+        if expanded % 100 == 0:
+            print(f'{time.time() - start_time} - poping....')
         current_node = frontier.pop(0)
+        if expanded % 100 == 0:
+            print(f'{time.time() - start_time} - POP')
         expanded += 1
-        explored.add(hash(current_node))
+        hsh = hash(current_node)
+        if expanded % 100 == 0:
+            print(f'{time.time() - start_time} - HASH')
+        explored.add(hsh)
+        if expanded % 100 == 0:
+            print(f'{time.time() - start_time} - Add')
         children = controller.get_children(current_node)
+        if expanded % 100 == 0:
+            print(f'{time.time() - start_time} - Children')
         if not children:
             leaves += 1
         else:
