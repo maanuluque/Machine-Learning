@@ -5,6 +5,7 @@ from board import Board
 from gameController import GameController
 from NonInformative.bfs import bfs
 from NonInformative.dfs import dfs
+from NonInformative.iddfs import iddfs
 
 from solution import Solution
 import json
@@ -57,6 +58,14 @@ if algorithm == "bfs":
         print("Solution not found.")
 elif algorithm == "dfs":
     game_solution = dfs(game, node)
+    if game_solution.solved:
+        game.print_path(game_solution.path)
+        print("Processing time: ", game_solution.processing_time)
+    else:
+        print("Solution not found.")
+elif algorithm == "iddfs":
+    hardcoded_limit = 100
+    game_solution = iddfs(game, node, hardcoded_limit)
     if game_solution.solved:
         game.print_path(game_solution.path)
         print("Processing time: ", game_solution.processing_time)
