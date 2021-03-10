@@ -30,6 +30,7 @@ def main():
 
     algorithm = data['algorithm']
     game_map = data['map']
+    iddfs_depth_limit = data["iddfs_depth_limit"]
     print("Chosen algorithm is:", algorithm)
     print("Board:")
     print()
@@ -66,7 +67,7 @@ def main():
     elif algorithm == "dfs":
         game_solution = dfs(game, initial_node)
     elif algorithm == "iddfs":
-        game_solution = iddfs(game, initial_node, 1000)
+        game_solution = iddfs(game, initial_node, iddfs_depth_limit)
     else:
         print("Invalid algorithm. See you later")
         exit()
