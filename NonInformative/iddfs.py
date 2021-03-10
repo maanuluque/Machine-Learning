@@ -1,23 +1,25 @@
 import time
 from solution import Solution
+from Util.queue import Queue
 
 def iddfs(controller, node, limit):
     explored = set()
-    stack = []
-    unexplored = []
+    stack_hash_values = set()
+    stack = Queue()
+    unexplored = Queue()
     unexplored_nodes = True
     expanded = 0
     cost = 0
     leaves = 0
     current_depth = 0
     node.depth = current_depth
-    stack.append(node)
+    stack.pushLast(node)
 
     start_time = time.time()
 
     while unexplored_nodes:
-        while stack:
-            current_node = stack.pop()
+        while stack.size > 0:
+            current_node = stack.popLast()
             current_depth = current_node.depth
             explored.add(hash(current_node))
             if current_depth < limit:
@@ -25,24 +27,25 @@ def iddfs(controller, node, limit):
                 if children:
                     current_depth += 1
                     for child in children:
-                        child.depth = current_depth
-                        if hash(child) not in explored and child not in stack:
+                        if hash(child) not in explored and hash(child) not in stack_hash_values:
+                            child.depth = current_depth
                             child.parent = current_node
                             if (controller.is_solution(child)):
-                                end_time = time.time()
-                                processing_time = end_time - start_time
+                                processing_time = time.time() - start_time
                                 return Solution(expanded, leaves, explored, child, True, cost, processing_time)
-                            stack.append(child)
+                            stack.pushLast(child)
+                            stack_hash_values.add(hash(child))
                 else:
-                    unexplored.append(current_node)
                     leaves += 1
+            else:
+                unexplored.pushLast(current_node)
         # End Stack while
-        if unexplored:
+        if unexplored.size > 0:
             unexplored_nodes = True
             limit = limit/2
-            iter = len(unexplored)
+            iter = unexplored.size
             for x in range(0, iter):
-                stack.append(unexplored.pop())
+                stack.pushLast(unexplored.popLast())
         else:
             unexplored_nodes = False
 

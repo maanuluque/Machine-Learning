@@ -65,7 +65,7 @@ elif algorithm == "dfs":
     else:
         print("Solution not found.")
 elif algorithm == "iddfs":
-    hardcoded_limit = 100
+    hardcoded_limit = 1000
     game_solution = iddfs(game, node, hardcoded_limit)
     if game_solution.solved:
         game.print_path(game_solution.path)

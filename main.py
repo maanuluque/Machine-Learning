@@ -5,6 +5,8 @@ from board import Board
 from gameController import GameController
 from NonInformative.bfs import bfs
 from NonInformative.dfs import dfs
+from NonInformative.iddfs import iddfs
+
 from solution import Solution
 import json
 
@@ -62,6 +64,11 @@ def main():
         game_solution = bfs(game, initial_node)
     elif algorithm == "dfs":
         game_solution = dfs(game, initial_node)
+    elif algorithm == "iddfs":
+        game_solution = iddfs(game, initial_node, 1000)
+    else:
+        print("Invalid algorithm. See you later")
+        exit()
 
     if game_solution.solved:
         print('Solution found:')
