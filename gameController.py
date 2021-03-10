@@ -59,5 +59,5 @@ class GameController:
         while hasattr(current_node, 'child'):
             self.board.print_state(current_node.player, current_node.boxes)
             current_node = current_node.child
-            print('---------------')
+            print('---------------------------------------------')
         self.board.print_state(current_node.player, current_node.boxes)
