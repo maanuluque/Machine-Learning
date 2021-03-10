@@ -32,7 +32,7 @@ def iddfs(controller, node, limit):
                             child.parent = current_node
                             if (controller.is_solution(child)):
                                 processing_time = time.time() - start_time
-                                return Solution(expanded, leaves, explored, child, True, cost, processing_time)
+                                return Solution(expanded, leaves, child, True, cost, processing_time)
                             stack.pushLast(child)
                             stack_hash_values.add(hash(child))
                 else:
@@ -49,5 +49,5 @@ def iddfs(controller, node, limit):
         else:
             unexplored_nodes = False
 
-
-    return Solution(None, None, None, None, False, None, None)
+    processing_time = time.time() - start_time
+    return Solution(expanded, leaves, None, False, cost, processing_time)

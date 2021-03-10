@@ -25,10 +25,10 @@ def dfs(controller, node):
                     child.parent = current_node
                     if(controller.is_solution(child)):
                         processing_time = time.time() - start_time
-                        return Solution(expanded, leaves, explored, child, True, cost, processing_time)
+                        return Solution(expanded, leaves, child, True, cost, processing_time)
                     stack.pushLast(child)
                     stack_hash_values.add(hash(child))
 
     end_time = time.time()
     processing_time = end_time - start_time
-    return Solution(expanded, leaves, explored, None, False, cost, processing_time)
+    return Solution(expanded, leaves, None, False, cost, processing_time)
