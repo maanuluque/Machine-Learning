@@ -6,6 +6,7 @@ from gameController import GameController
 from NonInformative.bfs import bfs
 from NonInformative.dfs import dfs
 from NonInformative.iddfs import iddfs
+import constants
 
 from solution import Solution
 import json
@@ -45,12 +46,12 @@ def main():
 
     for x, line in enumerate(lines):
         for y, char in enumerate(line[:-1]):
-            if char == 'P':
+            if char == constants.PLAYER:
                 player = Player(x, y)
-                board[x][y] = '.'
-            elif char == '#':
+                board[x][y] = constants.EMPTY
+            elif char == constants.BOX:
                 boxes.append(Box(x, y))
-                board[x][y] = '.'
+                board[x][y] = constants.EMPTY
             else:
                 board[x][y] = char
 

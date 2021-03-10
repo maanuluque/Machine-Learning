@@ -1,3 +1,5 @@
+import constants
+
 class Board:
 
     def __init__(self, board, height, width):
@@ -6,25 +8,25 @@ class Board:
         self.width = width
 
     def is_valid_position(self, x, y):
-        return x in range(0, self.size) and y in range(0, self.width) and self.board[x][y] != "1"
+        return x in range(0, self.size) and y in range(0, self.width) and self.board[x][y] != constants.WALL
 
     def is_solution(self, boxes):
         for box in boxes:
-            if self.board[box.x][box.y] != '+':
+            if self.board[box.x][box.y] != constants.GOAL:
                 return False
         return True
 
     def is_deadlock(self, boxes):
         for box in boxes:
-            if self.board[box.x-1][box.y] == '+':
+            if self.board[box.x-1][box.y] == constants.GOAL:
                 return False
-            if self.board[box.x-1][box.y] == '1' and self.board[box.x][box.y-1] == '1':
+            if self.board[box.x-1][box.y] == constants.WALL and self.board[box.x][box.y-1] == constants.WALL:
                 return True
-            if self.board[box.x+1][box.y] == '1' and self.board[box.x][box.y-1] == '1':
+            if self.board[box.x+1][box.y] == constants.WALL and self.board[box.x][box.y-1] == constants.WALL:
                 return True
-            if self.board[box.x-1][box.y] == '1' and self.board[box.x][box.y+1] == '1':
+            if self.board[box.x-1][box.y] == constants.WALL and self.board[box.x][box.y+1] == constants.WALL:
                 return True
-            if self.board[box.x+1][box.y] == '1' and self.board[box.x][box.y+1] == '1':
+            if self.board[box.x+1][box.y] == constants.WALL and self.board[box.x][box.y+1] == constants.WALL:
                 return True
         return False
 
@@ -32,14 +34,14 @@ class Board:
         for x, line in enumerate(self.board):
             for y, column in enumerate(line):
                 if player.x == x and player.y == y:
-                    print('P', end=' ')
+                    print(constants.PLAYER, end=' ')
                 else:
                     for box in boxes:
                         if box.x == x and box.y == y:
                             if column == '+':
-                                print('X', end=' ')
+                                print(constants.BOX_IN_GOAL, end=' ')
                             else:
-                                print('#', end=' ')
+                                print(constants.BOX, end=' ')
                             break
                     else:
                         print(column, end=' ')
