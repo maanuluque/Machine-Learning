@@ -41,7 +41,7 @@ def main():
     height = len(lines)
     width = len(lines[0]) - 1
 
-    board = [['0' for i in range(width)] for j in range(height)]
+    board = [['1' for i in range(width)] for j in range(height)]
     boxes = []
     player = Player(0, 0)
 
