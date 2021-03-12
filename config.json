@@ -1,6 +1,6 @@
 {
-    "algorithm": "bfs",
+    "algorithm": "iddfs",
     "heuristics": "none",
-    "map": "Maps/map3.txt",
-    "iddfs_depth_limit": 1000
+    "map": "Maps/map1.txt",
+    "iddfs_depth_limit": 7
 }

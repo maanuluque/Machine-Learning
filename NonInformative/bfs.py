@@ -17,14 +17,14 @@ def bfs(controller, node):
     while frontier.size > 0:
         current_node = frontier.popFirst()
         expanded += 1
-        children = controller.get_children(current_node) ####################################################################
+        children = controller.get_children(current_node)
         if not children:
             leaves += 1
         else:
             for child in children:
                 if hash(child) not in exploreSet:
                     child.parent = current_node
-                    if controller.is_solution(child):   ######################################################################
+                    if controller.is_solution(child):
                         processing_time = time.time() - start_time
                         return Solution(expanded, leaves, child, True, cost, processing_time)
                     frontier.pushLast(child)
