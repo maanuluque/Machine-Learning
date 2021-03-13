@@ -3,6 +3,7 @@ from solution import Solution
 from Util.queue import Queue
 
 def iddfs(controller, node, limit):
+    threshold = limit
     explored = set()
     unexplored = Queue()
     stack = Queue()
@@ -21,7 +22,7 @@ def iddfs(controller, node, limit):
         while stack.size > 0:
             current_node = stack.popLast()
             current_depth = current_node.depth
-            if current_depth < limit:
+            if current_depth < threshold:
                 children = controller.get_children(current_node)
                 if children:
                     current_depth += 1
@@ -41,7 +42,7 @@ def iddfs(controller, node, limit):
         # End Stack while
         if unexplored.size > 0:
             unexplored_nodes = True
-            limit = limit/2
+            threshold += limit
             iter = unexplored.size
             for x in range(0, iter):
                 stack.pushLast(unexplored.popLast())

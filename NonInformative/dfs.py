@@ -5,7 +5,6 @@ from Util.queue import Queue
 def dfs(controller, node):
     explored = set()
     stack = Queue()
-    stack_hash_values = set()
     expanded = 0
     cost = 0
     leaves = 0
@@ -29,6 +28,5 @@ def dfs(controller, node):
                     stack.pushLast(child)
                     explored.add(hash(child))
 
-    end_time = time.time()
-    processing_time = end_time - start_time
+    processing_time = time.time() - start_time
     return Solution(expanded, leaves, None, False, cost, processing_time)
