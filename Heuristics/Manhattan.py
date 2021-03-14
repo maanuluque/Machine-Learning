@@ -1,5 +1,8 @@
 def manhattan(board, boxes):
+    return 0
+
     total_sum = 0
+
     dist = 0
     for box in boxes:
         for goal in board.goals:

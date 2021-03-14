@@ -14,3 +14,6 @@ class Node:
             if box not in other.boxes:
                 return False
         return True
+
+    def __lt__(self, other):
+        return self.player.x < other.player.x
