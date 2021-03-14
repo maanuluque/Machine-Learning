@@ -1,11 +1,13 @@
 import constants
 
+
 class Board:
 
-    def __init__(self, board, height, width):
+    def __init__(self, board, height, width, goals):
         self.board = board
         self.size = height
         self.width = width
+        self.goals = goals
 
     def is_valid_position(self, x, y):
         return x in range(0, self.size) and y in range(0, self.width) and self.board[x][y] != constants.WALL

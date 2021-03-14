@@ -1,3 +1,4 @@
+from goal import Goal
 from player import Player
 from box import Box
 from node import Node
@@ -43,6 +44,7 @@ def main():
 
     board = [['1' for i in range(width)] for j in range(height)]
     boxes = []
+    goals = []
     player = Player(0, 0)
 
     for x, line in enumerate(lines):
@@ -53,10 +55,13 @@ def main():
             elif char == constants.BOX:
                 boxes.append(Box(x, y))
                 board[x][y] = constants.EMPTY
+            elif char == constants.GOAL:
+                goals.append(Goal(x, y))
+                board[x][y] = char
             else:
                 board[x][y] = char
 
-    board = Board(board, height, width)
+    board = Board(board, height, width, goals)
     board.print_state(player=player, boxes=boxes)
 
     initial_node = Node(player, boxes)
