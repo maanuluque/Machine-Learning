@@ -1,3 +1,5 @@
+from Heuristics.Manhattan import manhattan
+from Informative.aStar import a_star
 from goal import Goal
 from player import Player
 from box import Box
@@ -73,6 +75,8 @@ def main():
         game_solution = dfs(game, initial_node)
     elif algorithm == "iddfs":
         game_solution = iddfs(game, initial_node, iddfs_depth_limit)
+    elif algorithm == "A*":
+        game_solution = a_star(game, initial_node, board, manhattan)
     else:
         print("Invalid algorithm. See you later")
         exit()
