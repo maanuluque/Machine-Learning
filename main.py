@@ -1,5 +1,6 @@
 from Heuristics.Manhattan import manhattan
 from Informative.aStar import a_star
+from Informative.globalGreedy import globalGreedy
 from goal import Goal
 from player import Player
 from box import Box
@@ -77,6 +78,8 @@ def main():
         game_solution = iddfs(game, initial_node, iddfs_depth_limit)
     elif algorithm == "A*":
         game_solution = a_star(game, initial_node, board, manhattan)
+    elif algorithm == "globalGreedy":
+        game_solution = globalGreedy(game, initial_node, board, manhattan)
     else:
         print("Invalid algorithm. See you later")
         exit()
