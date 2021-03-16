@@ -16,6 +16,9 @@ def iddfs(controller, node, limit):
     stack.pushLast(node)
     explored.add(hash(node))
 
+    # Space complexity
+    max_stack_size = 1
+
     start_time = time.time()
 
     while unexplored_nodes:
@@ -23,6 +26,7 @@ def iddfs(controller, node, limit):
             current_node = stack.popLast()
             current_depth = current_node.depth
             if current_depth < threshold:
+                expanded += 1
                 children = controller.get_children(current_node)
                 if children:
                     current_depth += 1
@@ -32,9 +36,12 @@ def iddfs(controller, node, limit):
                             child.parent = current_node
                             if (controller.is_solution(child)):
                                 processing_time = time.time() - start_time
-                                return Solution(expanded, leaves, child, True, cost, processing_time)
+                                space_complexity = node.space_complexity() * max_stack_size
+                                return Solution(expanded, leaves, child, True, cost, processing_time, space_complexity)
                             stack.pushLast(child)
                             explored.add(hash(child))
+                    if stack.size > max_stack_size:
+                        max_stack_size = stack.size
                 else:
                     leaves += 1
             else:
@@ -49,5 +56,6 @@ def iddfs(controller, node, limit):
         else:
             unexplored_nodes = False
 
+    space_complexity = node.space_complexity() * max_stack_size
     processing_time = time.time() - start_time
-    return Solution(expanded, leaves, None, False, cost, processing_time)
+    return Solution(expanded, leaves, None, False, cost, processing_time, space_complexity)

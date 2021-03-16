@@ -103,13 +103,13 @@ def main():
         print('Solution found:')
         game.print_path(game_solution.path)
         print("Solution depth: ", game_solution.depth)
-        print("Solution cost: ", game_solution.cost)
     else:
         print("Solution not found.")
 
-    print("Processing time: ", game_solution.processing_time)
     print("Expanded nodes: ", game_solution.expanded)
     print("Frontier nodes: ", game_solution.leaves)
+    print("Processing time: ", round(game_solution.processing_time, 4))
+    print("Memory used: " + str(game_solution.space_complexity) + " bytes")
 
 
 if __name__ == "__main__":
