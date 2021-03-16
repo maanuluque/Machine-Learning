@@ -50,9 +50,12 @@ def iddfs(controller, node, limit):
         if unexplored.size > 0:
             unexplored_nodes = True
             threshold += limit
-            iter = unexplored.size
-            for x in range(0, iter):
-                stack.pushLast(unexplored.popLast())
+            aux = stack
+            stack = unexplored
+            unexplored = stack
+            # iter = unexplored.size
+            # for x in range(0, iter):
+            #     stack.pushLast(unexplored.popLast())
         else:
             unexplored_nodes = False
 
