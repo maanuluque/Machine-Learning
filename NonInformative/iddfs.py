@@ -52,7 +52,7 @@ def iddfs(controller, node, limit):
             threshold += limit
             aux = stack
             stack = unexplored
-            unexplored = stack
+            unexplored = aux
             # iter = unexplored.size
             # for x in range(0, iter):
             #     stack.pushLast(unexplored.popLast())
