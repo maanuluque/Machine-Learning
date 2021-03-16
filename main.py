@@ -1,6 +1,7 @@
 from Heuristics.minimumMatchingLowerBound import mmlb
 from Heuristics.simpleLowerBound import slb
 from Informative.aStar import a_star
+from Informative.idaStar import ida_star
 from Informative.globalGreedy import globalGreedy
 from goal import Goal
 from player import Player
@@ -36,6 +37,7 @@ def main():
     algorithm = data['algorithm']
     game_map = data['map']
     iddfs_depth_limit = data["iddfs_depth_limit"]
+    ida_limit = data["ida*_limit"]
     print("Chosen algorithm is:", algorithm)
     print("Board:")
     print()
@@ -80,7 +82,11 @@ def main():
     elif algorithm == "A*":
         game_solution = a_star(game, initial_node, board, slb)
     elif algorithm == "globalGreedy":
+
         game_solution = globalGreedy(game, initial_node, board, slb)
+    elif algorithm == "IDA*":
+        game_solution = ida_star(game, initial_node, board, slb, ida_limit)
+
     else:
         print("Invalid algorithm. See you later")
         exit()
