@@ -1,12 +1,13 @@
 class Solution:
 
-    def __init__(self, expanded, leaves, path, solved, cost, processing_time):
+    def __init__(self, expanded, leaves, path, solved, cost, processing_time, space_complexity):
         self.expanded = expanded
         self.leaves = leaves
         self.solved = solved
         self.cost = cost
         self.processing_time = processing_time
         self.depth = 0
+        self.space_complexity = space_complexity
 
         current_node = path
         while hasattr(current_node, 'parent'):
