@@ -1,6 +1,6 @@
 {
     "algorithm": "A*",
-    "heuristics": "mmlb",
+    "heuristics": "slb*",
     "map": "Maps/map4.txt",
     "iddfs_depth_limit": 7,
     "ida*_limit": 1000
