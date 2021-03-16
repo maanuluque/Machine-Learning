@@ -12,7 +12,7 @@ def a_star(controller, node, board, heuristic):
     explored = set()
     expanded = 0
     leaves = 0
-    frontier.put((node.path_cost + heuristic(board, node.boxes), node))
+    frontier.put((node.path_cost + heuristic(board, node.boxes, node.player), node))
     size_frontier = size_frontier + 1
     explored.add(hash(node))
     start_time = time.time()
@@ -36,7 +36,8 @@ def a_star(controller, node, board, heuristic):
                         processing_time = time.time() - start_time
                         space_complexity = max_frontier_size * node.space_complexity()
                         return Solution(expanded, leaves, child, True, child.path_cost, processing_time, space_complexity)
-                    frontier.put((child.path_cost + heuristic(board, child.boxes), child))
+                    frontier.put((child.path_cost + heuristic(board, child.boxes, child.player), child))
+
                     size_frontier = size_frontier + 1
                     explored.add(hash(child))
             if size_frontier > max_frontier_size:
