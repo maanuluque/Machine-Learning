@@ -32,7 +32,7 @@ def globalGreedy(controller, node, board, heuristic):
                     if controller.is_solution(child):
                         processing_time = time.time() - start_time
                         return Solution(expanded, leaves, child, True, child.path_cost, processing_time)
-                    frontier.put((heuristic(board, child.boxes), child))
+                    frontier.put((heuristic(board, child.boxes, child.player), child))
                     size_frontier = size_frontier + 1
                     explored.add(hash(child))
 

@@ -30,7 +30,7 @@ def ida_star(controller, node, board, heuristic, limit):
     # Initialize
     stack.pushFirst(node)
     stack_size = stack_size + 1
-    #frontier.put((node.path_cost + heuristic(board, node.boxes), node))
+    #frontier.put((node.path_cost + heuristic(board, node.boxes, node.player), node))
     #size_frontier = size_frontier + 1
     explored.add(hash(node))
     start_time = time.time()
@@ -40,7 +40,7 @@ def ida_star(controller, node, board, heuristic, limit):
             current_node = stack.popFirst()
             stack_size = stack_size - 1
             expanded += 1
-            if (current_node.path_cost + heuristic(board, current_node.boxes)) > threshold:
+            if (current_node.path_cost + heuristic(board, current_node.boxes, current_node.player)) > threshold:
                 unexplored.pushLast(current_node)
             else:
                 children = controller.get_children(current_node)
@@ -54,7 +54,7 @@ def ida_star(controller, node, board, heuristic, limit):
                             if controller.is_solution(child):
                                 processing_time = time.time() - start_time
                                 return Solution(expanded, leaves, child, True, child.path_cost, processing_time)
-                            frontier.put((child.path_cost + heuristic(board, child.boxes), child))
+                            frontier.put((child.path_cost + heuristic(board, child.boxes, child.player), child))
                             size_frontier = size_frontier + 1
                             explored.add(hash(child))
                     for x in range(size_frontier):
@@ -72,7 +72,7 @@ def ida_star(controller, node, board, heuristic, limit):
             iter = unexplored.size
             for x in range(0, iter):
                 node = unexplored.popLast()
-                frontier.put(node.path_cost + heuristic(board, node.boxes), node)
+                frontier.put(node.path_cost + heuristic(board, node.boxes, node.player), node)
         else:
             unexplored_nodes = False
 
