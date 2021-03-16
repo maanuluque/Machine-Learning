@@ -37,6 +37,7 @@ def main():
     algorithm = data['algorithm']
     game_map = data['map']
     heuristic = data['heuristics']
+    heuristic_str = data['heuristics']
     iddfs_depth_limit = data["iddfs_depth_limit"]
     ida_limit = data["ida*_limit"]
     print("Chosen algorithm is:", algorithm)
@@ -73,7 +74,6 @@ def main():
 
     initial_node = Node(player, boxes)
     game = GameController(board)
-    print(heuristic)
     if heuristic == "slb":
         heuristic = slb
     elif heuristic == "mmlb":
@@ -110,6 +110,10 @@ def main():
     print("Frontier nodes: ", game_solution.leaves)
     print("Processing time: ", round(game_solution.processing_time, 4))
     print("Memory used: " + str(game_solution.space_complexity) + " bytes")
+    print()
+    print("Chosen algorithm is:", algorithm)
+    if algorithm == "A*" or algorithm == "IDA*" or algorithm == "globalGreedy*":
+        print("Chosen heuristic is:", heuristic_str)
 
 
 if __name__ == "__main__":
