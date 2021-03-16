@@ -1,4 +1,5 @@
-from Heuristics.Manhattan import manhattan
+from Heuristics.minimumMatchingLowerBound import mmlb
+from Heuristics.simpleLowerBound import slb, slb_plus
 from Informative.aStar import a_star
 from Informative.idaStar import ida_star
 from Informative.globalGreedy import globalGreedy
@@ -12,8 +13,8 @@ from NonInformative.bfs import bfs
 from NonInformative.dfs import dfs
 from NonInformative.iddfs import iddfs
 import constants
-
 from solution import Solution
+
 import json
 
 
@@ -35,6 +36,7 @@ def main():
 
     algorithm = data['algorithm']
     game_map = data['map']
+    heuristic = data['heuristics']
     iddfs_depth_limit = data["iddfs_depth_limit"]
     ida_limit = data["ida*_limit"]
     print("Chosen algorithm is:", algorithm)
@@ -71,6 +73,13 @@ def main():
 
     initial_node = Node(player, boxes)
     game = GameController(board)
+    print(heuristic)
+    if heuristic == "slb":
+        heuristic = slb
+    elif heuristic == "mmlb":
+        heuristic = mmlb
+    elif heuristic == "slb*":
+        heuristic = slb_plus
 
     if algorithm == "bfs":
         game_solution = bfs(game, initial_node)
@@ -79,11 +88,13 @@ def main():
     elif algorithm == "iddfs":
         game_solution = iddfs(game, initial_node, iddfs_depth_limit)
     elif algorithm == "A*":
-        game_solution = a_star(game, initial_node, board, manhattan)
+        game_solution = a_star(game, initial_node, board, heuristic)
     elif algorithm == "globalGreedy":
-        game_solution = globalGreedy(game, initial_node, board, manhattan)
+
+        game_solution = globalGreedy(game, initial_node, board, heuristic)
     elif algorithm == "IDA*":
-        game_solution = ida_star(game, initial_node, board, manhattan, ida_limit)
+        game_solution = ida_star(game, initial_node, board, heuristic, ida_limit)
+
     else:
         print("Invalid algorithm. See you later")
         exit()
@@ -99,6 +110,7 @@ def main():
     print("Frontier nodes: ", game_solution.leaves)
     print("Processing time: ", round(game_solution.processing_time, 4))
     print("Memory used: " + str(game_solution.space_complexity) + " bytes")
+
 
 if __name__ == "__main__":
     main()

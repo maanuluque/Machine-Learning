@@ -10,3 +10,5 @@ class Box:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
+    def __str__(self):
+        return "x: %d, y: %d" % (self.x, self.y)
