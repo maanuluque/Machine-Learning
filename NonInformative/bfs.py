@@ -12,6 +12,9 @@ def bfs(controller, node):
     cost = 0
     start_time = time.time()
 
+    # Space complexity
+    max_frontier_size = 1
+
     frontier.pushLast(current_node)  # check if deadlock?
     exploreSet.add(hash(current_node))
     while frontier.size > 0:
@@ -26,10 +29,14 @@ def bfs(controller, node):
                     child.parent = current_node
                     if controller.is_solution(child):
                         processing_time = time.time() - start_time
-                        return Solution(expanded, leaves, child, True, cost, processing_time)
+                        space_complexity = max_frontier_size * node.space_complexity()
+                        return Solution(expanded, leaves, child, True, cost, processing_time, space_complexity)
                     frontier.pushLast(child)
                     exploreSet.add(hash(child))
+            if frontier.size > max_frontier_size:
+                max_frontier_size = frontier.size
 
     # No solution found :/
     processing_time = time.time() - start_time
-    return Solution(expanded, leaves, None, False, None, processing_time)
+    space_complexity = max_frontier_size * node.space_complexity()
+    return Solution(expanded, leaves, None, False, None, processing_time, space_complexity)

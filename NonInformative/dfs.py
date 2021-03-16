@@ -12,6 +12,9 @@ def dfs(controller, node):
     explored.add(hash(node))
     start_time = time.time()
 
+    # Space complexity
+    max_stack_size = 1
+
     while stack.size > 0:
         current_node = stack.popLast()
         expanded += 1
@@ -24,9 +27,13 @@ def dfs(controller, node):
                     child.parent = current_node
                     if(controller.is_solution(child)):
                         processing_time = time.time() - start_time
-                        return Solution(expanded, leaves, child, True, cost, processing_time)
+                        space_complexity = node.space_complexity() * max_stack_size
+                        return Solution(expanded, leaves, child, True, cost, processing_time, space_complexity)
                     stack.pushLast(child)
                     explored.add(hash(child))
+            if stack.size > max_stack_size:
+                max_stack_size = stack.size
 
     processing_time = time.time() - start_time
-    return Solution(expanded, leaves, None, False, cost, processing_time)
+    space_complexity = node.space_complexity() * max_stack_size
+    return Solution(expanded, leaves, None, False, cost, processing_time, space_complexity)

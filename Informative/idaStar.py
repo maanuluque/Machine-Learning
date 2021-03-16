@@ -35,6 +35,10 @@ def ida_star(controller, node, board, heuristic, limit):
     explored.add(hash(node))
     start_time = time.time()
 
+    # Space complexity
+    max_frontier_size = 1
+    max_unexplored_size = 0
+
     while unexplored_nodes:
         while stack_size > 0:
             current_node = stack.popFirst()
@@ -52,11 +56,14 @@ def ida_star(controller, node, board, heuristic, limit):
                             child.parent = current_node
                             child.path_cost = current_node.path_cost + 1
                             if controller.is_solution(child):
+                                space_complexity = (max_unexplored_size + max_frontier_size + child.path_cost)*node.space_complexity()
                                 processing_time = time.time() - start_time
-                                return Solution(expanded, leaves, child, True, child.path_cost, processing_time)
+                                return Solution(expanded, leaves, child, True, child.path_cost, processing_time, space_complexity)
                             frontier.put((child.path_cost + heuristic(board, child.boxes), child))
                             size_frontier = size_frontier + 1
                             explored.add(hash(child))
+                    if size_frontier > max_frontier_size:
+                        max_frontier_size = size_frontier
                     for x in range(size_frontier):
                         reverse_frontier.pushFirst(frontier.get()[1])
                         size_frontier = size_frontier - 1
@@ -67,6 +74,8 @@ def ida_star(controller, node, board, heuristic, limit):
                         stack_size = stack_size + 1
         # End Frontier while
         if unexplored.size > 0:
+            if unexplored.size > max_unexplored_size:
+                max_unexplored_size = unexplored.size
             unexplored_nodes = True
             threshold += limit
             iter = unexplored.size
@@ -76,5 +85,6 @@ def ida_star(controller, node, board, heuristic, limit):
         else:
             unexplored_nodes = False
 
+    space_complexity = (max_unexplored_size + max_frontier_size) * node.space_complexity()
     processing_time = time.time() - start_time
-    return Solution(expanded, leaves, None, False, 0, processing_time)
+    return Solution(expanded, leaves, None, False, 0, processing_time, space_complexity)

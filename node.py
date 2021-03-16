@@ -1,8 +1,14 @@
+import sys
+
+
 class Node:
 
     def __init__(self, player, boxes: list):
         self.player = player
         self.boxes = boxes
+
+    def space_complexity(self):
+        return sys.getsizeof(self.player) + sys.getsizeof(self.boxes)
 
     def __hash__(self):
         return hash((self.player, tuple(self.boxes)))
