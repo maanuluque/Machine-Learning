@@ -2,6 +2,8 @@ from Heuristics.manhattanDistance import manhattan_dist
 
 
 def slb(board, boxes, player):
+    if board.is_deadlock(boxes):
+        return float('inf')
     total_sum = 0
     dist = float('inf')
     for box in boxes:
@@ -14,6 +16,8 @@ def slb(board, boxes, player):
 
 
 def slb_plus(board, boxes, player):
+    if board.is_deadlock(boxes):
+        return float('inf')
     player_dist = float('inf')
     for box in boxes:
         aux = manhattan_dist(player, box)

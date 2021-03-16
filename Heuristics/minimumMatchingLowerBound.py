@@ -3,6 +3,8 @@ from Heuristics.manhattanDistance import manhattan_dist
 
 
 def mmlb(board, boxes, player):
+    if board.is_deadlock(boxes):
+        return float('inf')
     dim = len(boxes)
     goals = board.goals
     matrix = [['0' for _ in range(dim)] for _ in range(dim)]
