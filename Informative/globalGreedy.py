@@ -12,7 +12,7 @@ def globalGreedy(controller, node, board, heuristic):
     explored = set()
     expanded = 0
     leaves = 0
-    frontier.put((heuristic(board, node.boxes), node))
+    frontier.put((heuristic(board, node.boxes, node.player), node))
     size_frontier = size_frontier + 1
     explored.add(hash(node))
     start_time = time.time()

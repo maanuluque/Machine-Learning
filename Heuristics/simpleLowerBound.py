@@ -1,8 +1,8 @@
-def manhattan(board, boxes):
-    return 0
+from Heuristics.manhattanDistance import manhattan_dist
 
+
+def slb(board, boxes, player):
     total_sum = 0
-
     dist = 0
     for box in boxes:
         for goal in board.goals:
@@ -12,6 +12,5 @@ def manhattan(board, boxes):
         dist = 0
     return total_sum
 
-
-def manhattan_dist(box, goal):
-    return abs(box.x - goal.x) + abs(box.y - goal.y)
+def slb_plus(board, boxes, player):
+    pass

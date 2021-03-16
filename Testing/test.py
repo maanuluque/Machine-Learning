@@ -1,3 +1,5 @@
+from Heuristics.minimumMatchingLowerBound import mmlb
+from goal import Goal
 from player import Player
 from box import Box
 from node import Node
@@ -28,6 +30,7 @@ width = len(lines[0])-1
 
 board = [['0' for i in range(width)] for j in range(height)]
 boxes = []
+goals = []
 player = Player(0, 0)
 
 for x, line in enumerate(lines):
@@ -38,17 +41,23 @@ for x, line in enumerate(lines):
         elif char == '#':
             boxes.append(Box(x, y))
             board[x][y] = '.'
+        elif char == '+':
+            goals.append(Goal(x, y))
+            board[x][y] = char
         else:
             board[x][y] = char
 
+for box in boxes:
+    print(box)
 
-board = Board(board, height, width)
+board = Board(board, height, width, goals)
 #board.print_state(player=player, boxes=boxes)
 
 node = Node(player, boxes)
 game = GameController(board)
 
-
+mmlb(board, boxes)
+"""
 if algorithm == "bfs":
     game_solution = bfs(game, node)
     if game_solution.solved:
@@ -73,4 +82,4 @@ elif algorithm == "iddfs":
     else:
         print("Solution not found.")
 
-
+"""

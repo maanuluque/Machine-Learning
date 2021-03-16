@@ -1,4 +1,5 @@
-from Heuristics.Manhattan import manhattan
+from Heuristics.minimumMatchingLowerBound import mmlb
+from Heuristics.simpleLowerBound import slb
 from Informative.aStar import a_star
 from Informative.globalGreedy import globalGreedy
 from goal import Goal
@@ -11,8 +12,8 @@ from NonInformative.bfs import bfs
 from NonInformative.dfs import dfs
 from NonInformative.iddfs import iddfs
 import constants
-
 from solution import Solution
+
 import json
 
 
@@ -77,9 +78,9 @@ def main():
     elif algorithm == "iddfs":
         game_solution = iddfs(game, initial_node, iddfs_depth_limit)
     elif algorithm == "A*":
-        game_solution = a_star(game, initial_node, board, manhattan)
+        game_solution = a_star(game, initial_node, board, slb)
     elif algorithm == "globalGreedy":
-        game_solution = globalGreedy(game, initial_node, board, manhattan)
+        game_solution = globalGreedy(game, initial_node, board, slb)
     else:
         print("Invalid algorithm. See you later")
         exit()
@@ -95,6 +96,7 @@ def main():
     print("Processing time: ", game_solution.processing_time)
     print("Expanded nodes: ", game_solution.expanded)
     print("Frontier nodes: ", game_solution.leaves)
+
 
 if __name__ == "__main__":
     main()
