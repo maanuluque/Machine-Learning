@@ -112,7 +112,7 @@ def main():
     print("Memory used: " + str(game_solution.space_complexity) + " bytes")
     print()
     print("Chosen algorithm is:", algorithm)
-    if algorithm == "A*" or algorithm == "IDA*" or algorithm == "globalGreedy*":
+    if algorithm == "A*" or algorithm == "IDA*" or algorithm == "globalGreedy":
         print("Chosen heuristic is:", heuristic_str)
 
 
