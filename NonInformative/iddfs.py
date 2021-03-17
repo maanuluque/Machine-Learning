@@ -35,6 +35,7 @@ def iddfs(controller, node, limit):
                             child.depth = current_depth
                             child.parent = current_node
                             if (controller.is_solution(child)):
+                                leaves = stack.size
                                 processing_time = time.time() - start_time
                                 space_complexity = node.space_complexity() * max_stack_size
                                 return Solution(expanded, leaves, child, True, cost, processing_time, space_complexity)
@@ -59,6 +60,7 @@ def iddfs(controller, node, limit):
         else:
             unexplored_nodes = False
 
+    leaves = 0
     space_complexity = node.space_complexity() * max_stack_size
     processing_time = time.time() - start_time
     return Solution(expanded, leaves, None, False, cost, processing_time, space_complexity)

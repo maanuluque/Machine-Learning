@@ -28,6 +28,7 @@ def bfs(controller, node):
                 if hash(child) not in exploreSet:
                     child.parent = current_node
                     if controller.is_solution(child):
+                        leaves = frontier.size
                         processing_time = time.time() - start_time
                         space_complexity = max_frontier_size * node.space_complexity()
                         return Solution(expanded, leaves, child, True, cost, processing_time, space_complexity)
@@ -37,6 +38,7 @@ def bfs(controller, node):
                 max_frontier_size = frontier.size
 
     # No solution found :/
+    leaves = 0
     processing_time = time.time() - start_time
     space_complexity = max_frontier_size * node.space_complexity()
     return Solution(expanded, leaves, None, False, None, processing_time, space_complexity)

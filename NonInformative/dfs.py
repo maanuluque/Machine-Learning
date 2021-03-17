@@ -26,6 +26,7 @@ def dfs(controller, node):
                 if hash(child) not in explored:
                     child.parent = current_node
                     if(controller.is_solution(child)):
+                        leaves = stack.size
                         processing_time = time.time() - start_time
                         space_complexity = node.space_complexity() * max_stack_size
                         return Solution(expanded, leaves, child, True, cost, processing_time, space_complexity)
@@ -34,6 +35,7 @@ def dfs(controller, node):
             if stack.size > max_stack_size:
                 max_stack_size = stack.size
 
+    leaves = 0
     processing_time = time.time() - start_time
     space_complexity = node.space_complexity() * max_stack_size
     return Solution(expanded, leaves, None, False, cost, processing_time, space_complexity)
