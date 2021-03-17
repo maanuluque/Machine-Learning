@@ -12,7 +12,8 @@ def a_star(controller, node, board, heuristic):
     explored = set()
     expanded = 0
     leaves = 0
-    frontier.put((node.path_cost + heuristic(board, node.boxes, node.player), node))
+    wrp = AStarWrapper(node.path_cost, heuristic(board, node.boxes, node.player), node)
+    frontier.put(wrp)
     size_frontier = size_frontier + 1
     explored.add(hash(node))
     start_time = time.time()
@@ -21,7 +22,7 @@ def a_star(controller, node, board, heuristic):
     max_frontier_size = size_frontier
 
     while size_frontier > 0:
-        current_node = frontier.get()[1]
+        current_node = frontier.get().node
         size_frontier = size_frontier - 1
         expanded += 1
         children = controller.get_children(current_node)
@@ -37,8 +38,9 @@ def a_star(controller, node, board, heuristic):
                         processing_time = time.time() - start_time
                         space_complexity = max_frontier_size * node.space_complexity()
                         return Solution(expanded, leaves, child, True, child.path_cost, processing_time, space_complexity)
-                    frontier.put((child.path_cost + heuristic(board, child.boxes, child.player), child))
 
+                    wrp = AStarWrapper(child.path_cost, heuristic(board, child.boxes, child.player), child)
+                    frontier.put(wrp)
                     size_frontier = size_frontier + 1
                     explored.add(hash(child))
             if size_frontier > max_frontier_size:
@@ -48,3 +50,23 @@ def a_star(controller, node, board, heuristic):
     space_complexity = max_frontier_size * node.space_complexity()
     processing_time = time.time() - start_time
     return Solution(expanded, leaves, None, False, 0, processing_time, space_complexity)
+
+class AStarWrapper:
+    def __init__(self, g, h, node):
+        self.g = g
+        self.h = h
+        self.node = node
+
+    def __hash__(self):
+        return hash((self.g, hash(self.node)))
+
+    def __eq__(self, other):
+        if not self.g == other.g or not self.node == other.node:
+            return False
+        return True
+
+    def __lt__(self, other):
+        comp = self.g + self.h - other.g - other.h
+        if comp != 0:
+            return comp < 0
+        return self.h < other.h
