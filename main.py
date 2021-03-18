@@ -39,7 +39,6 @@ def main():
     heuristic = data['heuristics']
     heuristic_str = data['heuristics']
     iddfs_depth_limit = data["iddfs_depth_limit"]
-    ida_limit = data["ida*_limit"]
     print("Chosen algorithm is:", algorithm)
     print("Board:")
     print()
@@ -93,7 +92,7 @@ def main():
 
         game_solution = globalGreedy(game, initial_node, board, heuristic)
     elif algorithm == "IDA*":
-        game_solution = ida_star(game, initial_node, board, heuristic, ida_limit)
+        game_solution = ida_star(game, initial_node, board, heuristic)
 
     else:
         print("Invalid algorithm. See you later")
