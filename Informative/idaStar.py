@@ -1,93 +1,65 @@
 import time
 from queue import PriorityQueue
 from Util.queue import Queue
-
-
 from solution import Solution
 
 
-def ida_star(controller, node, board, heuristic, limit):
+def ida_star(controller, node, board, heuristic):
     # Limit
-    threshold = limit
-    unexplored = Queue()
-    unexplored_nodes = True
+    h = heuristic(board, node.boxes, node.player)
+    threshold = h
 
     # To make PQ and DFS work
     stack = Queue()
     frontier = PriorityQueue()
-    reverse_frontier = Queue()
 
-    # Initialize sizes (counters) for every queue
-    stack_size = 0
-    size_frontier = 0
-    reverse_frontier_size = 0
-
-    node.path_cost = 0
     explored = set()
-    leaves = 0
     expanded = 0
 
     # Initialize
-    stack.pushFirst(node)
-    stack_size = stack_size + 1
-    #frontier.put((node.path_cost + heuristic(board, node.boxes, node.player), node))
-    #size_frontier = size_frontier + 1
+    node.path_cost = 0
+    frontier.put((h, node))
+    frontier_size = 1
     explored.add(hash(node))
     start_time = time.time()
 
     # Space complexity
     max_frontier_size = 1
-    max_unexplored_size = 0
 
-    while unexplored_nodes:
-        while stack_size > 0:
+    while frontier_size > 0 or stack.size > 0:
+        while stack.size > 0:
             current_node = stack.popFirst()
-            stack_size = stack_size - 1
+            sol = controller.is_solution(current_node)
+            if sol:
+                space_complexity = (max_frontier_size + current_node.path_cost)*node.space_complexity()
+                processing_time = time.time() - start_time
+                current_size = stack.size + frontier_size
+                return Solution(expanded, current_size, current_node, True, current_node.path_cost, processing_time, space_complexity)
             expanded += 1
-            if (current_node.path_cost + heuristic(board, current_node.boxes, current_node.player)) > threshold:
-                unexplored.pushLast(current_node)
-            else:
-                children = controller.get_children(current_node)
-                if not children:
-                    leaves += 1
-                else:
-                    for child in children:
-                        if hash(child) not in explored:
-                            child.parent = current_node
-                            child.path_cost = current_node.path_cost + 1
-                            if controller.is_solution(child):
-                                space_complexity = (max_unexplored_size + max_frontier_size + child.path_cost)*node.space_complexity()
-                                processing_time = time.time() - start_time
-                                leaves = stack_size
-                                return Solution(expanded, leaves, child, True, child.path_cost, processing_time, space_complexity)
-                            frontier.put((child.path_cost + heuristic(board, child.boxes, child.player), child))
-
-                            size_frontier = size_frontier + 1
+            children = controller.get_children(current_node)
+            if children:
+                for child in children:
+                    if hash(child) not in explored:
+                        child.parent = current_node
+                        child.path_cost = current_node.path_cost + 1
+                        h = heuristic(board, child.boxes, child.player)
+                        f = child.path_cost + h
+                        if f > threshold:
+                            frontier.put((f, child))
+                            frontier_size += 1
                             explored.add(hash(child))
-                    if size_frontier > max_frontier_size:
-                        max_frontier_size = size_frontier
-                    for x in range(size_frontier):
-                        reverse_frontier.pushFirst(frontier.get()[1])
-                        size_frontier = size_frontier - 1
-                        reverse_frontier_size = reverse_frontier_size + 1
-                    for x in range(reverse_frontier_size):
-                        stack.pushFirst(reverse_frontier.popFirst())
-                        reverse_frontier_size = reverse_frontier_size - 1
-                        stack_size = stack_size + 1
-        # End Frontier while
-        if unexplored.size > 0:
-            if unexplored.size > max_unexplored_size:
-                max_unexplored_size = unexplored.size
-            unexplored_nodes = True
-            threshold += limit
-            iter = unexplored.size
-            for x in range(0, iter):
-                node = unexplored.popLast()
-                frontier.put(node.path_cost + heuristic(board, node.boxes, node.player), node)
-        else:
-            unexplored_nodes = False
+                        else:
+                            stack.pushLast(child)
+                            explored.add(hash(child))
+                        current_size = stack.size + frontier_size
+                        if current_size > max_frontier_size:
+                                max_frontier_size = current_size
 
-    leaves = 0
-    space_complexity = (max_unexplored_size + max_frontier_size) * node.space_complexity()
+        # End Frontier while
+        if frontier_size > 0:
+            stack.pushLast(frontier.get()[1])  
+            frontier_size -= 1
+
+    space_complexity = (max_frontier_size) * node.space_complexity()
     processing_time = time.time() - start_time
-    return Solution(expanded, leaves, None, False, 0, processing_time, space_complexity)
+    return Solution(expanded, 0, None, False, 0, processing_time, space_complexity)
