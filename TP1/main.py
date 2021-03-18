@@ -12,6 +12,7 @@ from gameController import GameController
 from NonInformative.bfs import bfs
 from NonInformative.dfs import dfs
 from NonInformative.iddfs import iddfs
+from NonInformative.iddfsOLD import iddfsOLD
 import constants
 from solution import Solution
 
@@ -88,6 +89,8 @@ def main():
         game_solution = dfs(game, initial_node)
     elif algorithm == "iddfs":
         game_solution = iddfs(game, initial_node, iddfs_depth_limit)
+    elif algorithm == "iddfsOLD":
+        game_solution = iddfsOLD(game, initial_node, iddfs_depth_limit)
     elif algorithm == "A*":
         game_solution = a_star(game, initial_node, board, heuristic)
     elif algorithm == "globalGreedy":

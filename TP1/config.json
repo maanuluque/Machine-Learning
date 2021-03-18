@@ -1,6 +1,6 @@
 {
     "algorithm": "iddfs",
     "heuristics": "slb**",
-    "map": "Maps/map7.txt",
-    "iddfs_depth_limit": 70
+    "map": "Maps/map13.txt",
+    "iddfs_depth_limit": 23
 }
