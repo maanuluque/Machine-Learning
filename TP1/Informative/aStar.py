@@ -1,11 +1,9 @@
 import time
 from queue import PriorityQueue
-
 from solution import Solution
 
 
 def a_star(controller, node, board, heuristic):
-
     node.path_cost = 0
     size_frontier = 0
     frontier = PriorityQueue()
@@ -15,7 +13,7 @@ def a_star(controller, node, board, heuristic):
     wrp = AStarWrapper(node.path_cost, heuristic(board, node.boxes, node.player), node)
     frontier.put(wrp)
     size_frontier = size_frontier + 1
-    explored.add(hash(node))
+    explored.add(hash((node.path_cost, node)))
     start_time = time.time()
 
     # Space complexity
@@ -24,25 +22,24 @@ def a_star(controller, node, board, heuristic):
     while size_frontier > 0:
         current_node = frontier.get().node
         size_frontier = size_frontier - 1
-        expanded += 1
+        if controller.is_solution(current_node):
+            leaves = size_frontier
+            processing_time = time.time() - start_time
+            space_complexity = max_frontier_size * node.space_complexity()
+            return Solution(expanded, leaves, current_node, True, current_node.path_cost, processing_time, space_complexity)
         children = controller.get_children(current_node)
+        expanded += 1
         if not children:
             leaves += 1
         else:
             for child in children:
-                if hash(child) not in explored:
+                child.path_cost = current_node.path_cost + 1
+                if hash((child.path_cost, child)) not in explored:
                     child.parent = current_node
-                    child.path_cost = current_node.path_cost + 1
-                    if controller.is_solution(child):
-                        leaves = size_frontier
-                        processing_time = time.time() - start_time
-                        space_complexity = max_frontier_size * node.space_complexity()
-                        return Solution(expanded, leaves, child, True, child.path_cost, processing_time, space_complexity)
-
                     wrp = AStarWrapper(child.path_cost, heuristic(board, child.boxes, child.player), child)
                     frontier.put(wrp)
                     size_frontier = size_frontier + 1
-                    explored.add(hash(child))
+                    explored.add(hash((child.path_cost, child)))
             if size_frontier > max_frontier_size:
                 max_frontier_size = size_frontier
 

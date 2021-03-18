@@ -20,7 +20,7 @@ def ida_star(controller, node, board, heuristic):
     node.path_cost = 0
     frontier.put((h, node))
     frontier_size = 1
-    explored.add(hash(node))
+    explored.add(hash((node.path_cost, node)))
     start_time = time.time()
 
     # Space complexity
@@ -39,18 +39,18 @@ def ida_star(controller, node, board, heuristic):
             children = controller.get_children(current_node)
             if children:
                 for child in children:
-                    if hash(child) not in explored:
+                    child.path_cost = current_node.path_cost + 1
+                    if hash((child.path_cost, child)) not in explored:
                         child.parent = current_node
-                        child.path_cost = current_node.path_cost + 1
                         h = heuristic(board, child.boxes, child.player)
                         f = child.path_cost + h
                         if f > threshold:
                             frontier.put((f, child))
                             frontier_size += 1
-                            explored.add(hash(child))
+                            explored.add(hash((child.path_cost, child)))
                         else:
                             stack.pushLast(child)
-                            explored.add(hash(child))
+                            explored.add(hash((child.path_cost, child)))
                         current_size = stack.size + frontier_size
                         if current_size > max_frontier_size:
                                 max_frontier_size = current_size
