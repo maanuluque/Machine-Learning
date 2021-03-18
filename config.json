@@ -1,6 +1,0 @@
-{
-    "algorithm": "A*",
-    "heuristics": "mmlb",
-    "map": "Maps/map4.txt",
-    "iddfs_depth_limit": 10
-}
