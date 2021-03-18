@@ -20,7 +20,7 @@ class Board:
 
     def is_deadlock(self, boxes):
         for box in boxes:
-            if self.board[box.x-1][box.y] == constants.GOAL:
+            if self.board[box.x][box.y] == constants.GOAL:
                 return False
             if self.board[box.x-1][box.y] == constants.WALL and self.board[box.x][box.y-1] == constants.WALL:
                 return True
