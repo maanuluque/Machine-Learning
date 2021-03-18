@@ -1,5 +1,5 @@
 from Heuristics.minimumMatchingLowerBound import mmlb
-from Heuristics.simpleLowerBound import slb, slb_plus
+from Heuristics.simpleLowerBound import slb, slb_plus, slb_plus_plus
 from Informative.aStar import a_star
 from Informative.idaStar import ida_star
 from Informative.globalGreedy import globalGreedy
@@ -79,6 +79,8 @@ def main():
         heuristic = mmlb
     elif heuristic == "slb*":
         heuristic = slb_plus
+    elif heuristic == "slb**":
+        heuristic = slb_plus_plus
 
     if algorithm == "bfs":
         game_solution = bfs(game, initial_node)
