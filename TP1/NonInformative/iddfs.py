@@ -4,7 +4,7 @@ from Util.queue import Queue
 
 def iddfs(controller, node, limit):
     threshold = limit
-    explored = set()
+    explored = {}
     unexplored = Queue()
     stack = Queue()
     unexplored_nodes = True
@@ -14,7 +14,7 @@ def iddfs(controller, node, limit):
     current_depth = 0
     node.depth = current_depth
     stack.pushLast(node)
-    explored.add(hash(node))
+    explored[hash(node)] = node.depth
 
     # Space complexity
     max_stack_size = 1
@@ -25,22 +25,23 @@ def iddfs(controller, node, limit):
         while stack.size > 0:
             current_node = stack.popLast()
             current_depth = current_node.depth
+            if (controller.is_solution(current_node)):
+                leaves = stack.size
+                processing_time = time.time() - start_time
+                space_complexity = current_node.space_complexity() * max_stack_size
+                return Solution(expanded, leaves, current_node, True, cost, processing_time, space_complexity)
             if current_depth < threshold:
                 expanded += 1
                 children = controller.get_children(current_node)
                 if children:
                     current_depth += 1
                     for child in children:
-                        if hash(child) not in explored:
-                            child.depth = current_depth
+                        child.depth = current_depth
+                        hash_child = hash(child) 
+                        if hash_child not in explored or explored[hash_child] > child.depth:
                             child.parent = current_node
-                            if (controller.is_solution(child)):
-                                leaves = stack.size
-                                processing_time = time.time() - start_time
-                                space_complexity = node.space_complexity() * max_stack_size
-                                return Solution(expanded, leaves, child, True, cost, processing_time, space_complexity)
                             stack.pushLast(child)
-                            explored.add(hash(child))
+                            explored[hash(child)] = child.depth
                     if stack.size > max_stack_size:
                         max_stack_size = stack.size
                 else:
