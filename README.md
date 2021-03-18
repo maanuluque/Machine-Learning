@@ -3,14 +3,14 @@
 
 ## Instalación
 
-## En Linux/Mac
+### En Linux/Mac
 Nuestro repositorio cuenta con un archivo `install.sh` que al ejecutarlo descarga los paquetes necesarios.
 Para ejecutarlo, abra la terminal en la carpeta del proyecto y utilice el siguiente comando:
 `./install.sh`
 
 Nota: el sistema le solicitará la contraseña de administrador para instalar los paquetes.
 
-# En Windows
+### En Windows
 Descargue python desde el [sitio oficial de python](https://www.python.org/downloads/). 
 El gestor de paquetes PIP se incluirá en la misma descarga. Para corroborarlo, ejecute en la terminal el siguiente comando: 
 `pip --version`
@@ -19,11 +19,11 @@ Finalmente, instale el paquete munkres mediante el comando:
 `pip install munkres`
 
 
-## Ejecución
+### Ejecución
 Para ejecutar el programa, simplemente se debe correr en la terminal el archivo main.py:
 `python3 main.py`
 
-## Configuración
+### Configuración
 El programa cuenta con varios parámetros que pueden ser seteados por el usuario. Ese proceso se realiza editando el archivo `config.json`
 En el mismo, se cuenta con los siguientes valores:
 - algorithm
