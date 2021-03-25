@@ -13,21 +13,30 @@ class Character(ABC):
     def set_performance(self, attack, defense):
         pass
 
+    def set_modifiers(self, height):
+        atm = 0.7 - math.pow((3 * height - 5), 4) + math.pow((3 * height - 5), 2) + (height / 4)
+        dfm = 1.9 + math.pow((2.5 * height - 4.16), 4) - math.pow((2.5 * height - 4.16), 2) - (3 * height / 10)
+        return atm, dfm
+
+    def set_attack(self, items, attack_modifier):
+        attack = (items.stats["p_agility"] + items.stats["p_expertise"]) * items.stats[
+            "p_strength"] * attack_modifier
+        return attack
+
+    def set_defense(self, items, defense_modifier):
+        defense = (items.stats["p_resistance"] + items.stats["p_expertise"]) * items.stats[
+            "p_health"] * defense_modifier
+        return defense
 
 class Warrior(Character):
     def __init__(self, items, height):
         print("I am a Warrior")
         self.items = items
         self.height = height
-        self.attack_modifier = 0.7 - math.pow((3 * self.height - 5), 4) + math.pow((3 * self.height - 5), 2) + (
-                self.height / 4)
-        self.defense_modifier = 1.9 + math.pow((2.5 * self.height - 4.16), 4) - math.pow((2.5 * self.height - 4.16), 2) - (
-                3 * self.height / 10)
+        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
 
-        self.attack = (self.items.stats["p_agility"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_strength"] * self.attack_modifier
-        self.defense = (self.items.stats["p_resistance"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_health"] * self.defense_modifier
+        self.attack = self.set_attack(items, self.attack_modifier)
+        self.defense = self.set_defense(items, self.defense_modifier)
         self.performance = self.set_performance(self.attack, self.defense)
 
     def set_performance(self, attack, defense):
@@ -39,10 +48,7 @@ class Archer(Character):
         print("I am an Archer")
         self.items = items
         self.height = height
-        self.attack_modifier = 0.7 - math.pow((3 * self.height - 5), 4) + math.pow((3 * self.height - 5), 2) + (
-                self.height / 4)
-        self.defense_modifier = 1.9 + math.pow((2.5 * self.height - 4.16), 4) - math.pow((2.5 * self.height - 4.16), 2) - (
-                3 * self.height / 10)
+        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
         self.attack = (self.items.stats["p_agility"] + self.items.stats["p_expertise"]) * self.items.stats[
             "p_strength"] * self.attack_modifier
         self.defense = (self.items.stats["p_resistance"] + self.items.stats["p_expertise"]) * self.items.stats[
@@ -58,10 +64,7 @@ class Defender(Character):
         print("I am a Defender")
         self.items = items
         self.height = height
-        self.attack_modifier = 0.7 - math.pow((3 * self.height - 5), 4) + math.pow((3 * self.height - 5), 2) + (
-                self.height / 4)
-        self.defense_modifier = 1.9 + math.pow((2.5 * self.height - 4.16), 4) - math.pow((2.5 * self.height - 4.16), 2) - (
-                3 * self.height / 10)
+        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
         self.attack = (self.items.stats["p_agility"] + self.items.stats["p_expertise"]) * self.items.stats[
             "p_strength"] * self.attack_modifier
         self.defense = (self.items.stats["p_resistance"] + self.items.stats["p_expertise"]) * self.items.stats[
@@ -77,10 +80,7 @@ class Infiltrate(Character):
         print("I am an Infiltrate")
         self.items = items
         self.height = height
-        self.attack_modifier = 0.7 - math.pow((3 * self.height - 5), 4) + math.pow((3 * self.height - 5), 2) + (
-                self.height / 4)
-        self.defense_modifier = 1.9 + math.pow((2.5 * self.height - 4.16), 4) - math.pow((2.5 * self.height - 4.16), 2) - (
-                3 * self.height / 10)
+        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
         self.attack = (self.items.stats["p_agility"] + self.items.stats["p_expertise"]) * self.items.stats[
             "p_strength"] * self.attack_modifier
         self.defense = (self.items.stats["p_resistance"] + self.items.stats["p_expertise"]) * self.items.stats[

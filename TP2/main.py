@@ -4,11 +4,13 @@ from items import Items
 from item import Item
 
 #  Retrieve data for every type of item
+print("Retrieving data from file....", end = ' ')
 weapons_data = pd.read_csv('data/armas.tsv', sep="\t")
 boots_data = pd.read_csv('data/botas.tsv', sep="\t")
 helmets_data = pd.read_csv('data/cascos.tsv', sep="\t")
 gloves_data = pd.read_csv('data/guantes.tsv', sep="\t")
 chests_data = pd.read_csv('data/pecheras.tsv', sep="\t")
+print("Done.")
 
 # Set columns name
 weapons_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
@@ -47,15 +49,15 @@ chest = Item("chest", chests_data.id[0], chests_data.strength[0],
 
 items1 = Items(weapon, boots, helmet, gloves, chest)
 
-warrior = character.Warrior(items1, 1.80)
-print("Height: " + str(warrior.height))
+character = character.Defender(items1, 1.80)
+print("Height: " + str(character.height))
 
-print("Attack Modifier: " + str(warrior.attack_modifier))
-print("Defense Modifier: " + str(warrior.defense_modifier))
+print("Attack Modifier: " + str(character.attack_modifier))
+print("Defense Modifier: " + str(character.defense_modifier))
 
-print("Items stats: " + str(warrior.items.stats))
+print("Items stats: " + str(character.items.stats))
 
-print("Attack: " + str(warrior.attack))
-print("Defense: " + str(warrior.defense))
+print("Attack: " + str(character.attack))
+print("Defense: " + str(character.defense))
 
-print("Performance: " + str(warrior.performance))
+print("Performance: " + str(character.performance))
