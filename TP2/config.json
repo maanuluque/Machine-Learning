@@ -1,17 +1,41 @@
 {
     "player_class": "player_class",
-    "cross": "cross",
-    "mutation": "mutation",
-    "select_parent_a": "select_parent_a",
-    "select_parent_b": "select_parent_b",
-    "select_child_a": "select_child_a",
-    "select_child_b": "select_child_b",
-    "percent_a": "percent_a",
-    "percent_b": "percent_b",
-    "fill": "fill_all",
-    "cut": "cut",
-    "dataset": "dataset",
+    "dataset": "data",
     "population_size": 1000,
-    "children_size": 600,
-    "time_cut_limit": 10
+    "fill": "fill_all",
+    "cross": {
+        "method": "one_point",
+        "cross_children": 500,
+        "annular_length": 3,
+        "uniform_prob": 0.5
+    },
+    "mutation": {
+        "method": "gene",
+        "probability": 0.5
+    },
+    "select_parents": {
+        "method_1": "elite",
+        "method_2": "roulette",
+        "percent_1": 0.7,
+        "amount": 500,
+        "boltzmann_temp": 100,
+        "tournament_group": 50,
+        "tournament_threshold": 0.7
+    },
+    "select_children": {
+        "method_1": "universal",
+        "method_2": "ranking",
+        "percent_1": 0.4,
+        "amount": 600,
+        "boltzmann_temp": 100,
+        "tournament_group": 50,
+        "tournament_threshold": 0.7
+    },
+    "cut": {
+        "method": "time",
+        "time_limit": 10,
+        "acceptable_fitness": 90,
+        "structural_group": 300,
+        "generations_limit": 200
+    }
 }

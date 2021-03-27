@@ -14,7 +14,7 @@ def initial_population(config, items):
 def select_algorithms(config, population):
     # TODO initialize classes (like TimeCut)
     algs = Obj()
-    algs.cut = TimeCut(config.time_cut_limit)
+    algs.cut = TimeCut(config.cut.time_limit)
     algs.cross = Obj()
     algs.cross.crossover = lambda x: x
     algs.mutation = Obj()
@@ -32,49 +32,27 @@ def main():
 
     # Game config
     with open('config.json') as config_file:
-        data = json.load(config_file)
-
-    config = Obj()
-    config.player_class = data['player_class']
-    config.cross = data['cross']
-    config.mutation = data['mutation']
-    config.select_parent_a = data['select_parent_a']
-    config.select_parent_b = data['select_parent_b']
-    config.select_child_a = data['select_child_a']
-    config.select_child_b = data['select_child_b']
-    config.percent_a = data['percent_a']
-    config.percent_b = data['percent_b']
-    config.fill = data['fill']
-    config.cut = data['cut']
-    config.dataset = data['dataset'] # TODO parametrizar dataset, solo 1 path a carpeta o path a cada uno??
-    config.population_size = data['population_size']
-    config.children_size = data['children_size']
-    config.time_cut_limit = data['time_cut_limit']
+        config = json.load(config_file, object_hook=lambda d: Obj(**d))
 
     print('Configuration:')
-    print(f'cross: {config.cross}')
-    print(f'mutation: {config.mutation}')
-    print(f'select_parent_a: {config.select_parent_a}')
-    print(f'select_parent_b: {config.select_parent_b}')
-    print(f'select_child_a: {config.select_child_a}')
-    print(f'select_child_b: {config.select_child_b}')
-    print(f'percent_a: {config.percent_a}')
-    print(f'percent_b: {config.percent_b}')
-    print(f'fill: {config.fill}')
-    print(f'cut: {config.cut}')
-    print(f'dataset: {config.dataset}')
-    print(f'population_size: {config.population_size}')
-    print(f'children_size: {config.children_size}')
-    print(f'time_cut_limit: {config.time_cut_limit}')
+    print(f'Player class: {config.player_class}')
+    print(f'Dataset: {config.dataset}')
+    print(f'Population size: {config.population_size}')
+    print(f'Fill: {config.fill}')
+    print(f'Cross: {config.cross}')
+    print(f'Mutation: {config.mutation}')
+    print(f'Select parents: {config.select_parents}')
+    print(f'Select children: {config.select_children}')
+    print(f'Cut: {config.cut}')
 
     #  Retrieve data for every type of item
     items_db = Obj()
     print("Retrieving data from file....")
-    items_db.weapons_data = pd.read_csv('data/armas.tsv', sep="\t")
-    items_db.boots_data = pd.read_csv('data/botas.tsv', sep="\t")
-    items_db.helmets_data = pd.read_csv('data/cascos.tsv', sep="\t")
-    items_db.gloves_data = pd.read_csv('data/guantes.tsv', sep="\t")
-    items_db.chests_data = pd.read_csv('data/pecheras.tsv', sep="\t")
+    items_db.weapons_data = pd.read_csv(f'{config.dataset}/armas.tsv', sep="\t")
+    items_db.boots_data = pd.read_csv(f'{config.dataset}/botas.tsv', sep="\t")
+    items_db.helmets_data = pd.read_csv(f'{config.dataset}/cascos.tsv', sep="\t")
+    items_db.gloves_data = pd.read_csv(f'{config.dataset}/guantes.tsv', sep="\t")
+    items_db.chests_data = pd.read_csv(f'{config.dataset}/pecheras.tsv', sep="\t")
     print("Done.")
 
     # Set columns name
@@ -95,9 +73,7 @@ def main():
     algs = select_algorithms(config, population)
     
     # Start program
-    only_children = config.children_size >= config.population_size
-    new_generation = []
-    print('starting..')
+    print('Starting..')
     while (not algs.cut.cut()):
         selected_parents = algs.select_parents.select()
         children = algs.cross.crossover(selected_parents)
