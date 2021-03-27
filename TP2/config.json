@@ -1,0 +1,17 @@
+{
+    "player_class": "player_class",
+    "cross": "cross",
+    "mutation": "mutation",
+    "select_parent_a": "select_parent_a",
+    "select_parent_b": "select_parent_b",
+    "select_child_a": "select_child_a",
+    "select_child_b": "select_child_b",
+    "percent_a": "percent_a",
+    "percent_b": "percent_b",
+    "fill": "fill_all",
+    "cut": "cut",
+    "dataset": "dataset",
+    "population_size": 1000,
+    "children_size": 600,
+    "time_cut_limit": 10
+}
