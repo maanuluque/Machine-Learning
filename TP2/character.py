@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import math
-import items
 
 
 class Character(ABC):
@@ -28,9 +27,19 @@ class Character(ABC):
             "p_health"] * defense_modifier
         return defense
 
+    def print_character(self):
+        print("Type: " + str(self.type))
+        print("Height: " + str(self.height))
+        self.print_items()
+
+    def print_items(self):
+        for k, v in self.items.equipment.items():
+            print("Item: { " + v.print_item() + " }")
+
+
 class Warrior(Character):
     def __init__(self, items, height):
-        print("I am a Warrior")
+        self.type = "Warrior"
         self.items = items
         self.height = height
         self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
@@ -42,10 +51,12 @@ class Warrior(Character):
     def set_performance(self, attack, defense):
         return 0.6 * attack + 0.6 * defense
 
+    def create_child(self, items, height):
+        return Warrior(items, height)
 
 class Archer(Character):
     def __init__(self, items, height):
-        print("I am an Archer")
+        self.type = "Archer"
         self.items = items
         self.height = height
         self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
@@ -58,10 +69,13 @@ class Archer(Character):
     def set_performance(self, attack, defense):
         return 0.9 * attack + 0.1 * defense
 
+    def create_child(self, items, height):
+        return Archer(items, height)
+
 
 class Defender(Character):
     def __init__(self, items, height):
-        print("I am a Defender")
+        self.type = "Defender"
         self.items = items
         self.height = height
         self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
@@ -74,10 +88,13 @@ class Defender(Character):
     def set_performance(self, attack, defense):
         return 0.3 * attack + 0.8 * defense
 
+    def create_child(self, items, height):
+        return Defender(items, height)
+
 
 class Infiltrate(Character):
     def __init__(self, items, height):
-        print("I am an Infiltrate")
+        self.type = "Infiltrate"
         self.items = items
         self.height = height
         self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
@@ -89,3 +106,6 @@ class Infiltrate(Character):
 
     def set_performance(self, attack, defense):
         return 0.8 * attack + 0.3 * defense
+
+    def create_child(self, items, height):
+        return Infiltrate(items, height)
