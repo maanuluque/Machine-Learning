@@ -19,10 +19,12 @@ def select_algorithms(config, population):
     algs.cross.crossover = lambda x: x
     algs.mutation = Obj()
     algs.mutation.mutate = lambda x: x
+    algs.fill = Obj()
+    algs.fill.fill = lambda x: x
     algs.select_parents = Obj()
-    algs.select_parents.select = lambda x: x
+    algs.select_parents.select = lambda : [1, 2, 5, 8]
     algs.select_children = Obj()
-    algs.select_children.select = lambda x: x[:4]
+    algs.select_children.select = lambda : [1, 2, 5, 8]
 
     return algs
 
@@ -61,6 +63,9 @@ def main():
     print(config.fill)
     print(config.cut)
     print(config.dataset)
+    print(config.population_size)
+    print(config.children_size)
+    print(config.time_cut_limit)
 
     #  Retrieve data for every type of item
     items_db = Obj()
@@ -94,20 +99,12 @@ def main():
     new_generation = []
     print('starting..')
     while (not algs.cut.cut()):
-        selected_parents = algs.select_parents.select(population)
+        selected_parents = algs.select_parents.select()
         children = algs.cross.crossover(selected_parents)
         children = algs.mutation.mutate(children)
-
-        new_generation.clear()
-        if config.fill == 'fill_all': # Select from both parents and children 
-            population.append(children)
-        elif only_children: # Select only from children
-            population.clear()
-            population.extend(children)
-        else: # Select only from parents (children already included)
-            new_generation.extend(children)
-        new_generation.extend(algs.select_children.select(population))
-
+        new_generation = algs.fill.fill(children)
+        new_generation.extend(algs.select_children.select())
+    
         population.clear()
         population.extend(new_generation)
 
