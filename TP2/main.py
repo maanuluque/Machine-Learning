@@ -1,63 +1,117 @@
+import json
 import pandas as pd
 import character
+from types import SimpleNamespace as Obj
 from items import Items
 from item import Item
+from Cut.time_cut import TimeCut
 
-#  Retrieve data for every type of item
-print("Retrieving data from file....", end = ' ')
-weapons_data = pd.read_csv('data/armas.tsv', sep="\t")
-boots_data = pd.read_csv('data/botas.tsv', sep="\t")
-helmets_data = pd.read_csv('data/cascos.tsv', sep="\t")
-gloves_data = pd.read_csv('data/guantes.tsv', sep="\t")
-chests_data = pd.read_csv('data/pecheras.tsv', sep="\t")
-print("Done.")
+def initial_population(config, items):
+    # TODO return array with initial random population
+    # Initial heights must be uniformly dist [1.3 , 2.0] meters
+    return [1, 2, 5, 8]
 
-# Set columns name
-weapons_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
-boots_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
-helmets_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
-gloves_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
-chests_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
+def select_algorithms(config, population):
+    # TODO initialize classes (like TimeCut)
+    algs = Obj()
+    algs.cut = TimeCut(config.time_cut_limit)
+    algs.cross = Obj()
+    algs.cross.crossover = lambda x: x
+    algs.mutation = Obj()
+    algs.mutation.mutate = lambda x: x
+    algs.fill = Obj()
+    algs.fill.fill = lambda x: x
+    algs.select_parents = Obj()
+    algs.select_parents.select = lambda : [1, 2, 5, 8]
+    algs.select_children = Obj()
+    algs.select_children.select = lambda : [1, 2, 5, 8]
 
-# Size of each file
-weapons_size = len(weapons_data.id)
-boots_size = len(boots_data.id)
-helmets_size = len(helmets_data.id)
-gloves_size = len(gloves_data.id)
-chests_size = len(chests_data.id)
+    return algs
 
-# Testing Character methods
-weapon = Item("weapon", weapons_data.id[0], weapons_data.strength[0],
-              weapons_data.agility[0], weapons_data.expertise[0],
-              weapons_data.resistance[0], weapons_data.health[0])
+def main():
 
-boots = Item("boots", boots_data.id[0], boots_data.strength[0],
-             boots_data.agility[0], boots_data.expertise[0],
-             boots_data.resistance[0], boots_data.health[0])
+    # Game config
+    with open('config.json') as config_file:
+        data = json.load(config_file)
 
-helmet = Item("helmet", helmets_data.id[0], helmets_data.strength[0],
-              helmets_data.agility[0], helmets_data.expertise[0],
-              helmets_data.resistance[0], helmets_data.health[0])
+    config = Obj()
+    config.player_class = data['player_class']
+    config.cross = data['cross']
+    config.mutation = data['mutation']
+    config.select_parent_a = data['select_parent_a']
+    config.select_parent_b = data['select_parent_b']
+    config.select_child_a = data['select_child_a']
+    config.select_child_b = data['select_child_b']
+    config.percent_a = data['percent_a']
+    config.percent_b = data['percent_b']
+    config.fill = data['fill']
+    config.cut = data['cut']
+    config.dataset = data['dataset'] # TODO parametrizar dataset, solo 1 path a carpeta o path a cada uno??
+    config.population_size = data['population_size']
+    config.children_size = data['children_size']
+    config.time_cut_limit = data['time_cut_limit']
 
-gloves = Item("gloves", gloves_data.id[0], gloves_data.strength[0],
-              gloves_data.agility[0], gloves_data.expertise[0],
-              gloves_data.resistance[0], gloves_data.health[0])
+    print('Configuration:')
+    print(f'cross: {config.cross}')
+    print(f'mutation: {config.mutation}')
+    print(f'select_parent_a: {config.select_parent_a}')
+    print(f'select_parent_b: {config.select_parent_b}')
+    print(f'select_child_a: {config.select_child_a}')
+    print(f'select_child_b: {config.select_child_b}')
+    print(f'percent_a: {config.percent_a}')
+    print(f'percent_b: {config.percent_b}')
+    print(f'fill: {config.fill}')
+    print(f'cut: {config.cut}')
+    print(f'dataset: {config.dataset}')
+    print(f'population_size: {config.population_size}')
+    print(f'children_size: {config.children_size}')
+    print(f'time_cut_limit: {config.time_cut_limit}')
 
-chest = Item("chest", chests_data.id[0], chests_data.strength[0],
-             chests_data.agility[0], chests_data.expertise[0],
-             chests_data.resistance[0], chests_data.health[0])
+    #  Retrieve data for every type of item
+    items_db = Obj()
+    print("Retrieving data from file....")
+    items_db.weapons_data = pd.read_csv('data/armas.tsv', sep="\t")
+    items_db.boots_data = pd.read_csv('data/botas.tsv', sep="\t")
+    items_db.helmets_data = pd.read_csv('data/cascos.tsv', sep="\t")
+    items_db.gloves_data = pd.read_csv('data/guantes.tsv', sep="\t")
+    items_db.chests_data = pd.read_csv('data/pecheras.tsv', sep="\t")
+    print("Done.")
 
-items1 = Items(weapon, boots, helmet, gloves, chest)
+    # Set columns name
+    items_db.weapons_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
+    items_db.boots_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
+    items_db.helmets_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
+    items_db.gloves_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
+    items_db.chests_data.columns = ["id", "strength", "agility", "expertise", "resistance", "health"]
 
-character = character.Defender(items1, 1.80)
-print("Height: " + str(character.height))
+    # Size of each file
+    items_db.weapons_size = len(items_db.weapons_data.id)
+    items_db.boots_size = len(items_db.boots_data.id)
+    items_db.helmets_size = len(items_db.helmets_data.id)
+    items_db.gloves_size = len(items_db.gloves_data.id)
+    items_db.chests_size = len(items_db.chests_data.id)
 
-print("Attack Modifier: " + str(character.attack_modifier))
-print("Defense Modifier: " + str(character.defense_modifier))
+    population = initial_population(config, items_db)
+    algs = select_algorithms(config, population)
+    
+    # Start program
+    only_children = config.children_size >= config.population_size
+    new_generation = []
+    print('starting..')
+    while (not algs.cut.cut()):
+        selected_parents = algs.select_parents.select()
+        children = algs.cross.crossover(selected_parents)
+        children = algs.mutation.mutate(children)
+        new_generation = algs.fill.fill(children)
+        new_generation.extend(algs.select_children.select())
+    
+        population.clear()
+        population.extend(new_generation)
 
-print("Items stats: " + str(character.items.stats))
+        # TODO graph
 
-print("Attack: " + str(character.attack))
-print("Defense: " + str(character.defense))
+    print(f'Final population:')
+    print(population)
 
-print("Performance: " + str(character.performance))
+if __name__ == "__main__":
+    main()
