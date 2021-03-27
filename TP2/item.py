@@ -8,3 +8,6 @@ class Item:
         self.expertise = expertise
         self.resistance = resistance
         self.health = health
+
+    def print_item(self):
+        return "type: " + str(self.type) + ", id: " + str(self.id)
