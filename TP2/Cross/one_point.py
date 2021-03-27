@@ -1,10 +1,13 @@
 import random
+
+from Cross.crossover import Crossover
 from items import Items
 
 
-class OnePointCross:
+class OnePointCross(Crossover):
 
     def __init__(self, genome_size):
+        super().__init__()
         self.genome_size = genome_size
 
     def crossover(self, parent1, parent2):
@@ -36,3 +39,6 @@ class OnePointCross:
         child2 = parent1.create_child(
             Items(items2["weapon"], items2["boots"], items2["helmet"], items2["gloves"], items2["chest"]), height2)
         return child1, child2
+
+    def cross(self, parents):
+        pass

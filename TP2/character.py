@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import math
-import items
 
 
 class Character(ABC):
