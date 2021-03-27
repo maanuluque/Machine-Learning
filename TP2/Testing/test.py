@@ -1,6 +1,7 @@
 import pandas as pd
 import character
 from Cross.one_point import OnePointCross
+from Cross.two_point import TwoPointCross
 from items import Items
 from item import Item
 
@@ -79,7 +80,7 @@ character2 = character.Defender(items2, 1.90)
 character1.print_character()
 character2.print_character()
 
-cross = OnePointCross(6)
+cross = TwoPointCross(6)
 character3, character4 = cross.crossover(character1, character2)
 character3.print_character()
 character4.print_character()

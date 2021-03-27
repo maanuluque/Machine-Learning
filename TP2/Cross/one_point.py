@@ -9,7 +9,6 @@ class OnePointCross:
 
     def crossover(self, parent1, parent2):
         p = random.randint(0, self.genome_size)
-        print("P: " + str(p))
         parent_keys = list(parent1.items.equipment.keys())
 
         item_len = len(parent_keys)
