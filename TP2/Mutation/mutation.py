@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 
 class Mutation(ABC):
     @abstractmethod
-    def __init__(self, probability):
+    def __init__(self, children_size, probability):
+        self.children_size = children_size
         self.probability = probability
         pass
 
