@@ -1,5 +1,4 @@
 import random
-
 from Cross.crossover import Crossover
 from items import Items
 
@@ -7,8 +6,7 @@ from items import Items
 class OnePointCross(Crossover):
 
     def __init__(self, genome_size):
-        super().__init__()
-        self.genome_size = genome_size
+        super().__init__(genome_size)
 
     def crossover(self, parent1, parent2):
         p = random.randint(0, self.genome_size)

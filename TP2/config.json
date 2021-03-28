@@ -1,41 +1,42 @@
 {
     "player_class": "player_class",
     "dataset": "data",
-    "population_size": 1000,
+    "population_size": 10,
+    "genome_size": 10,
     "fill": "fill_all",
     "cross": {
-        "method": "one_point",
-        "cross_children": 500,
+        "method": "no_cross",
+        "cross_children": 10,
         "annular_length": 3,
         "uniform_prob": 0.5
     },
     "mutation": {
-        "method": "gene",
+        "method": "no_mutation",
         "probability": 0.5
     },
     "select_parents": {
-        "method_1": "elite",
-        "method_2": "roulette",
+        "method_1": "select_all",
+        "method_2": "select_all",
         "percent_1": 0.7,
-        "amount": 500,
+        "amount": 10,
         "boltzmann_temp": 100,
         "tournament_group": 50,
         "tournament_threshold": 0.7
     },
     "select_children": {
-        "method_1": "universal",
-        "method_2": "ranking",
+        "method_1": "select_all",
+        "method_2": "select_all",
         "percent_1": 0.4,
-        "amount": 600,
+        "amount": 10,
         "boltzmann_temp": 100,
         "tournament_group": 50,
         "tournament_threshold": 0.7
     },
     "cut": {
-        "method": "time",
-        "time_limit": 10,
+        "method": "generations_cut",
+        "time_limit": 3,
         "acceptable_fitness": 90,
         "structural_group": 300,
-        "generations_limit": 200
+        "generations_limit": 1000
     }
 }

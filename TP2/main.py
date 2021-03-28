@@ -5,26 +5,61 @@ from types import SimpleNamespace as Obj
 from items import Items
 from item import Item
 from Cut.time_cut import TimeCut
+from Cut.generations_cut import GenerationsCut
+from Fill.fill_all import FillAll
+from Mutation.no_mutation import NoMutation
+from Selection.double_selection import DoubleSelection
+from Selection.select_all import SelectAll
+from Cross.no_cross import NoCross
+
 
 def initial_population(config, items):
     # TODO return array with initial random population
     # Initial heights must be uniformly dist [1.3 , 2.0] meters
-    return [1, 2, 5, 8]
+    return [1, 2, 5, 8, 3, 0, 4, 7, 6, 9]
 
 def select_algorithms(config, population):
     # TODO initialize classes (like TimeCut)
     algs = Obj()
-    algs.cut = TimeCut(config.cut.time_limit)
-    algs.cross = Obj()
-    algs.cross.crossover = lambda x: x
-    algs.mutation = Obj()
-    algs.mutation.mutate = lambda x: x
-    algs.fill = Obj()
-    algs.fill.fill = lambda x: x
-    algs.select_parents = Obj()
-    algs.select_parents.select = lambda : [1, 2, 5, 8]
-    algs.select_children = Obj()
-    algs.select_children.select = lambda : [1, 2, 5, 8]
+    population_amount = config.population_size
+
+    # Cut
+    if config.cut.method == 'time_cut':
+        algs.cut = TimeCut(config.cut.time_limit)
+    elif config.cut.method == 'generations_cut':
+        algs.cut = GenerationsCut(config.cut.generations_limit)
+
+    # Cross
+    if config.cross.method == 'no_cross':
+        algs.crossover = NoCross(config.genome_size)
+
+    # Mutation
+    if config.mutation.method == 'no_mutation':
+        algs.mutation = NoMutation(config.mutation.probability)
+
+    # Select Parents
+    parents_amount = config.select_parents.amount
+    A1 = round(parents_amount*config.select_parents.percent_1)
+    A2 = parents_amount - A1
+    if config.select_parents.method_1 == 'select_all':
+        sp_1 = SelectAll(population_amount, A1)
+    if config.select_parents.method_2 == 'select_all':
+        sp_2 = SelectAll(population_amount, A2)
+    algs.select_parents = DoubleSelection(sp_1, sp_2)
+
+    # Select Children
+    children_amount = config.select_children.amount
+    B1 = round(children_amount*config.select_children.percent_1)
+    B2 = children_amount - B1
+    if config.select_children.method_1 == 'select_all':
+        sc_1 = SelectAll(population_amount, B1)
+    if config.select_children.method_2 == 'select_all':
+        sc_2 = SelectAll(population_amount, B1)
+    algs.select_children = DoubleSelection(sc_1, sc_2)
+
+    # Fill Implementation
+    if config.fill == 'fill_all':
+        algs.fill = FillAll(population_amount, children_amount)
 
     return algs
 
@@ -74,15 +109,14 @@ def main():
     
     # Start program
     print('Starting..')
-    while (not algs.cut.cut()):
-        selected_parents = algs.select_parents.select()
-        children = algs.cross.crossover(selected_parents)
+    while (not algs.cut.cut(population)):
+        selected_parents = algs.select_parents.select(population)
+        children = algs.crossover.cross(selected_parents)
         children = algs.mutation.mutate(children)
-        new_generation = algs.fill.fill(children)
-        new_generation.extend(algs.select_children.select())
+        population, new_generation = algs.fill.fill(population, children)
+        new_generation.extend(algs.select_children.select(population))
     
-        population.clear()
-        population.extend(new_generation)
+        population = new_generation
 
         # TODO graph
 
