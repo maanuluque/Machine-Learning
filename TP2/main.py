@@ -42,7 +42,20 @@ def initial_population(config, items_db):
     times = config.population_size
     max_h = config.max_height
     min_h = config.min_height
-    population = SortedListAdapter()
+    useSort = (config.select_parents.method_1 == 'elite' or
+               config.select_parents.method_2 == 'elite' or
+               config.select_parents.method_1 == 'ranking' or
+               config.select_parents.method_2 == 'ranking' or
+               config.select_children.method_1 == 'elite' or
+               config.select_children.method_2 == 'elite' or
+               config.select_children.method_1 == 'ranking' or
+               config.select_children.method_2 == 'ranking' or
+               config.cut.method == 'acceptable')
+
+    print(f'Sorted population list: {useSort}')
+    population = SortedListAdapter() if useSort else []
+    # population = SortedListAdapter()
+    # population = []
     if config.player_class == 'warrior':
         character_class = character.Warrior
     elif config.player_class == 'archer':
@@ -64,20 +77,18 @@ def initial_population(config, items_db):
     return population
 
 def select_algorithms(config, population):
-    # TODO initialize classes (like TimeCut)
     algs = Obj()
     pop_size = config.population_size
     parents_size = config.select_parents.amount
-    # Select even amount of parents
-    if (parents_size % 2) != 0:
-        parents_size -= 1
     children_size = parents_size
 
     # Cut
-    if config.cut.method == 'time_cut':
-        algs.cut = TimeCut(config.cut.time_limit)
+    if config.cut.method == 'acceptable_cut':
+        algs.cut = AcceptableCut(config.cut.acceptable_fitness)
     elif config.cut.method == 'generations_cut':
         algs.cut = GenerationsCut(config.cut.generations_limit)
+    else:
+        algs.cut = TimeCut(config.cut.time_limit)
 
     # Cross
     if config.cross.method == 'one_point':
@@ -175,7 +186,9 @@ def main():
     
     # Start program
     print('Starting...')
+    generations = 0
     while (not algs.cut.cut(population)):
+        generations += 1
         selected_parents = algs.select_parents.select(population)
         children = algs.crossover.cross(selected_parents)
         children = algs.mutation.mutate(children)
@@ -187,7 +200,9 @@ def main():
 
         # TODO graph
         
-    print(len(population))
+    print(f'Generations: {generations}')
+    print(f'Population:  {len(population)}')
+    population[0].print_character()
 
 if __name__ == "__main__":
     main()

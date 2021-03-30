@@ -6,6 +6,6 @@ class AcceptableCut(Cut):
     
     def cut(self, *args):
         population = args[0]
-        best_fitness = population[0] # TODO will population be List or PQ??
+        best_fitness = population[0]
         return best_fitness.performance >= self.acceptable_fitness
 

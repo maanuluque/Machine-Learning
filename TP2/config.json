@@ -1,7 +1,7 @@
 {
     "player_class": "warrior",
     "dataset": "data",
-    "population_size": 4,
+    "population_size": 1000,
     "max_height": 2.0,
     "min_height": 1.3,
     "genome_size": 10,
@@ -19,7 +19,7 @@
         "method_1": "select_all",
         "method_2": "select_all",
         "percent_1": 0.7,
-        "amount": 4,
+        "amount": 1000,
         "boltzmann_temp": 100,
         "tournament_group": 50,
         "tournament_threshold": 0.7
@@ -33,10 +33,10 @@
         "tournament_threshold": 0.7
     },
     "cut": {
-        "method": "generations_cut",
-        "time_limit": 3,
-        "acceptable_fitness": 90,
+        "method": "time_cut",
+        "time_limit": 10,
+        "acceptable_fitness": 18,
         "structural_group": 300,
-        "generations_limit": 1
+        "generations_limit": 1000
     }
 }
