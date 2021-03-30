@@ -28,13 +28,17 @@ class Character(ABC):
         return defense
 
     def print_character(self):
-        print("Type: " + str(self.type))
-        print("Height: " + str(self.height))
+        print(f"====> Fitness: {self.performance}")
+        print(f"Height: {self.height}")
         self.print_items()
+        print(f"Type: {self.type} <====")
 
     def print_items(self):
         for k, v in self.items.equipment.items():
             print("Item: { " + v.print_item() + " }")
+
+    def __lt__(self, other):
+        return self.performance.__lt__(other.performance)
 
 
 class Warrior(Character):

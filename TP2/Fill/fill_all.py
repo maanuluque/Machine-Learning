@@ -7,4 +7,4 @@ class FillAll(Fill):
     def fill(self, population, children):
         population.extend(children)
         new_generation = []
-        return population, new_generation
+        return new_generation

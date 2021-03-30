@@ -3,15 +3,14 @@ import json
 import pandas as pd
 import character
 from types import SimpleNamespace as Obj
+from sortedListAdapter import SortedListAdapter
 from items import Items
 from item import Item
-from Cut.time_cut import TimeCut
-from Cut.generations_cut import GenerationsCut
-from Fill.fill_all import FillAll
-from Mutation.no_mutation import NoMutation
-from Selection.double_selection import DoubleSelection
-from Selection.select_all import SelectAll
-from Cross.no_cross import NoCross
+from Cut import *
+from Cross import *
+from Mutation import *
+from Fill import *
+from Selection import *
 
 def randItems(items_db):
     weapon_id = random.randint(0, items_db.weapons_size)
@@ -43,7 +42,7 @@ def initial_population(config, items_db):
     times = config.population_size
     max_h = config.max_height
     min_h = config.min_height
-    population = []
+    population = SortedListAdapter()
     if config.player_class == 'warrior':
         character_class = character.Warrior
     elif config.player_class == 'archer':
@@ -81,7 +80,16 @@ def select_algorithms(config, population):
         algs.cut = GenerationsCut(config.cut.generations_limit)
 
     # Cross
-    if config.cross.method == 'no_cross':
+    if config.cross.method == 'one_point':
+        algs.crossover = OnePointCross(children_size, config.genome_size)
+    elif config.cross.method == 'two_point':
+        algs.crossover = TwoPointCross(children_size, config.genome_size)
+    elif config.cross.method == 'annular':
+        algs.crossover = Annular(children_size, config.genome_size)    
+    elif config.cross.method == 'uniform':
+        algs.crossover = Uniform(children_size, config.genome_size)
+    else:
+        print('Default to no-crossover')
         algs.crossover = NoCross(children_size, config.genome_size)
 
     # Mutation
@@ -171,12 +179,15 @@ def main():
         selected_parents = algs.select_parents.select(population)
         children = algs.crossover.cross(selected_parents)
         children = algs.mutation.mutate(children)
-        population, new_generation = algs.fill.fill(population, children)
+        new_generation = algs.fill.fill(population, children)
         new_generation.extend(algs.select_children.select(population))
     
-        population = new_generation
+        population.clear() 
+        population.extend(new_generation)
 
         # TODO graph
+        
+    print(len(population))
 
 if __name__ == "__main__":
     main()

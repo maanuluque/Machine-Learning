@@ -1,4 +1,3 @@
-from time import time
 from Cut.cut import Cut
 
 class GenerationsCut(Cut):
@@ -7,5 +6,5 @@ class GenerationsCut(Cut):
     
     def cut(self, *args):
         self.limit -= 1
-        return self.limit <= 0
+        return self.limit < 0
         
