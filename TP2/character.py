@@ -38,7 +38,7 @@ class Character(ABC):
             print("Item: { " + v.print_item() + " }")
 
     def __lt__(self, other):
-        return self.performance.__lt__(other.performance)
+        return other.performance.__lt__(self.performance)
 
 
 class Warrior(Character):
