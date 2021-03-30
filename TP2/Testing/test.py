@@ -1,7 +1,9 @@
 import pandas as pd
 import character
+from Cross.annular import Annular
 from Cross.one_point import OnePointCross
 from Cross.two_point import TwoPointCross
+from Cross.uniform import Uniform
 from items import Items
 from item import Item
 
@@ -80,10 +82,17 @@ character2 = character.Defender(items2, 1.90)
 character1.print_character()
 character2.print_character()
 
-cross = TwoPointCross(6)
-character3, character4 = cross.crossover(character1, character2)
+character3 = character.Defender(items2, 1.70)
+character4 = character.Defender(items1, 1.00)
+
 character3.print_character()
 character4.print_character()
+
+cross = Uniform(6, 0.5)
+children = cross.cross([character1, character2, character3, character4])
+print("\nchildren:\n")
+for character in children:
+    character.print_character()
 """
 print("Height: " + str(character.height))
 

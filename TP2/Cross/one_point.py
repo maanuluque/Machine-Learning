@@ -39,6 +39,3 @@ class OnePointCross(Crossover):
         child2 = parent1.create_child(
             Items(items2["weapon"], items2["boots"], items2["helmet"], items2["gloves"], items2["chest"]), height2)
         return child1, child2
-
-    def cross(self, parents):
-        pass
