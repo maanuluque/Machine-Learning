@@ -1,3 +1,4 @@
+import random
 import json
 import pandas as pd
 import character
@@ -5,26 +6,118 @@ from types import SimpleNamespace as Obj
 from items import Items
 from item import Item
 from Cut.time_cut import TimeCut
+from Cut.generations_cut import GenerationsCut
+from Fill.fill_all import FillAll
+from Mutation.no_mutation import NoMutation
+from Selection.double_selection import DoubleSelection
+from Selection.select_all import SelectAll
+from Cross.no_cross import NoCross
 
-def initial_population(config, items):
-    # TODO return array with initial random population
-    # Initial heights must be uniformly dist [1.3 , 2.0] meters
-    return [1, 2, 5, 8]
+def randItems(items_db):
+    weapon_id = random.randint(0, items_db.weapons_size)
+    weapon = Item("weapon", items_db.weapons_data.id[weapon_id], items_db.weapons_data.strength[weapon_id],
+              items_db.weapons_data.agility[weapon_id], items_db.weapons_data.expertise[weapon_id],
+              items_db.weapons_data.resistance[weapon_id], items_db.weapons_data.health[weapon_id])
+    boots_id = random.randint(0, items_db.boots_size)
+    boots = Item("boot", items_db.boots_data.id[boots_id], items_db.boots_data.strength[boots_id],
+              items_db.boots_data.agility[boots_id], items_db.boots_data.expertise[boots_id],
+              items_db.boots_data.resistance[boots_id], items_db.boots_data.health[boots_id])
+    helmet_id = random.randint(0, items_db.helmets_size)
+    helmet = Item("helmet", items_db.helmets_data.id[helmet_id], items_db.helmets_data.strength[helmet_id],
+              items_db.helmets_data.agility[helmet_id], items_db.helmets_data.expertise[helmet_id],
+              items_db.helmets_data.resistance[helmet_id], items_db.helmets_data.health[helmet_id])
+    gloves_id = random.randint(0, items_db.gloves_size)
+    gloves = Item("gloves", items_db.gloves_data.id[gloves_id], items_db.gloves_data.strength[gloves_id],
+              items_db.gloves_data.agility[gloves_id], items_db.gloves_data.expertise[gloves_id],
+              items_db.gloves_data.resistance[gloves_id], items_db.gloves_data.health[gloves_id])
+    chest_id = random.randint(0, items_db.chests_size)
+    chest = Item("chest", items_db.chests_data.id[chest_id], items_db.chests_data.strength[chest_id],
+              items_db.chests_data.agility[chest_id], items_db.chests_data.expertise[chest_id],
+              items_db.chests_data.resistance[chest_id], items_db.chests_data.health[chest_id])
+
+    items = Items(weapon, boots, helmet, gloves, chest)
+    return items
+
+
+def initial_population(config, items_db):
+    times = config.population_size
+    max_h = config.max_height
+    min_h = config.min_height
+    population = []
+    if config.player_class == 'warrior':
+        character_class = character.Warrior
+    elif config.player_class == 'archer':
+        character_class = character.Archer
+    elif config.player_class == 'defender':
+        character_class = character.Defender
+    elif config.player_class == 'infiltrate':
+        character_class = character.Infiltrate
+    else:
+        raise 'Invalid player class' from Exception
+
+    while times > 0:
+        items = randItems(items_db)
+        height = random.uniform(max_h, min_h) # TODO round decimals?
+        char = character_class(items, height)
+        population.append(char)
+        times -= 1
+
+    return population
 
 def select_algorithms(config, population):
     # TODO initialize classes (like TimeCut)
     algs = Obj()
-    algs.cut = TimeCut(config.time_cut_limit)
-    algs.cross = Obj()
-    algs.cross.crossover = lambda x: x
-    algs.mutation = Obj()
-    algs.mutation.mutate = lambda x: x
-    algs.fill = Obj()
-    algs.fill.fill = lambda x: x
-    algs.select_parents = Obj()
-    algs.select_parents.select = lambda : [1, 2, 5, 8]
-    algs.select_children = Obj()
-    algs.select_children.select = lambda : [1, 2, 5, 8]
+    pop_size = config.population_size
+    parents_size = config.select_parents.amount
+    # Select even amount of parents
+    if (parents_size % 2) != 0:
+        parents_size -= 1
+    children_size = parents_size
+
+    # Cut
+    if config.cut.method == 'time_cut':
+        algs.cut = TimeCut(config.cut.time_limit)
+    elif config.cut.method == 'generations_cut':
+        algs.cut = GenerationsCut(config.cut.generations_limit)
+
+    # Cross
+    if config.cross.method == 'no_cross':
+        algs.crossover = NoCross(children_size, config.genome_size)
+
+    # Mutation
+    if config.mutation.method == 'no_mutation':
+        algs.mutation = NoMutation(children_size, config.mutation.probability)
+
+    # Select Parents
+    A1 = round(parents_size*config.select_parents.percent_1)
+    A2 = parents_size - A1
+    if config.select_parents.method_1 == 'select_all':
+        sp_1 = SelectAll(pop_size, A1)
+    if config.select_parents.method_2 == 'select_all':
+        sp_2 = SelectAll(pop_size, A2)
+    algs.select_parents = DoubleSelection(sp_1, sp_2)
+
+    # Select Children
+    if config.fill == 'fill_all':
+        old_gen_size = pop_size + children_size
+        new_gen_size = pop_size
+    elif pop_size <= children_size:
+        old_gen_size = children_size
+        new_gen_size = pop_size
+    else:
+        old_gen_size = parents_size
+        new_gen_size = pop_size - children_size
+    B1 = round(new_gen_size*config.select_children.percent_1)
+    B2 = new_gen_size - B1
+    if config.select_children.method_1 == 'select_all':
+        sc_1 = SelectAll(old_gen_size, B1)
+    if config.select_children.method_2 == 'select_all':
+        sc_2 = SelectAll(old_gen_size, B2)
+    algs.select_children = DoubleSelection(sc_1, sc_2)
+
+    # Fill Implementation
+    if config.fill == 'fill_all':
+        algs.fill = FillAll(pop_size, children_size)
 
     return algs
 
@@ -32,49 +125,27 @@ def main():
 
     # Game config
     with open('config.json') as config_file:
-        data = json.load(config_file)
-
-    config = Obj()
-    config.player_class = data['player_class']
-    config.cross = data['cross']
-    config.mutation = data['mutation']
-    config.select_parent_a = data['select_parent_a']
-    config.select_parent_b = data['select_parent_b']
-    config.select_child_a = data['select_child_a']
-    config.select_child_b = data['select_child_b']
-    config.percent_a = data['percent_a']
-    config.percent_b = data['percent_b']
-    config.fill = data['fill']
-    config.cut = data['cut']
-    config.dataset = data['dataset'] # TODO parametrizar dataset, solo 1 path a carpeta o path a cada uno??
-    config.population_size = data['population_size']
-    config.children_size = data['children_size']
-    config.time_cut_limit = data['time_cut_limit']
+        config = json.load(config_file, object_hook=lambda d: Obj(**d))
 
     print('Configuration:')
-    print(f'cross: {config.cross}')
-    print(f'mutation: {config.mutation}')
-    print(f'select_parent_a: {config.select_parent_a}')
-    print(f'select_parent_b: {config.select_parent_b}')
-    print(f'select_child_a: {config.select_child_a}')
-    print(f'select_child_b: {config.select_child_b}')
-    print(f'percent_a: {config.percent_a}')
-    print(f'percent_b: {config.percent_b}')
-    print(f'fill: {config.fill}')
-    print(f'cut: {config.cut}')
-    print(f'dataset: {config.dataset}')
-    print(f'population_size: {config.population_size}')
-    print(f'children_size: {config.children_size}')
-    print(f'time_cut_limit: {config.time_cut_limit}')
+    print(f'Player class: {config.player_class}')
+    print(f'Dataset: {config.dataset}')
+    print(f'Population size: {config.population_size}')
+    print(f'Fill: {config.fill}')
+    print(f'Cross: {config.cross}')
+    print(f'Mutation: {config.mutation}')
+    print(f'Select parents: {config.select_parents}')
+    print(f'Select children: {config.select_children}')
+    print(f'Cut: {config.cut}')
 
     #  Retrieve data for every type of item
     items_db = Obj()
     print("Retrieving data from file....")
-    items_db.weapons_data = pd.read_csv('data/armas.tsv', sep="\t")
-    items_db.boots_data = pd.read_csv('data/botas.tsv', sep="\t")
-    items_db.helmets_data = pd.read_csv('data/cascos.tsv', sep="\t")
-    items_db.gloves_data = pd.read_csv('data/guantes.tsv', sep="\t")
-    items_db.chests_data = pd.read_csv('data/pecheras.tsv', sep="\t")
+    items_db.weapons_data = pd.read_csv(f'{config.dataset}/armas.tsv', sep="\t")
+    items_db.boots_data = pd.read_csv(f'{config.dataset}/botas.tsv', sep="\t")
+    items_db.helmets_data = pd.read_csv(f'{config.dataset}/cascos.tsv', sep="\t")
+    items_db.gloves_data = pd.read_csv(f'{config.dataset}/guantes.tsv', sep="\t")
+    items_db.chests_data = pd.read_csv(f'{config.dataset}/pecheras.tsv', sep="\t")
     print("Done.")
 
     # Set columns name
@@ -95,23 +166,17 @@ def main():
     algs = select_algorithms(config, population)
     
     # Start program
-    only_children = config.children_size >= config.population_size
-    new_generation = []
-    print('starting..')
-    while (not algs.cut.cut()):
-        selected_parents = algs.select_parents.select()
-        children = algs.cross.crossover(selected_parents)
+    print('Starting...')
+    while (not algs.cut.cut(population)):
+        selected_parents = algs.select_parents.select(population)
+        children = algs.crossover.cross(selected_parents)
         children = algs.mutation.mutate(children)
-        new_generation = algs.fill.fill(children)
-        new_generation.extend(algs.select_children.select())
+        population, new_generation = algs.fill.fill(population, children)
+        new_generation.extend(algs.select_children.select(population))
     
-        population.clear()
-        population.extend(new_generation)
+        population = new_generation
 
         # TODO graph
-
-    print(f'Final population:')
-    print(population)
 
 if __name__ == "__main__":
     main()

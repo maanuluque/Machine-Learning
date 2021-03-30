@@ -1,11 +1,11 @@
 from abc import abstractmethod, ABC
 import random
 
-
 class Crossover(ABC):
-
     @abstractmethod
-    def __init__(self):
+    def __init__(self, parents_size, genome_size):
+        self.parents_size = parents_size
+        self.genome_size = genome_size
         pass
 
     def cross(self, parents):
