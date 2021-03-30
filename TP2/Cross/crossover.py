@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABC
+import random
 
 class Crossover(ABC):
     @abstractmethod
@@ -7,6 +8,16 @@ class Crossover(ABC):
         self.genome_size = genome_size
         pass
 
-    @abstractmethod
     def cross(self, parents):
+        children = []
+        while len(parents) >= 2:
+            x = random.randint(0, len(parents) - 1)
+            parent1 = parents.pop(0)
+            x = random.randint(0, len(parents) - 1)
+            parent2 = parents.pop(0)
+            children.extend(self.crossover(parent1, parent2))
+        return children
+
+    @abstractmethod
+    def crossover(self, parent1, parent2):
         pass
