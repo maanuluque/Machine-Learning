@@ -89,7 +89,7 @@ character3.print_character()
 character4.print_character()
 
 cross = Uniform(6, 0.5)
-children = cross.cross([character1, character2, character3, character4])
+children = cross.cross([character1])
 print("\nchildren:\n")
 for character in children:
     character.print_character()

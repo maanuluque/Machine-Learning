@@ -7,7 +7,7 @@ from items import Items
 class Annular(Crossover):
 
     def __init__(self, genome_size, length):
-        super().__init__()
+        super().__init__(genome_size)
         self.genome_size = genome_size
         self.length = length
 
