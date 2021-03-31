@@ -140,10 +140,48 @@ def select_algorithms(config, population):
     # Select Parents
     A1 = round(parents_size * config.select_parents.percent_1)
     A2 = parents_size - A1
+    threshold = config.select_parents.tournament_threshold
+    tournament_group = config.select_parents.tournament_group
+    temperature = config.select_parents.boltzmann_temp
+
     if config.select_parents.method_1 == 'select_all':
         sp_1 = SelectAll(pop_size, A1)
+    elif config.select_parents.method_1 == 'roulette':
+        sp_1 = Roulette(pop_size, A1)
+    elif config.select_parents.method_1 == 'elite':
+        sp_1 = Elite(pop_size, A1)
+    elif config.select_parents.method_1 == 'universal':
+        sp_1 = Universal(pop_size, A1)
+    elif config.select_parents.method_1 == 'ranking':
+        sp_1 = Ranking(pop_size, A1)
+    elif config.select_parents.method_1 == 'd_tournament':
+        sp_1 = DeterministicTournament(pop_size, A1, tournament_group)
+    elif config.select_parents.method_1 == 'p_tournament':
+        sp_1 = ProbabilisticTournament(pop_size, A1, threshold)
+    elif config.select_parents.method_1 == 'boltzmann':
+        sp_1 = Boltzmann(pop_size, A1, temperature)
+    else:
+        raise Exception('Invalid selection method. ') from Exception
+
     if config.select_parents.method_2 == 'select_all':
         sp_2 = SelectAll(pop_size, A2)
+    elif config.select_parents.method_2 == 'roulette':
+        sp_2 = Roulette(pop_size, A2)
+    elif config.select_parents.method_2 == 'elite':
+        sp_2 = Elite(pop_size, A2)
+    elif config.select_parents.method_2 == 'universal':
+        sp_2 = Universal(pop_size, A2)
+    elif config.select_parents.method_2 == 'ranking':
+        sp_2 = Ranking(pop_size, A2)
+    elif config.select_parents.method_2 == 'd_tournament':
+        sp_2 = DeterministicTournament(pop_size, A2, tournament_group)
+    elif config.select_parents.method_2 == 'p_tournament':
+        sp_2 = ProbabilisticTournament(pop_size, A2, threshold)
+    elif config.select_parents.method_2 == 'boltzmann':
+        sp_2 = Boltzmann(pop_size, A2, temperature)
+    else:
+        raise Exception('Invalid selection method. ') from Exception
+
     algs.select_parents = DoubleSelection(sp_1, sp_2)
 
     # Select Children
@@ -158,10 +196,44 @@ def select_algorithms(config, population):
         new_gen_size = pop_size - children_size
     B1 = round(new_gen_size * config.select_children.percent_1)
     B2 = new_gen_size - B1
+    threshold_children = config.select_children.tournament_threshold
+    tournament_group_children = config.select_children.tournament_group
+    temperature_children = config.select_children.boltzmann_temp
+    
     if config.select_children.method_1 == 'select_all':
         sc_1 = SelectAll(old_gen_size, B1)
+    if config.select_children.method_1 == 'roulette':
+        sc_1 = Roulette(old_gen_size, B1)
+    if config.select_children.method_1 == 'elite':
+        sc_1 = Elite(old_gen_size, B1)
+    if config.select_children.method_1 == 'universal':
+        sc_1 = Universal(old_gen_size, B1)
+    if config.select_children.method_1 == 'ranking':
+        sc_1 = Ranking(old_gen_size, B1)
+    if config.select_children.method_1 == 'd_tournament':
+        sc_1 = DeterministicTournament(old_gen_size, B1, tournament_group_children)
+    if config.select_children.method_1 == 'p_tournament':
+        sc_1 = ProbabilisticTournament(old_gen_size, B1, threshold_children)
+    if config.select_children.method_1 == 'boltzmann':
+        sc_1 = Boltzmann(old_gen_size, B1, temperature_children)
+        
     if config.select_children.method_2 == 'select_all':
         sc_2 = SelectAll(old_gen_size, B2)
+    if config.select_children.method_1 == 'roulette':
+        sc_2 = Roulette(old_gen_size, B2)
+    if config.select_children.method_1 == 'elite':
+        sc_2 = Elite(old_gen_size, B2)
+    if config.select_children.method_1 == 'universal':
+        sc_2 = Universal(old_gen_size, B2)
+    if config.select_children.method_1 == 'ranking':
+        sc_2 = Ranking(old_gen_size, B2)
+    if config.select_children.method_1 == 'd_tournament':
+        sc_2 = DeterministicTournament(old_gen_size, B2, tournament_group_children)
+    if config.select_children.method_1 == 'p_tournament':
+        sc_2 = ProbabilisticTournament(old_gen_size, B2, threshold_children)
+    if config.select_children.method_1 == 'boltzmann':
+        sc_2 = Boltzmann(old_gen_size, B2, temperature_children)
+
     algs.select_children = DoubleSelection(sc_1, sc_2)
 
     # Fill Implementation
