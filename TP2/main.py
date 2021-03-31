@@ -65,7 +65,7 @@ def initial_population(config, items_db):
     elif config.player_class == 'infiltrate':
         character_class = character.Infiltrate
     else:
-        raise 'Invalid player class' from Exception
+        raise Exception('Invalid player class') from Exception
 
     while times > 0:
         items = randItems(items_db)
