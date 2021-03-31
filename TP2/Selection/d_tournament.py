@@ -2,7 +2,7 @@ from SIA.TP2.Selection.selection import Selection
 from SIA.TP2.sortedListAdapter import SortedListAdapter
 
 
-class deterministicTournament(Selection):
+class DeterministicTournament(Selection):
     def __init__(self, population_size, amount, tournament_group_size):
         super().__init__(population_size, amount)
         self.tournament_group_size = tournament_group_size

@@ -3,10 +3,10 @@ from SIA.TP2.sortedListAdapter import SortedListAdapter
 import random
 
 
-class deterministicTournament(Selection):
-    def __init__(self, population_size, amount, threeshold):
+class ProbabilisticTournament(Selection):
+    def __init__(self, population_size, amount, threshold):
         super().__init__(population_size, amount)
-        self.threeshold = threeshold
+        self.threshold = threshold
 
     def select(self, population):
         population_size = len(population)
@@ -21,10 +21,11 @@ class deterministicTournament(Selection):
                 break
             index += 2
             random_number = random.randint(0,1)
-            if random_number < self.threeshold:
+            if random_number < self.threshold:
                 selected_population.append(temporal_tournament.pop())
             else:
-                selected_population.append(temporal_tournament.pop(1))
+                if selected_population:
+                    selected_population.append(temporal_tournament.pop(0))
             temporal_tournament.clear()
 
         return selected_population
