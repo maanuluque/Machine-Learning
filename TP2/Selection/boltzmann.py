@@ -9,7 +9,6 @@ class Boltzmann(Selection):
         self.temperature = temperature
 
     def select(self, population):
-        k = self.amount
         population_size = len(population)
 
         accumulated_functions = 0
@@ -24,18 +23,21 @@ class Boltzmann(Selection):
         exp_values = {}
 
         for character in population:
-            exp_values[character.exp_value/average_function] = character
+            value = round(character.exp_value/average_function, 3)
+            exp_values[value] = character
 
-        sorted_exp_values = sorted(exp_values.keys())
-
-        random_numbers = {}
-        for x in range(k):
-            random_numbers[x] = random.randint(0, 1)
+        for key in exp_values.keys():
+            print(str(key), end=' ')
+        print()
 
         selected_population = []
-        for r_number in random_numbers:
-            for exp_val in sorted_exp_values:
-                if r_number > exp_val:
+
+        # TODO: Improve random float, or improve average function
+        # exp_values sometimes greater than 1 :(
+        for index in range(self.amount):
+            rand = round(random.random(), 3)
+            for exp_val in exp_values.keys():
+                if rand < exp_val:
                     selected_population.append(exp_values[exp_val])
                     break
 

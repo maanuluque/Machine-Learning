@@ -9,10 +9,9 @@ class Ranking(Selection):
         super().__init__(population_size, amount)
 
     def select(self, population):
-        k = self.amount
         population_size = len(population)
 
-        # Ranking: Population ordered. At the end --> most performance char
+        # Ranking: Population ordered. At the end --> most performance character
         ranking = SortedListAdapter()
         for x in range(population_size):
             ranking.append(population[x])
@@ -26,16 +25,11 @@ class Ranking(Selection):
             f = (population_size - (population_size - 1 - index)) / population_size
             acc_rank_performances[f] = ranking[index]
 
-
-        sorted_acc_rank_performance = sorted(acc_rank_performances.keys())
-        random_numbers = {}
-        for x in range(k):
-            random_numbers[x] = random.randint(0, 1)
-
         selected_population = []
-        for r_number in random_numbers:
-            for acc_rank_performance in sorted_acc_rank_performance:
-                if r_number > acc_rank_performance:
+        for index in range(self.amount):
+            rand = round(random.random(), 2)
+            for acc_rank_performance in acc_rank_performances.keys():
+                if rand < acc_rank_performance:
                     selected_population.append(acc_rank_performances[acc_rank_performance])
                     break
 

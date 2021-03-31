@@ -1,5 +1,6 @@
 from SIA.TP2.Selection.selection import Selection
 from SIA.TP2.sortedListAdapter import SortedListAdapter
+import random
 
 
 class DeterministicTournament(Selection):
@@ -16,13 +17,22 @@ class DeterministicTournament(Selection):
         index = 0
         selected_population = []
         temporal_tournament = SortedListAdapter()
-        while index < population_size:
-            for x in range(self.tournament_group_size):
-                if (index + x) < population_size:
-                    temporal_tournament.append(population[index + x])
-                break
-            index += self.tournament_group_size
+
+        # while index < population_size:
+        #     for x in range(self.tournament_group_size):
+        #         if (index + x) < population_size:
+        #             temporal_tournament.append(population[index + x])
+        #         break
+        #     index += self.tournament_group_size
+        #     selected_population.append(temporal_tournament.pop())
+        #     temporal_tournament.clear()
+
+        for index in range(self.amount):
+            for value in range(self.tournament_group_size):
+                rand = random.randint(0,population_size-1)
+                temporal_tournament.append(population[index])
             selected_population.append(temporal_tournament.pop())
             temporal_tournament.clear()
 
         return selected_population
+
