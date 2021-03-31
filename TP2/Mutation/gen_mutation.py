@@ -7,9 +7,9 @@ class GenMutation(Mutation):
         super().__init__(children_size, probability, min_h, max_h, items_db)
 
     def single_mutation(self, child):
-        gen = random.randint(1, 6)
+        gene = random.randint(1, 6)
         p = random.random()
         if p < self.probability:
             return child
-        return self.switch_genes(child, gen)
+        return self.mutate_gene(child, gene)
 
