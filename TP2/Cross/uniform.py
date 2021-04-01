@@ -6,9 +6,8 @@ from items import Items
 
 class Uniform(Crossover):
 
-    def __init__(self, genome_size, probability):
-        super().__init__(genome_size)
-        self.genome_size = genome_size
+    def __init__(self, parent_size, genome_size, probability):
+        super().__init__(parent_size, genome_size)
         self.probability = probability
 
     def crossover(self, parent1, parent2):
