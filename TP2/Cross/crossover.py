@@ -13,10 +13,13 @@ class Crossover(ABC):
         children = []
         parent_list = parents.copy()
         parent2 = None
-        while self.parent_size >= 2:
-            x = random.randint(0, self.parent_size - 1)
+        size = self.parent_size
+        while size >= 2:
+            x = random.randint(0, size - 1)
+            size = size - 1
             parent1 = parent_list.pop(x)
-            x = random.randint(0, self.parent_size - 1)
+            x = random.randint(0, size -1)
+            size = size - 1
             parent2 = parent_list.pop(x)
             children.extend(self.crossover(parent1, parent2))
         if len(parent_list) == 1:

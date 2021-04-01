@@ -83,13 +83,13 @@ character1.print_character()
 character2.print_character()
 
 character3 = character.Defender(items2, 1.70)
-character4 = character.Defender(items1, 1.00)
+character4 = character.Defender(items1, 1.30)
 
 character3.print_character()
 character4.print_character()
 
-cross = Uniform(6, 0.5)
-children = cross.cross([character1])
+cross = Uniform(2, 6, 0.5)
+children = cross.cross([character1, character2])
 print("\nchildren:\n")
 for character in children:
     character.print_character()
