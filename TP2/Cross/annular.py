@@ -6,14 +6,12 @@ from items import Items
 
 class Annular(Crossover):
 
-    def __init__(self, genome_size, length):
-        super().__init__(genome_size)
-        self.genome_size = genome_size
+    def __init__(self, parent_size, genome_size, length):
+        super().__init__(parent_size, genome_size)
         self.length = length
 
     def crossover(self, parent1, parent2):
         p = random.randint(0, self.genome_size)
-        print("P1: " + str(p))
 
         parent_keys = list(parent1.items.equipment.keys())
         item_len = len(parent_keys)
