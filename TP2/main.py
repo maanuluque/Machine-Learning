@@ -100,7 +100,7 @@ def select_algorithms(config, population):
     elif config.cross.method == 'annular':
         algs.crossover = Annular(children_size, config.genome_size)    
     elif config.cross.method == 'uniform':
-        algs.crossover = Uniform(children_size, config.genome_size)
+        algs.crossover = Uniform(children_size, config.genome_size, config.cross.uniform_prob)
     else:
         print('Default to no-crossover')
         algs.crossover = NoCross(children_size, config.genome_size)

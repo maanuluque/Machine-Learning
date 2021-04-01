@@ -1,5 +1,5 @@
-from SIA.TP2.Selection.selection import Selection
-from SIA.TP2.sortedListAdapter import SortedListAdapter
+from Selection.selection import Selection
+from sortedListAdapter import SortedListAdapter
 import random
 import math
 

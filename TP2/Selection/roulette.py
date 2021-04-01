@@ -1,4 +1,4 @@
-from SIA.TP2.Selection.selection import Selection
+from Selection.selection import Selection
 import random
 
 

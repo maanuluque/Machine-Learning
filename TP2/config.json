@@ -1,13 +1,13 @@
 {
     "player_class": "warrior",
     "dataset": "data",
-    "population_size": 100,
+    "population_size": 1000,
     "max_height": 2.0,
     "min_height": 1.3,
     "genome_size": 10,
     "fill": "fill_all",
     "cross": {
-        "method": "no_cross",
+        "method": "uniform",
         "annular_length": 3,
         "uniform_prob": 0.5
     },
@@ -16,18 +16,18 @@
         "probability": 0.5
     },
     "select_parents": {
-        "method_1": "select_all",
-        "method_2": "select_all",
+        "method_1": "elite",
+        "method_2": "ranking",
         "percent_1": 0.7,
-        "amount": 100,
+        "amount": 1000,
         "boltzmann_temp": 100,
         "tournament_group": 50,
         "tournament_threshold": 0.7
     },
     "select_children": {
-        "method_1": "select_all",
-        "method_2": "select_all",
-        "percent_1": 0.4,
+        "method_1": "elite",
+        "method_2": "ranking",
+        "percent_1": 0.3,
         "boltzmann_temp": 100,
         "tournament_group": 50,
         "tournament_threshold": 0.7
@@ -36,8 +36,8 @@
         "method": "structure_cut",
         "time_limit": 10,
         "acceptable_fitness": 18,
-        "structure_percent": 0.1,
+        "structure_percent": 0.6,
         "generations_limit": 100,
-        "fitness_decimals": 1
+        "fitness_decimals": 2
     }
 }
