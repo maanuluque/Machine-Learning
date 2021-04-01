@@ -32,7 +32,6 @@ class Mutation(ABC):
                 weapon = None
                 while weapon is None or weapon_id == weapon.id:
                     weapon = rand_weapon(self.items_db)
-                    weapon_id = weapon.id
                 items[0] = weapon
 
             elif gene == 2:
@@ -40,7 +39,6 @@ class Mutation(ABC):
                 boots = None
                 while boots is None or boots_id == boots.id:
                     boots = rand_boots(self.items_db)
-                    boots_id = boots.id
                 items[1] = boots
 
             elif gene == 3:
@@ -48,7 +46,6 @@ class Mutation(ABC):
                 helmet = None
                 while helmet is None or helmet_id == helmet.id:
                     helmet = rand_helmet(self.items_db)
-                    helmet_id = helmet.id
                 items[2] = helmet
 
             elif gene == 4:
@@ -56,7 +53,6 @@ class Mutation(ABC):
                 gloves = None
                 while gloves is None or gloves_id == gloves.id:
                     gloves = rand_gloves(self.items_db)
-                    gloves_id = gloves.id
                 items[3] = gloves
 
             elif gene == 5:
@@ -64,7 +60,6 @@ class Mutation(ABC):
                 chest = None
                 while chest is None or chest_id == chest.id:
                     chest = rand_chest(self.items_db)
-                    chest_id = chest.id
                 items[4] = chest
 
             elif gene == 6:
