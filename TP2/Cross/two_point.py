@@ -4,8 +4,8 @@ from items import Items
 
 
 class TwoPointCross(Crossover):
-    def __init__(self, genome_size):
-        super().__init__(genome_size)
+    def __init__(self, parent_size, genome_size):
+        super().__init__(parent_size, genome_size)
 
     def crossover(self, parent1, parent2):
         p1 = random.randint(0, self.genome_size)
@@ -14,7 +14,6 @@ class TwoPointCross(Crossover):
             aux = p1
             p1 = p2
             p2 = aux
-        print("P1: " + str(p1) + ", P2: " + str(p2))
         parent_keys = list(parent1.items.equipment.keys())
         item_len = len(parent_keys)
 
