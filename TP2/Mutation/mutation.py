@@ -1,3 +1,4 @@
+import random
 from abc import ABC, abstractmethod
 from items import Items
 from main import rand_helmet, rand_weapon, rand_boots, rand_gloves, rand_chest, rand_height
@@ -27,7 +28,10 @@ class Mutation(ABC):
                  child.items.equipment["gloves"], child.items.equipment["chest"]]
         child_height = child.height
         for gene in genes:
-            if gene == 1:
+            p = random.random()
+            if p < self.probability:
+                pass
+            elif gene == 1:
                 weapon_id = child.items.equipment["weapon"].id
                 weapon = None
                 while weapon is None or weapon_id == weapon.id:
@@ -67,4 +71,5 @@ class Mutation(ABC):
                 while height is None or height == child.height:
                     height = rand_height(self.min_h, self.max_h)
                 child_height = height
+
         return child.create_child(Items(items[0], items[1], items[2], items[3], items[4]), child_height)

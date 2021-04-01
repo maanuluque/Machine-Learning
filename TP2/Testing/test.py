@@ -1,6 +1,7 @@
 import pandas as pd
 import character
 from Mutation.gen_mutation import GenMutation
+from Mutation.limited_multigen_mutation import LimitedMultigenMutation
 from items import Items
 from item import Item
 from types import SimpleNamespace as Obj
@@ -40,7 +41,7 @@ character2 = character.Defender(items2, 1.90)
 character1.print_character()
 character2.print_character()
 
-mutation = GenMutation(2, 0.5, 1.30, 2.00, items_db)
+mutation = LimitedMultigenMutation(2, 0.5, 1.30, 2.00, items_db)
 children = mutation.mutate([character1, character2])
 print("\nchildren:\n")
 for character in children:
