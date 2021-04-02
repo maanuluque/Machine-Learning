@@ -12,18 +12,18 @@ class StructureCut(Cut):
         curr_pop = self.fitness_list(population)
         pop_kept = 0
         for i, prev in enumerate(self.prev_pop):
-            if round(abs(prev - curr_pop[i])) == 0:
+            curr = curr_pop[i]
+            diff = round(abs(prev - curr))
+            if diff == 0:
                 pop_kept += 1   
 
         if pop_kept >= self.amount:
             self.curr_generations += 1
-            print('+1 generations')
         else:
             self.curr_generations = 0
-            print('reset generations')
 
         bol = self.curr_generations >= self.generations
-        print(f'Cut: {bol}')
+        self.prev_pop = curr_pop
         return bol
                 
 
