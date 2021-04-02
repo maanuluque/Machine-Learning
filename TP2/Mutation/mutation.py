@@ -27,7 +27,6 @@ class Mutation(ABC):
                  child.items.equipment["gloves"], child.items.equipment["chest"]]
         child_height = child.height
         for gene in genes:
-            print(f'Gene: {gene}')
             if gene == 1:
                 weapon_id = child.items.equipment["weapon"].id
                 weapon = None

@@ -9,7 +9,6 @@ class CompleteMutation(Mutation):
 
     def single_mutation(self, child):
         p = random.random()
-        print(f'Prob: {p}')
         if p < self.probability:
             return child
         return self.mutate_gene(child, [*range(1, 7)])

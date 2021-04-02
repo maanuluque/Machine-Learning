@@ -9,7 +9,6 @@ class LimitedMultigenMutation(Mutation):
     def single_mutation(self, child):
         mutations_quantity = random.randint(1, 6)
         to_mutate = []
-        print(f'Mut quantity: {mutations_quantity}')
         while mutations_quantity > 0:
             mutate_gene = random.randint(1, 6)
             if mutate_gene not in to_mutate:
