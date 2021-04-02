@@ -1,9 +1,11 @@
 from Selection.selection import Selection
 import random
+import numpy as np
 
 class Roulette(Selection):
     def __init__(self, population_size, amount):
         super().__init__(population_size, amount)
+        self.acc_performances = np.zeros(population_size)
 
     def select(self, population):
         total_performance = 0
@@ -12,19 +14,18 @@ class Roulette(Selection):
             total_performance += character.performance
 
         accumulated_performance = 0
-        acc_performances = {}  # Key: acc_performance (should be unique), Value --> Character
-        for character in population:
+        performances_dict = {} # Key: acc_performance (should be unique), Value --> Character
+         
+        for idx, character in enumerate(population):
             accumulated_performance += (character.performance / total_performance)
-            character.accumulated_performance = accumulated_performance
-            acc_performances[round(accumulated_performance, 2)] = character
+            self.acc_performances[idx] = accumulated_performance
+            performances_dict[accumulated_performance] = character
+        self.acc_performances = np.sort(self.acc_performances)
 
         selected_population = []
-
-        for index in range(self.amount):
-            rand = round(random.random(), 2)
-            for acc_performance in acc_performances.keys():
-                if rand < acc_performance:
-                    selected_population.append(acc_performances[acc_performance])
-                    break
+        for _ in range(self.amount):
+            rand = random.random()
+            winner = np.searchsorted(self.acc_performances, rand)
+            selected_population.append(performances_dict[self.acc_performances[winner]])
 
         return selected_population
