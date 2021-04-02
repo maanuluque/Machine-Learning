@@ -14,4 +14,8 @@ class LimitedMultigenMutation(Mutation):
             if mutate_gene not in to_mutate:
                 to_mutate.append(mutate_gene)
                 mutations_quantity = mutations_quantity - 1
+        for i in range(0, 5):
+            p = random.random()
+            if p < self.probability:
+                to_mutate.pop(i)
         return self.mutate_gene(child, to_mutate)
