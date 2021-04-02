@@ -2,6 +2,7 @@ import random
 import json
 import pandas as pd
 import character
+from time import time
 from types import SimpleNamespace as Obj
 from sortedListAdapter import SortedListAdapter
 from items import Items
@@ -28,7 +29,7 @@ def rand_height(max_h, min_h):
 
 
 def rand_weapon(items_db):
-    weapon_id = random.randint(0, items_db.weapons_size)
+    weapon_id = random.randint(0, items_db.weapons_size - 1)
     weapon = Item("weapon", items_db.weapons_data.id[weapon_id], items_db.weapons_data.strength[weapon_id],
                   items_db.weapons_data.agility[weapon_id], items_db.weapons_data.expertise[weapon_id],
                   items_db.weapons_data.resistance[weapon_id], items_db.weapons_data.health[weapon_id])
@@ -36,7 +37,7 @@ def rand_weapon(items_db):
 
 
 def rand_boots(items_db):
-    boots_id = random.randint(0, items_db.boots_size)
+    boots_id = random.randint(0, items_db.boots_size - 1)
     boots = Item("boot", items_db.boots_data.id[boots_id], items_db.boots_data.strength[boots_id],
                  items_db.boots_data.agility[boots_id], items_db.boots_data.expertise[boots_id],
                  items_db.boots_data.resistance[boots_id], items_db.boots_data.health[boots_id])
@@ -44,7 +45,7 @@ def rand_boots(items_db):
 
 
 def rand_helmet(items_db):
-    helmet_id = random.randint(0, items_db.helmets_size)
+    helmet_id = random.randint(0, items_db.helmets_size - 1)
     helmet = Item("helmet", items_db.helmets_data.id[helmet_id], items_db.helmets_data.strength[helmet_id],
                   items_db.helmets_data.agility[helmet_id], items_db.helmets_data.expertise[helmet_id],
                   items_db.helmets_data.resistance[helmet_id], items_db.helmets_data.health[helmet_id])
@@ -52,7 +53,7 @@ def rand_helmet(items_db):
 
 
 def rand_gloves(items_db):
-    gloves_id = random.randint(0, items_db.gloves_size)
+    gloves_id = random.randint(0, items_db.gloves_size - 1)
     gloves = Item("gloves", items_db.gloves_data.id[gloves_id], items_db.gloves_data.strength[gloves_id],
                   items_db.gloves_data.agility[gloves_id], items_db.gloves_data.expertise[gloves_id],
                   items_db.gloves_data.resistance[gloves_id], items_db.gloves_data.health[gloves_id])
@@ -60,7 +61,7 @@ def rand_gloves(items_db):
 
 
 def rand_chest(items_db):
-    chest_id = random.randint(0, items_db.chests_size)
+    chest_id = random.randint(0, items_db.chests_size - 1)
     chest = Item("chest", items_db.chests_data.id[chest_id], items_db.chests_data.strength[chest_id],
                  items_db.chests_data.agility[chest_id], items_db.chests_data.expertise[chest_id],
                  items_db.chests_data.resistance[chest_id], items_db.chests_data.health[chest_id])
@@ -79,7 +80,8 @@ def initial_population(config, items_db):
                config.select_children.method_2 == 'elite' or
                config.select_children.method_1 == 'ranking' or
                config.select_children.method_2 == 'ranking' or
-               config.cut.method == 'acceptable')
+               config.cut.method == 'acceptable' or
+               config.cut.method == 'structure_cut')
 
     print(f'Sorted population list: {useSort}')
     population = SortedListAdapter() if useSort else []
@@ -111,6 +113,7 @@ def select_algorithms(config, population):
     pop_size = config.population_size
     parents_size = config.select_parents.amount
     children_size = parents_size
+    item_keys = list(population[0].items.equipment)
 
     # Cut
     if config.cut.method == 'acceptable_cut':
@@ -124,16 +127,16 @@ def select_algorithms(config, population):
 
     # Cross
     if config.cross.method == 'one_point':
-        algs.crossover = OnePointCross(children_size, config.genome_size)
+        algs.crossover = OnePointCross(children_size, config.genome_size, item_keys)
     elif config.cross.method == 'two_point':
-        algs.crossover = TwoPointCross(children_size, config.genome_size)
+        algs.crossover = TwoPointCross(children_size, config.genome_size, item_keys)
     elif config.cross.method == 'annular':
-        algs.crossover = Annular(children_size, config.genome_size)
+        algs.crossover = Annular(children_size, config.genome_size, item_keys)
     elif config.cross.method == 'uniform':
-        algs.crossover = Uniform(children_size, config.genome_size, config.cross.uniform_prob)
+        algs.crossover = Uniform(children_size, config.genome_size, item_keys, config.cross.uniform_prob)
     else:
         print('Default to no-crossover')
-        algs.crossover = NoCross(children_size, config.genome_size)
+        algs.crossover = NoCross(children_size, config.genome_size, item_keys)
 
     # Mutation
     if config.mutation.method == 'no_mutation':
@@ -245,6 +248,17 @@ def select_algorithms(config, population):
     return algs
 
 
+def print_pop(population):
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    for p in population:
+        p.print_character()
+
+def avg(l: list):
+    size = len(l)
+    total = sum(l)
+    return round(total/size, 6)
+
+
 def main():
     # Game config
     with open('config.json') as config_file:
@@ -285,27 +299,96 @@ def main():
     items_db.gloves_size = len(items_db.gloves_data.id)
     items_db.chests_size = len(items_db.chests_data.id)
 
+    print('Generating random initial population...')
     population = initial_population(config, items_db)
+    print('Done.')
+    print('Loading configuration...')
     algs = select_algorithms(config, population)
+    print('Done.')
 
     # Start program
-    print('Starting...')
+    print('Starting algorithm...')
     generations = 0
-    while (not algs.cut.cut(population)):
-        generations += 1
-        selected_parents = algs.select_parents.select(population)
-        children = algs.crossover.cross(selected_parents)
-        children = algs.mutation.mutate(children)
-        new_generation = algs.fill.fill(population, children)
-        new_generation.extend(algs.select_children.select(population))
+    fmt = '{:<10} {}'
+    cut_list = []
+    parents_list = []
+    cross_list = []
+    mutate_list = []
+    fill_list = []
+    children_list = []
+    newgen_list = []
+    print_on = False
+    while (True):
+        print_on and print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        # Cut
+        t = time()
+        finish = algs.cut.cut(population)
+        d = time() - t
+        cut_list.append(d)
+        print_on and print(fmt.format('Cut:', d))
+        if (finish):
+            break
 
+        # Select Parents
+        t = time()
+        selected_parents = algs.select_parents.select(population)
+        d = time() - t
+        parents_list.append(d)
+        print_on and print(fmt.format('Parents:', d))
+
+        # Crossover
+        t = time()
+        children = algs.crossover.cross(selected_parents)
+        d = time() - t
+        cross_list.append(d)
+        print_on and print(fmt.format('Crossover:', d))
+
+        # Mutation
+        t = time()
+        children = algs.mutation.mutate(children)
+        d = time() - t
+        mutate_list.append(d)
+        print_on and print(fmt.format('Mutation:', d))
+
+        # Fill
+        t = time()
+        new_generation = algs.fill.fill(population, children)
+        d = time() - t
+        fill_list.append(d)
+        print_on and print(fmt.format('Fill:', d))
+
+        # Select Children
+        t = time()
+        new_generation.extend(algs.select_children.select(population))
+        d = time() - t
+        children_list.append(d)
+        print_on and print(fmt.format('Children:', d))
+
+        # New Population
+        t = time()
         population.clear()
         population.extend(new_generation)
+        generations += 1
+        d = time() - t
+        newgen_list.append(d)
+        print_on and print(fmt.format('Newpop:', d))
+        
 
         # TODO graph
 
+    print(f'~ ~ ~ C O M P L E T E ~ ~ ~')
+    print('Time averages:')
+    print(fmt.format('Cut: ', avg(cut_list)))
+    print(fmt.format('Parents: ', avg(parents_list)))
+    print(fmt.format('Cross: ', avg(cross_list)))
+    print(fmt.format('Mutation: ', avg(mutate_list)))
+    print(fmt.format('fill: ', avg(fill_list)))
+    print(fmt.format('Children: ', avg(children_list)))
+    print(fmt.format('NewGen: ', avg(newgen_list)))
+    print()
     print(f'Generations: {generations}')
     print(f'Population:  {len(population)}')
+    print('Best character:')
     population[0].print_character()
 
 

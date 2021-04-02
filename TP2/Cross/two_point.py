@@ -4,8 +4,8 @@ from items import Items
 
 
 class TwoPointCross(Crossover):
-    def __init__(self, parent_size, genome_size):
-        super().__init__(parent_size, genome_size)
+    def __init__(self, parent_size, genome_size, item_keys):
+        super().__init__(parent_size, genome_size, item_keys)
 
     def crossover(self, parent1, parent2):
         p1 = random.randint(0, self.genome_size)

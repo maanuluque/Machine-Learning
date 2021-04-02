@@ -6,8 +6,8 @@ from items import Items
 
 class Annular(Crossover):
 
-    def __init__(self, parent_size, genome_size, length):
-        super().__init__(parent_size, genome_size)
+    def __init__(self, parent_size, genome_size, item_keys, length):
+        super().__init__(parent_size, genome_size, item_keys)
         self.length = length
 
     def crossover(self, parent1, parent2):
