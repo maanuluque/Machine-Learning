@@ -27,10 +27,7 @@ class Mutation(ABC):
                  child.items.equipment["gloves"], child.items.equipment["chest"]]
         child_height = child.height
         for gene in genes:
-            p = random.random()
-            if p < self.probability:
-                pass
-            elif gene == 1:
+            if gene == 1:
                 weapon_id = child.items.equipment["weapon"].id
                 weapon = None
                 while weapon is None or weapon_id == weapon.id:
