@@ -8,5 +8,8 @@ class GenMutation(Mutation):
 
     def single_mutation(self, child):
         gene = random.randint(1, 6)
+        p = random.random()
+        if p < self.probability:
+            return child
         return self.mutate_gene(child, [gene])
 
