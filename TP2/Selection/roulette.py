@@ -1,7 +1,6 @@
 from Selection.selection import Selection
 import random
 
-
 class Roulette(Selection):
     def __init__(self, population_size, amount):
         super().__init__(population_size, amount)

@@ -1,8 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 from items import Items
-from main import rand_helmet, rand_weapon, rand_boots, rand_gloves, rand_chest, rand_height
-
+from util import rand_helmet, rand_weapon, rand_boots, rand_gloves, rand_chest, rand_height
 
 class Mutation(ABC):
     @abstractmethod

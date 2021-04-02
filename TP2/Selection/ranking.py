@@ -1,8 +1,6 @@
 from Selection.selection import Selection
-from sortedListAdapter import SortedListAdapter
 import random
 import math
-
 
 class Ranking(Selection):
     def __init__(self, population_size, amount):
@@ -12,9 +10,10 @@ class Ranking(Selection):
         population_size = len(population)
 
         # Ranking: Population ordered. At the end --> most performance character
-        ranking = SortedListAdapter()
+        ranking = []
         for x in range(population_size):
             ranking.append(population[x])
+        ranking.sort()
 
         # Reverse iteration. Formula for Relative Rank Performance is:
         # F = [N - rank(i)] / N
