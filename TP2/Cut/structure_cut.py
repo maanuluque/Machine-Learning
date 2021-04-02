@@ -5,11 +5,13 @@ class StructureCut(Cut):
         self.amount = int(args[0])
         self.generations = int(args[1])
         self.prev_pop = self.fitness_list(args[2])
+        self.prev_pop.sort()
         self.decimals = int(args[3])
         self.curr_generations = 0
 
     def cut(self, population):
         curr_pop = self.fitness_list(population)
+        curr_pop.sort()
         pop_kept = 0
         for i, prev in enumerate(self.prev_pop):
             curr = curr_pop[i]
@@ -26,7 +28,6 @@ class StructureCut(Cut):
         self.prev_pop = curr_pop
         return bol
                 
-
     def fitness_list(self, population):
         l = []
         for char in population:

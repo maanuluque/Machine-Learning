@@ -5,15 +5,22 @@ class Elite(Selection):
         super().__init__(population_size, amount)
 
     def select(self, population):
-        population_size = len(population)
-        selected_population = []
-        sorted_population = []
+        if self.amount == self.population_size:
+            return population
 
-        for x in range(population_size):
-            sorted_population.append(population[x])
-        sorted_population.sort()
+        to_select = self.amount
+        selected = []
+        
+        while to_select >= self.population_size:
+            if (to_select == self.population_size):
+                return population
+            selected.extend(population)
+            to_select -= self.population_size
+        
+        if to_select > 0:
+            sorted_pop = population.copy()
+            sorted_pop.sort()
+            selected.extend(sorted_pop[:to_select])
 
-        for x in range(self.amount):
-            selected_population.append(sorted_population.pop(0))
-
-        return selected_population
+        return selected
+        

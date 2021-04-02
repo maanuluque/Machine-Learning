@@ -81,7 +81,7 @@ def initial_population(config, items_db):
 
     while times > 0:
         items = rand_items(items_db)
-        height = random.uniform(max_h, min_h)  # TODO round decimals?
+        height = rand_height(max_h, min_h)
         char = character_class(items, height)
         population.append(char)
         times -= 1

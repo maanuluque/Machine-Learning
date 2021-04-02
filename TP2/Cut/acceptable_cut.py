@@ -5,6 +5,5 @@ class AcceptableCut(Cut):
         self.acceptable_fitness = args[0]
     
     def cut(self, population):
-        best_fitness = population[0]
+        best_fitness = max(population)
         return best_fitness.performance >= self.acceptable_fitness
-
