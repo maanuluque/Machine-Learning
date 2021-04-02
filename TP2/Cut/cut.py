@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 class Cut(ABC):
     @abstractmethod
-    def __init__(self, limit):
+    def __init__(self, *args):
         pass
 
     @abstractmethod
-    def cut(self, *args):
+    def cut(self, population):
         pass

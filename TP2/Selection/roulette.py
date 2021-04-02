@@ -1,6 +1,5 @@
-from SIA.TP2.Selection.selection import Selection
+from Selection.selection import Selection
 import random
-
 
 class Roulette(Selection):
     def __init__(self, population_size, amount):

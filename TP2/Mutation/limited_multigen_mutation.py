@@ -1,5 +1,4 @@
 import random
-
 from Mutation.mutation import Mutation
 
 
