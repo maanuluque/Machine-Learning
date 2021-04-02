@@ -1,9 +1,11 @@
 from Selection.selection import Selection
 import random
+import numpy as np
 
 class Universal(Selection):
     def __init__(self, population_size, amount):
         super().__init__(population_size, amount)
+        self.acc_performances = np.zeros(population_size)
 
     def select(self, population):
         total_performance = 0
@@ -12,19 +14,19 @@ class Universal(Selection):
             total_performance += character.performance
 
         accumulated_performance = 0
-        acc_performances = {}  # Key: acc_performance (should be unique), Value --> Character
-        for character in population:
+        performances_dict = {} # Key: acc_performance (should be unique), Value --> Character
+         
+        for idx, character in enumerate(population):
             accumulated_performance += (character.performance / total_performance)
-            character.accumulated_performance = accumulated_performance
-            acc_performances[round(accumulated_performance, 3)] = character
+            self.acc_performances[idx] = accumulated_performance
+            performances_dict[accumulated_performance] = character
+        self.acc_performances = np.sort(self.acc_performances)
 
         selected_population = []
-
+        rand = random.random()
         for index in range(self.amount):
-            rand = round((round(random.random(), 2) + index) / self.amount, 3)
-            for acc_performance in acc_performances.keys():
-                if rand < acc_performance:
-                    selected_population.append(acc_performances[acc_performance])
-                    break
+            rj = (rand + index) / self.amount
+            winner = np.searchsorted(self.acc_performances, rj)
+            selected_population.append(performances_dict[self.acc_performances[winner]])
 
         return selected_population
