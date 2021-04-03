@@ -176,12 +176,12 @@ def select_algorithms(config, population):
     if config.fill == 'fill_all':
         old_gen_size = pop_size + children_size
         new_gen_size = pop_size
-    elif pop_size <= children_size:
+    elif children_size <= pop_size:
+        old_gen_size = pop_size
+        new_gen_size = pop_size - children_size
+    else:
         old_gen_size = children_size
         new_gen_size = pop_size
-    else:
-        old_gen_size = parents_size
-        new_gen_size = pop_size - children_size
     B1 = round(new_gen_size * config.select_children.percent_1)
     B2 = new_gen_size - B1
     threshold_children = config.select_children.tournament_threshold
@@ -229,6 +229,8 @@ def select_algorithms(config, population):
     # Fill Implementation
     if config.fill == 'fill_all':
         algs.fill = FillAll(pop_size, children_size)
+    else:
+        algs.fill = FillParent(pop_size, children_size)
 
     return algs
 

@@ -1,11 +1,11 @@
 {
     "player_class": "warrior",
     "dataset": "data",
-    "population_size": 50000,
+    "population_size": 1000,
     "max_height": 2.0,
     "min_height": 1.3,
     "genome_size": 6,
-    "fill": "fill_all",
+    "fill": "fill_parents",
     "cross": {
         "method": "uniform",
         "annular_length": 3,
@@ -19,7 +19,7 @@
         "method_1": "ranking",
         "method_2": "ranking",
         "percent_1": 0.7,
-        "amount": 50000,
+        "amount": 1000,
         "boltzmann_tc": 1,
         "boltzmann_t0": 20,
         "boltzmann_k": 0.1,

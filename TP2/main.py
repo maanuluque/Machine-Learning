@@ -62,6 +62,7 @@ def main():
     children_list = []
     newgen_list = []
     print_on = False
+    init = time()
     while (True):
         print_on and print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         # Cut
@@ -130,6 +131,7 @@ def main():
     print(fmt.format('Children: ', avg(children_list)))
     print(fmt.format('NewGen: ', avg(newgen_list)))
     print()
+    print(f'Execution Time: {round(time() - init, 3)}')
     print(f'Generations: {generations}')
     print(f'Population:  {len(population)}')
     print('Best character:')
