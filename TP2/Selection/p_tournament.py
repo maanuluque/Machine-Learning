@@ -7,35 +7,22 @@ class ProbabilisticTournament(Selection):
         self.threshold = threshold
 
     def select(self, population):
-        population_size = len(population)
+        population_size = self.population_size
 
         index = 0
         selected_population = []
         temporal_tournament = []
-        # while index < population_size:
-        #     for x in range(2):
-        #         if (index + x) < population_size:
-        #             temporal_tournament.append(population[index + x])
-        #         break
-        #     index += 2
-        #     random_number = random.randint(0,1)
-        #     if random_number < self.threshold:
-        #         selected_population.append(temporal_tournament.pop())
-        #     else:
-        #         if selected_population:
-        #             selected_population.append(temporal_tournament.pop(0))
-        #     temporal_tournament.clear()
 
         for index in range(self.amount):
             for x in range(2):
                 rand_character_index = random.randint(0, population_size-1)
                 temporal_tournament.append(population[rand_character_index])
             temporal_tournament.sort()
-            rand_r = round(random.random(), 2)
+            rand_r = random.random()
             if rand_r < self.threshold:
-                selected_population.append(temporal_tournament.pop())
-            else:
                 selected_population.append(temporal_tournament.pop(0))
+            else:
+                selected_population.append(temporal_tournament.pop())
             temporal_tournament.clear()
 
         return selected_population
