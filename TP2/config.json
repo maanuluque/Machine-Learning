@@ -16,8 +16,8 @@
         "probability": 0.5
     },
     "select_parents": {
-        "method_1": "roulette",
-        "method_2": "roulette",
+        "method_1": "ranking",
+        "method_2": "ranking",
         "percent_1": 0.7,
         "amount": 50000,
         "boltzmann_tc": 1,

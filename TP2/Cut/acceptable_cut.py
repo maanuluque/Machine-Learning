@@ -6,4 +6,4 @@ class AcceptableCut(Cut):
     
     def cut(self, population):
         best_fitness = max(population)
-        return best_fitness.performance >= self.acceptable_fitness
+        return best_fitness.get_performance() >= self.acceptable_fitness

@@ -12,6 +12,25 @@ class Character(ABC):
     def set_performance(self, attack, defense):
         pass
 
+    def get_performance(self):
+        if self.performance == None:
+            self.performance = self.set_performance(self.get_attack(), self.get_defense())
+        return self.performance
+
+    def get_attack(self):
+        if self.attack == None:
+            self.attack_modifier, self.defense_modifier = self.set_modifiers(self.height)
+            self.attack  = self.set_attack(self.items, self.attack_modifier)
+            self.defense = self.set_defense(self.items, self.defense_modifier)
+        return self.attack
+
+    def get_defense(self):
+        if self.defense == None:
+            self.attack_modifier, self.defense_modifier = self.set_modifiers(self.height)
+            self.attack  = self.set_attack(self.items, self.attack_modifier)
+            self.defense = self.set_defense(self.items, self.defense_modifier)
+        return self.defense    
+
     def set_modifiers(self, height):
         atm = 0.7 - math.pow((3 * height - 5), 4) + math.pow((3 * height - 5), 2) + (height / 4)
         dfm = 1.9 + math.pow((2.5 * height - 4.16), 4) - math.pow((2.5 * height - 4.16), 2) - (3 * height / 10)
@@ -38,7 +57,7 @@ class Character(ABC):
             print("Item: { " + v.print_item() + " }")
 
     def __lt__(self, other):
-        return other.performance.__lt__(self.performance)
+        return other.get_performance().__lt__(self.get_performance())
 
 
 class Warrior(Character):
@@ -46,11 +65,11 @@ class Warrior(Character):
         self.type = "Warrior"
         self.items = items
         self.height = height
-        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
+        self.attack_modifier, self.defense_modifier = None, None # super().set_modifiers(height)
 
-        self.attack = self.set_attack(items, self.attack_modifier)
-        self.defense = self.set_defense(items, self.defense_modifier)
-        self.performance = self.set_performance(self.attack, self.defense)
+        self.attack = None # self.set_attack(items, self.attack_modifier)
+        self.defense = None # self.set_defense(items, self.defense_modifier)
+        self.performance = None # self.set_performance(self.attack, self.defense)
 
     def set_performance(self, attack, defense):
         return 0.6 * attack + 0.6 * defense
@@ -63,12 +82,11 @@ class Archer(Character):
         self.type = "Archer"
         self.items = items
         self.height = height
-        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
-        self.attack = (self.items.stats["p_agility"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_strength"] * self.attack_modifier
-        self.defense = (self.items.stats["p_resistance"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_health"] * self.defense_modifier
-        self.performance = self.set_performance(self.attack, self.defense)
+        self.attack_modifier, self.defense_modifier = None, None # super().set_modifiers(height)
+
+        self.attack = None # self.set_attack(items, self.attack_modifier)
+        self.defense = None # self.set_defense(items, self.defense_modifier)
+        self.performance = None # self.set_performance(self.attack, self.defense)
 
     def set_performance(self, attack, defense):
         return 0.9 * attack + 0.1 * defense
@@ -82,12 +100,11 @@ class Defender(Character):
         self.type = "Defender"
         self.items = items
         self.height = height
-        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
-        self.attack = (self.items.stats["p_agility"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_strength"] * self.attack_modifier
-        self.defense = (self.items.stats["p_resistance"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_health"] * self.defense_modifier
-        self.performance = self.set_performance(self.attack, self.defense)
+        self.attack_modifier, self.defense_modifier = None, None # super().set_modifiers(height)
+
+        self.attack = None # self.set_attack(items, self.attack_modifier)
+        self.defense = None # self.set_defense(items, self.defense_modifier)
+        self.performance = None # self.set_performance(self.attack, self.defense)
 
     def set_performance(self, attack, defense):
         return 0.3 * attack + 0.8 * defense
@@ -101,12 +118,11 @@ class Infiltrate(Character):
         self.type = "Infiltrate"
         self.items = items
         self.height = height
-        self.attack_modifier, self.defense_modifier = super().set_modifiers(height)
-        self.attack = (self.items.stats["p_agility"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_strength"] * self.attack_modifier
-        self.defense = (self.items.stats["p_resistance"] + self.items.stats["p_expertise"]) * self.items.stats[
-            "p_health"] * self.defense_modifier
-        self.performance = self.set_performance(self.attack, self.defense)
+        self.attack_modifier, self.defense_modifier = None, None # super().set_modifiers(height)
+
+        self.attack = None # self.set_attack(items, self.attack_modifier)
+        self.defense = None # self.set_defense(items, self.defense_modifier)
+        self.performance = None # self.set_performance(self.attack, self.defense)
 
     def set_performance(self, attack, defense):
         return 0.8 * attack + 0.3 * defense

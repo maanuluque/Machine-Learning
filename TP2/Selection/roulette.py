@@ -11,13 +11,13 @@ class Roulette(Selection):
         total_performance = 0
         # TODO: Can be added when population is created
         for character in population:
-            total_performance += character.performance
+            total_performance += character.get_performance()
 
         accumulated_performance = 0
         performances_dict = {} # Key: acc_performance (should be unique), Value --> Character
          
         for idx, character in enumerate(population):
-            accumulated_performance += (character.performance / total_performance)
+            accumulated_performance += (character.get_performance() / total_performance)
             self.acc_performances[idx] = accumulated_performance
             performances_dict[accumulated_performance] = character
         self.acc_performances = np.sort(self.acc_performances)

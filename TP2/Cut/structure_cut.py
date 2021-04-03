@@ -31,5 +31,5 @@ class StructureCut(Cut):
     def fitness_list(self, population):
         l = []
         for char in population:
-            l.append(char.performance)
+            l.append(char.get_performance())
         return l
