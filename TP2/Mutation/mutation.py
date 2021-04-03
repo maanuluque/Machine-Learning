@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 from items import Items
-from util import rand_helmet, rand_weapon, rand_boots, rand_gloves, rand_chest, rand_height
+import util
 
 class Mutation(ABC):
     @abstractmethod
@@ -11,6 +11,8 @@ class Mutation(ABC):
         self.min_h = min_h
         self.max_h = max_h
         self.items_db = items_db
+        self.genes_idx = list(range(0, 6))
+        self.aux_idx = []
 
     def mutate(self, children):
         mutated = []
@@ -31,41 +33,41 @@ class Mutation(ABC):
                 weapon_id = child.items.equipment["weapon"].id
                 weapon = None
                 while weapon is None or weapon_id == weapon.id:
-                    weapon = rand_weapon(self.items_db)
+                    weapon = util.rand_weapon(self.items_db)
                 items[0] = weapon
 
             elif gene == 2:
                 boots_id = child.items.equipment["boots"].id
                 boots = None
                 while boots is None or boots_id == boots.id:
-                    boots = rand_boots(self.items_db)
+                    boots = util.rand_boots(self.items_db)
                 items[1] = boots
 
             elif gene == 3:
                 helmet_id = child.items.equipment["helmet"].id
                 helmet = None
                 while helmet is None or helmet_id == helmet.id:
-                    helmet = rand_helmet(self.items_db)
+                    helmet = util.rand_helmet(self.items_db)
                 items[2] = helmet
 
             elif gene == 4:
                 gloves_id = child.items.equipment["gloves"].id
                 gloves = None
                 while gloves is None or gloves_id == gloves.id:
-                    gloves = rand_gloves(self.items_db)
+                    gloves = util.rand_gloves(self.items_db)
                 items[3] = gloves
 
             elif gene == 5:
                 chest_id = child.items.equipment["chest"].id
                 chest = None
                 while chest is None or chest_id == chest.id:
-                    chest = rand_chest(self.items_db)
+                    chest = util.rand_chest(self.items_db)
                 items[4] = chest
 
             elif gene == 6:
                 height = None
                 while height is None or height == child.height:
-                    height = rand_height(self.min_h, self.max_h)
+                    height = util.rand_height(self.min_h, self.max_h)
                 child_height = height
 
         return child.create_child(Items(items[0], items[1], items[2], items[3], items[4]), child_height)

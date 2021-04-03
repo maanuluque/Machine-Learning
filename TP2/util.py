@@ -89,12 +89,14 @@ def initial_population(config, items_db):
     return population
 
 
-def select_algorithms(config, population):
+def select_algorithms(config, population, items_db):
     algs = Obj()
     pop_size = config.population_size
     parents_size = config.select_parents.amount
     children_size = parents_size
     item_keys = list(population[0].items.equipment)
+    min_h = config.min_height
+    max_h = config.max_height
 
     # Cut
     if config.cut.method == 'acceptable_cut':
@@ -114,7 +116,7 @@ def select_algorithms(config, population):
     elif config.cross.method == 'two_point':
         algs.crossover = TwoPointCross(children_size, config.genome_size, item_keys)
     elif config.cross.method == 'annular':
-        algs.crossover = Annular(children_size, config.genome_size, item_keys)
+        algs.crossover = Annular(children_size, config.genome_size, item_keys, config.cross.annular_length)
     elif config.cross.method == 'uniform':
         algs.crossover = Uniform(children_size, config.genome_size, item_keys, config.cross.uniform_prob)
     else:
@@ -124,6 +126,15 @@ def select_algorithms(config, population):
     # Mutation
     if config.mutation.method == 'no_mutation':
         algs.mutation = NoMutation(children_size, config.mutation.probability)
+    elif config.mutation.method == 'limited':
+        algs.mutation = LimitedMultigenMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+    elif config.mutation.method == 'uniform':
+        algs.mutation = UniformMultigenMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+    elif config.mutation.method == 'gen':
+        algs.mutation = GenMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+    elif config.mutation.method == 'complete':
+        algs.mutation = CompleteMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+
 
     # Select Parents
     A1 = round(parents_size * config.select_parents.percent_1)

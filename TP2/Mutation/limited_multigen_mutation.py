@@ -9,13 +9,20 @@ class LimitedMultigenMutation(Mutation):
     def single_mutation(self, child):
         mutations_quantity = random.randint(1, 6)
         to_mutate = []
+        size = 6
         while mutations_quantity > 0:
-            mutate_gene = random.randint(1, 6)
-            if mutate_gene not in to_mutate:
-                to_mutate.append(mutate_gene)
-                mutations_quantity = mutations_quantity - 1
-        for i in range(0, 5):
+            rand_idx = random.randint(0, size-1)
+            mutate_gene = self.genes_idx.pop(rand_idx)
+            self.aux_idx.append(mutate_gene)
+            size -= 1
+            to_mutate.append(mutate_gene)
+            mutations_quantity = mutations_quantity - 1
+        self.genes_idx.extend(self.aux_idx)
+        self.aux_idx = []
+
+        mutate = []
+        for gene in to_mutate:
             p = random.random()
-            if p < self.probability:
-                to_mutate.pop(i)
-        return self.mutate_gene(child, to_mutate)
+            if p >= self.probability:
+                mutate.append(gene)
+        return self.mutate_gene(child, mutate)

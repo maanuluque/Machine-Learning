@@ -12,12 +12,12 @@
         "uniform_prob": 0.5
     },
     "mutation": {
-        "method": "no_mutation",
+        "method": "limited",
         "probability": 0.5
     },
     "select_parents": {
-        "method_1": "ranking",
-        "method_2": "ranking",
+        "method_1": "elite",
+        "method_2": "boltzmann",
         "percent_1": 0.7,
         "amount": 10000,
         "boltzmann_tc": 1,
@@ -28,7 +28,7 @@
     },
     "select_children": {
         "method_1": "elite",
-        "method_2": "elite",
+        "method_2": "ranking",
         "percent_1": 0.3,
         "boltzmann_tc": 1,
         "boltzmann_t0": 20,
@@ -37,8 +37,8 @@
         "tournament_threshold": 0.7
     },
     "cut": {
-        "method": "content_cut",
-        "time_limit": 10,
+        "method": "time_cut",
+        "time_limit": 15,
         "acceptable_fitness": 18,
         "structure_percent": 0.8,
         "generations_limit": 50,

@@ -22,7 +22,7 @@ class Boltzmann(Selection):
         temp = self.tc + (self.t0 - self.tc)*math.exp(-self.k*self.x)
         self.x += 1
         for idx, character in enumerate(population):
-            function_result = math.exp(character.get_performance()/self.temperature)
+            function_result = math.exp(character.get_performance() / temp)
             self.acc_functions[idx] = function_result
             accumulated_functions += function_result
         average_function = accumulated_functions/population_size

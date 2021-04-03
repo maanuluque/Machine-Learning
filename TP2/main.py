@@ -47,7 +47,7 @@ def main():
     population = initial_population(config, items_db)
     print('Done.')
     print('Loading configuration...')
-    algs = select_algorithms(config, population)
+    algs = select_algorithms(config, population, items_db)
     print('Done.')
 
     # Start program
