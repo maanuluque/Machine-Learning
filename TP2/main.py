@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 from time import time
+
+from graph import plot_gen
 from util import *
 
 def main():
@@ -53,6 +55,10 @@ def main():
     # Start program
     print('Starting algorithm...')
     generations = 0
+    generations_list = []
+    avg_fitness = []
+    best_fitness = []
+    animation = None
     fmt = '{:<10} {}'
     cut_list = []
     parents_list = []
@@ -116,8 +122,11 @@ def main():
         d = time() - t
         newgen_list.append(d)
         print_on and print(fmt.format('Newpop:', d))
-        
 
+        generations_list.append(generations - 1)
+        best_fitness.append(population[0].performance)
+        avg_fitness.append(sum([i.performance for i in population]) / len(population))
+        animation = plot_gen(generations_list, avg_fitness, best_fitness)
         # TODO graph
 
     print(f'~ ~ ~ C O M P L E T E ~ ~ ~')
