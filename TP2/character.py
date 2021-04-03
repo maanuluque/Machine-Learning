@@ -47,7 +47,7 @@ class Character(ABC):
         return defense
 
     def print_character(self):
-        print(f"====> Fitness: {self.performance}")
+        print(f"====> Fitness: {self.get_performance()}")
         print(f"Height: {self.height}")
         self.print_items()
         print(f"Type: {self.type} <====")

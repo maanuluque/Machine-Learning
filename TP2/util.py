@@ -101,6 +101,8 @@ def select_algorithms(config, population):
         algs.cut = AcceptableCut(config.cut.acceptable_fitness)
     elif config.cut.method == 'generations_cut':
         algs.cut = GenerationsCut(config.cut.generations_limit)
+    elif config.cut.method == 'content_cut':
+        algs.cut = ContentCut(config.cut.generations_limit, config.cut.fitness_decimals)
     elif config.cut.method == 'structure_cut':
          algs.cut = StructureCut(round(pop_size*config.cut.structure_percent), config.cut.generations_limit, population, config.cut.fitness_decimals)
     else:

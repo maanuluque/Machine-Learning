@@ -52,7 +52,7 @@ def main():
 
     # Start program
     print('Starting algorithm...')
-    generations = 0
+    generations = 1
     fmt = '{:<10} {}'
     cut_list = []
     parents_list = []
@@ -135,7 +135,7 @@ def main():
     print(f'Generations: {generations}')
     print(f'Population:  {len(population)}')
     print('Best character:')
-    population[0].print_character()
+    min(population).print_character()
 
 
 if __name__ == "__main__":

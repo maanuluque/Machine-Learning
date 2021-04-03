@@ -21,7 +21,7 @@ class DeterministicTournament(Selection):
             for value in range(self.tournament_group_size):
                 rand = random.randint(0,population_size-1)
                 temporal_tournament.append(population[index])
-            selected_population.append(max(temporal_tournament))
+            selected_population.append(min(temporal_tournament))
             temporal_tournament.clear()
 
         return selected_population
