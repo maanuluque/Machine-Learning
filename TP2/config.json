@@ -16,11 +16,13 @@
         "probability": 0.5
     },
     "select_parents": {
-        "method_1": "elite",
-        "method_2": "elite",
+        "method_1": "roulette",
+        "method_2": "roulette",
         "percent_1": 0.7,
         "amount": 50000,
-        "boltzmann_temp": 100,
+        "boltzmann_tc": 1,
+        "boltzmann_t0": 20,
+        "boltzmann_k": 0.1,
         "tournament_group": 50,
         "tournament_threshold": 0.7
     },
@@ -28,7 +30,9 @@
         "method_1": "elite",
         "method_2": "elite",
         "percent_1": 0.3,
-        "boltzmann_temp": 100,
+        "boltzmann_tc": 1,
+        "boltzmann_t0": 20,
+        "boltzmann_k": 0.1,
         "tournament_group": 50,
         "tournament_threshold": 0.7
     },
