@@ -3,7 +3,7 @@ from Mutation.mutation import Mutation
 
 
 class UniformMultigenMutation(Mutation):
-    def __init__(self, children_size, probability, min_h, max_h, items_db):
+    def __init__(self, children_size, probability, min_h, max_h, height_decimals, items_db):
         super().__init__(children_size, probability, min_h, max_h, items_db)
         self.to_mutate = [*range(1, 7)]
 

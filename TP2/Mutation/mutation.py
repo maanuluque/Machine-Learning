@@ -5,7 +5,7 @@ import util
 
 class Mutation(ABC):
     @abstractmethod
-    def __init__(self, children_size, probability, min_h, max_h, items_db):
+    def __init__(self, children_size, probability, min_h, max_h, height_decimals, items_db):
         self.children_size = children_size
         self.probability = probability
         self.min_h = min_h
@@ -13,6 +13,7 @@ class Mutation(ABC):
         self.items_db = items_db
         self.genes_idx = list(range(0, 6))
         self.aux_idx = []
+        self.height_decimals = height_decimals
 
     def mutate(self, children):
         mutated = []
@@ -67,7 +68,7 @@ class Mutation(ABC):
             elif gene == 6:
                 height = None
                 while height is None or height == child.height:
-                    height = util.rand_height(self.min_h, self.max_h)
+                    height = round(util.rand_height(self.min_h, self.max_h), self.height_decimals)
                 child_height = height
 
         return child.create_child(Items(items[0], items[1], items[2], items[3], items[4]), child_height)

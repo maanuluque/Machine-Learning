@@ -81,7 +81,7 @@ def initial_population(config, items_db):
 
     while times > 0:
         items = rand_items(items_db)
-        height = rand_height(max_h, min_h)
+        height = round(rand_height(max_h, min_h), config.height_decimals)
         char = character_class(items, height)
         population.append(char)
         times -= 1
@@ -124,16 +124,17 @@ def select_algorithms(config, population, items_db):
         algs.crossover = NoCross(children_size, config.genome_size, item_keys)
 
     # Mutation
+    height_decimals = config.height_decimals
     if config.mutation.method == 'no_mutation':
         algs.mutation = NoMutation(children_size, config.mutation.probability)
     elif config.mutation.method == 'limited':
-        algs.mutation = LimitedMultigenMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+        algs.mutation = LimitedMultigenMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
     elif config.mutation.method == 'uniform':
-        algs.mutation = UniformMultigenMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+        algs.mutation = UniformMultigenMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
     elif config.mutation.method == 'gen':
-        algs.mutation = GenMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+        algs.mutation = GenMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
     elif config.mutation.method == 'complete':
-        algs.mutation = CompleteMutation(children_size, config.mutation.probability, min_h, max_h, items_db)
+        algs.mutation = CompleteMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
 
 
     # Select Parents
