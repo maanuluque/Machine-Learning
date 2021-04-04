@@ -59,6 +59,6 @@ print("Items stats: " + str(character.items.stats))
 print("Attack: " + str(character.attack))
 print("Defense: " + str(character.defense))
 
-print("Performance: " + str(character.performance))
+print("Performance: " + str(character.get_performance()))
 
 """

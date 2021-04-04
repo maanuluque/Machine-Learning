@@ -1,35 +1,41 @@
 from Selection.selection import Selection
 import random
 import math
+import numpy as np
 
 class Ranking(Selection):
     def __init__(self, population_size, amount):
         super().__init__(population_size, amount)
+        self.acc_rank_performances = np.zeros(population_size)
 
     def select(self, population):
-        population_size = len(population)
+        population_size = self.population_size
 
-        # Ranking: Population ordered. At the end --> most performance character
-        ranking = []
-        for x in range(population_size):
-            ranking.append(population[x])
+        # Ranking: Population ordered
+        ranking = population.copy()
         ranking.sort()
 
         # Reverse iteration. Formula for Relative Rank Performance is:
         # F = [N - rank(i)] / N
 
-        acc_rank_performances = {}
-        # Accumulated Rank Performance. Key: F, Value: Character
+        # Pseudo fitness
         for index in range(population_size):
-            f = (population_size - (population_size - 1 - index)) / population_size
-            acc_rank_performances[f] = ranking[index]
+            f = (population_size - (index+1)) / population_size
+            self.acc_rank_performances[index] = f      
+
+        total_fitness = sum(self.acc_rank_performances)
+        accumulated_performance = 0
+        performances_dict = {}
+        for idx, character in enumerate(population):
+            accumulated_performance += (self.acc_rank_performances[idx] / total_fitness)
+            self.acc_rank_performances[idx] = accumulated_performance
+            performances_dict[accumulated_performance] = character
+        self.acc_rank_performances = np.sort(self.acc_rank_performances)
 
         selected_population = []
-        for index in range(self.amount):
-            rand = round(random.random(), 2)
-            for acc_rank_performance in acc_rank_performances.keys():
-                if rand < acc_rank_performance:
-                    selected_population.append(acc_rank_performances[acc_rank_performance])
-                    break
+        for _ in range(self.amount):
+            rand = random.random()
+            winner = np.searchsorted(self.acc_rank_performances, rand)
+            selected_population.append(performances_dict[self.acc_rank_performances[winner]])
 
         return selected_population

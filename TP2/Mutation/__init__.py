@@ -1,1 +1,5 @@
 from Mutation.no_mutation import NoMutation
+from Mutation.limited_multigen_mutation import LimitedMultigenMutation
+from Mutation.uniform_multigen_mutation import UniformMultigenMutation
+from Mutation.gen_mutation import GenMutation
+from Mutation.complete_mutation import CompleteMutation

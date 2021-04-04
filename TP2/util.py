@@ -81,7 +81,7 @@ def initial_population(config, items_db):
 
     while times > 0:
         items = rand_items(items_db)
-        height = rand_height(max_h, min_h)
+        height = round(rand_height(max_h, min_h), config.height_decimals)
         char = character_class(items, height)
         population.append(char)
         times -= 1
@@ -89,18 +89,22 @@ def initial_population(config, items_db):
     return population
 
 
-def select_algorithms(config, population):
+def select_algorithms(config, population, items_db):
     algs = Obj()
     pop_size = config.population_size
     parents_size = config.select_parents.amount
     children_size = parents_size
     item_keys = list(population[0].items.equipment)
+    min_h = config.min_height
+    max_h = config.max_height
 
     # Cut
     if config.cut.method == 'acceptable_cut':
         algs.cut = AcceptableCut(config.cut.acceptable_fitness)
     elif config.cut.method == 'generations_cut':
         algs.cut = GenerationsCut(config.cut.generations_limit)
+    elif config.cut.method == 'content_cut':
+        algs.cut = ContentCut(config.cut.generations_limit, config.cut.fitness_decimals)
     elif config.cut.method == 'structure_cut':
          algs.cut = StructureCut(round(pop_size*config.cut.structure_percent), config.cut.generations_limit, population, config.cut.fitness_decimals)
     else:
@@ -112,7 +116,7 @@ def select_algorithms(config, population):
     elif config.cross.method == 'two_point':
         algs.crossover = TwoPointCross(children_size, config.genome_size, item_keys)
     elif config.cross.method == 'annular':
-        algs.crossover = Annular(children_size, config.genome_size, item_keys)
+        algs.crossover = Annular(children_size, config.genome_size, item_keys, config.cross.annular_length)
     elif config.cross.method == 'uniform':
         algs.crossover = Uniform(children_size, config.genome_size, item_keys, config.cross.uniform_prob)
     else:
@@ -120,15 +124,27 @@ def select_algorithms(config, population):
         algs.crossover = NoCross(children_size, config.genome_size, item_keys)
 
     # Mutation
+    height_decimals = config.height_decimals
     if config.mutation.method == 'no_mutation':
         algs.mutation = NoMutation(children_size, config.mutation.probability)
+    elif config.mutation.method == 'limited':
+        algs.mutation = LimitedMultigenMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
+    elif config.mutation.method == 'uniform':
+        algs.mutation = UniformMultigenMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
+    elif config.mutation.method == 'gen':
+        algs.mutation = GenMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
+    elif config.mutation.method == 'complete':
+        algs.mutation = CompleteMutation(children_size, config.mutation.probability, min_h, max_h, height_decimals, items_db)
+
 
     # Select Parents
     A1 = round(parents_size * config.select_parents.percent_1)
     A2 = parents_size - A1
     threshold = config.select_parents.tournament_threshold
     tournament_group = config.select_parents.tournament_group
-    temperature = config.select_parents.boltzmann_temp
+    tc = config.select_parents.boltzmann_tc
+    t0 = config.select_parents.boltzmann_t0
+    k = config.select_parents.boltzmann_k
 
     if config.select_parents.method_1 == 'select_all':
         sp_1 = SelectAll(pop_size, A1)
@@ -145,7 +161,7 @@ def select_algorithms(config, population):
     elif config.select_parents.method_1 == 'p_tournament':
         sp_1 = ProbabilisticTournament(pop_size, A1, threshold)
     elif config.select_parents.method_1 == 'boltzmann':
-        sp_1 = Boltzmann(pop_size, A1, temperature)
+        sp_1 = Boltzmann(pop_size, A1, tc, t0, k)
     else:
         raise Exception('Invalid selection method. ') from Exception
 
@@ -164,7 +180,7 @@ def select_algorithms(config, population):
     elif config.select_parents.method_2 == 'p_tournament':
         sp_2 = ProbabilisticTournament(pop_size, A2, threshold)
     elif config.select_parents.method_2 == 'boltzmann':
-        sp_2 = Boltzmann(pop_size, A2, temperature)
+        sp_2 = Boltzmann(pop_size, A2, tc, t0, k)
     else:
         raise Exception('Invalid selection method. ') from Exception
 
@@ -174,17 +190,19 @@ def select_algorithms(config, population):
     if config.fill == 'fill_all':
         old_gen_size = pop_size + children_size
         new_gen_size = pop_size
-    elif pop_size <= children_size:
+    elif children_size <= pop_size:
+        old_gen_size = pop_size
+        new_gen_size = pop_size - children_size
+    else:
         old_gen_size = children_size
         new_gen_size = pop_size
-    else:
-        old_gen_size = parents_size
-        new_gen_size = pop_size - children_size
     B1 = round(new_gen_size * config.select_children.percent_1)
     B2 = new_gen_size - B1
     threshold_children = config.select_children.tournament_threshold
     tournament_group_children = config.select_children.tournament_group
-    temperature_children = config.select_children.boltzmann_temp
+    tc = config.select_children.boltzmann_tc
+    t0 = config.select_children.boltzmann_t0
+    k = config.select_children.boltzmann_k
     
     if config.select_children.method_1 == 'select_all':
         sc_1 = SelectAll(old_gen_size, B1)
@@ -201,7 +219,7 @@ def select_algorithms(config, population):
     if config.select_children.method_1 == 'p_tournament':
         sc_1 = ProbabilisticTournament(old_gen_size, B1, threshold_children)
     if config.select_children.method_1 == 'boltzmann':
-        sc_1 = Boltzmann(old_gen_size, B1, temperature_children)
+        sc_1 = Boltzmann(old_gen_size, B1, tc, t0, k)
         
     if config.select_children.method_2 == 'select_all':
         sc_2 = SelectAll(old_gen_size, B2)
@@ -218,13 +236,15 @@ def select_algorithms(config, population):
     if config.select_children.method_1 == 'p_tournament':
         sc_2 = ProbabilisticTournament(old_gen_size, B2, threshold_children)
     if config.select_children.method_1 == 'boltzmann':
-        sc_2 = Boltzmann(old_gen_size, B2, temperature_children)
+        sc_2 = Boltzmann(old_gen_size, B2, tc, t0, k)
 
     algs.select_children = DoubleSelection(sc_1, sc_2)
 
     # Fill Implementation
     if config.fill == 'fill_all':
         algs.fill = FillAll(pop_size, children_size)
+    else:
+        algs.fill = FillParent(pop_size, children_size)
 
     return algs
 

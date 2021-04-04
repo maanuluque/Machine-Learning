@@ -55,12 +55,12 @@ def main():
     population = initial_population(config, items_db)
     print('Done.')
     print('Loading configuration...')
-    algs = select_algorithms(config, population)
+    algs = select_algorithms(config, population, items_db)
     print('Done.')
 
     # Start program
     print('Starting algorithm...')
-    generations = 0
+    generations = 1
 
     if config.live_graph:
         generations_list = multiprocessing.Queue()
@@ -68,6 +68,7 @@ def main():
         best_fitness = multiprocessing.Queue()
         process = multiprocessing.Process(target=plot_gen, args=(generations_list, best_fitness, avg_fitness))
         process.start()
+
 
     fmt = '{:<10} {}'
     cut_list = []
@@ -78,6 +79,7 @@ def main():
     children_list = []
     newgen_list = []
     print_on = False
+    init = time()
     while (True):
         print_on and print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         # Cut
@@ -134,7 +136,7 @@ def main():
         print_on and print(fmt.format('Newpop:', d))
 
         if config.live_graph:
-            generations_list.put(generations - 1)
+            generations_list.put(generations)
             best_fitness.put(population[0].performance)
             avg_fitness.put(sum([i.performance for i in population]) / config.population_size)
 
@@ -153,10 +155,11 @@ def main():
     print(fmt.format('Children: ', avg(children_list)))
     print(fmt.format('NewGen: ', avg(newgen_list)))
     print()
+    print(f'Execution Time: {round(time() - init, 3)}')
     print(f'Generations: {generations}')
     print(f'Population:  {len(population)}')
     print('Best character:')
-    population[0].print_character()
+    min(population).print_character()
 
 
 if __name__ == "__main__":
