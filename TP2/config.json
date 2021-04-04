@@ -45,5 +45,5 @@
         "generations_limit": 1000,
         "fitness_decimals": 4
     },
-    "live_graph": true
+    "live_graph": false
 }
