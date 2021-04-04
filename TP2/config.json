@@ -1,7 +1,7 @@
 {
     "player_class": "warrior",
     "dataset": "data",
-    "population_size": 50000,
+    "population_size": 500,
     "max_height": 2.0,
     "min_height": 1.3,
     "genome_size": 6,
@@ -19,7 +19,7 @@
         "method_1": "elite",
         "method_2": "elite",
         "percent_1": 0.7,
-        "amount": 50000,
+        "amount": 500,
         "boltzmann_temp": 100,
         "tournament_group": 50,
         "tournament_threshold": 0.7
@@ -39,5 +39,6 @@
         "structure_percent": 0.7,
         "generations_limit": 5,
         "fitness_decimals": 3
-    }
+    },
+    "live_graph": true
 }

@@ -1,9 +1,15 @@
 import json
+import multiprocessing
+
 import pandas as pd
-from time import time
+from time import time, sleep
 
 from graph import plot_gen
 from util import *
+
+import matplotlib; matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 def main():
     # Game config
@@ -55,10 +61,14 @@ def main():
     # Start program
     print('Starting algorithm...')
     generations = 0
-    generations_list = []
-    avg_fitness = []
-    best_fitness = []
-    animation = None
+
+    if config.live_graph:
+        generations_list = multiprocessing.Queue()
+        avg_fitness = multiprocessing.Queue()
+        best_fitness = multiprocessing.Queue()
+        process = multiprocessing.Process(target=plot_gen, args=(generations_list, best_fitness, avg_fitness))
+        process.start()
+
     fmt = '{:<10} {}'
     cut_list = []
     parents_list = []
@@ -123,12 +133,16 @@ def main():
         newgen_list.append(d)
         print_on and print(fmt.format('Newpop:', d))
 
-        generations_list.append(generations - 1)
-        best_fitness.append(population[0].performance)
-        avg_fitness.append(sum([i.performance for i in population]) / len(population))
-        animation = plot_gen(generations_list, avg_fitness, best_fitness)
-        # TODO graph
+        if config.live_graph:
+            generations_list.put(generations - 1)
+            best_fitness.put(population[0].performance)
+            avg_fitness.put(sum([i.performance for i in population]) / config.population_size)
 
+    if config.live_graph:
+        while not best_fitness.empty():
+            pass
+        sleep(5)
+        process.terminate()
     print(f'~ ~ ~ C O M P L E T E ~ ~ ~')
     print('Time averages:')
     print(fmt.format('Cut: ', avg(cut_list)))
