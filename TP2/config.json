@@ -44,5 +44,6 @@
         "structure_percent": 0.8,
         "generations_limit": 1000,
         "fitness_decimals": 4
-    }
+    },
+    "live_graph": false
 }
