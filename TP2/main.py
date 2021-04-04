@@ -4,6 +4,7 @@ import multiprocessing
 import pandas as pd
 from time import time, sleep
 
+from boxplot import plot_diversity, plot_last_diversity
 from graph import plot_gen
 from util import *
 
@@ -62,13 +63,28 @@ def main():
     print('Starting algorithm...')
     generations = 1
 
+    if config.last_diversity_graph:
+        last_diversity = multiprocessing.Queue()
+        process3 = multiprocessing.Process(target=plot_last_diversity, args=(last_diversity,))
+
+
     if config.live_graph:
         generations_list = multiprocessing.Queue()
         avg_fitness = multiprocessing.Queue()
         best_fitness = multiprocessing.Queue()
+
         process = multiprocessing.Process(target=plot_gen, args=(generations_list, best_fitness, avg_fitness))
         process.start()
 
+    if config.diversity_graph:
+        diversity_list = [[*map(map_performance, population)]]
+        init_population = multiprocessing.Queue()
+        nth_population = multiprocessing.Queue()
+        last_population = multiprocessing.Queue()
+        labels = multiprocessing.Queue()
+
+        process2 = multiprocessing.Process(target=plot_diversity, args=(init_population, nth_population, last_population, labels))
+        process2.start()
 
     fmt = '{:<10} {}'
     cut_list = []
@@ -135,6 +151,15 @@ def main():
         newgen_list.append(d)
         print_on and print(fmt.format('Newpop:', d))
 
+        if config.diversity_graph:
+            diversity_list.append([*map(map_performance, population)])
+            init_population.put(diversity_list[0])
+            last_population.put(diversity_list[-1])
+            mid = int(generations / 2)
+            nth_population.put(diversity_list[mid-1])
+
+            labels.put(("init", "mid", "last"))
+
         if config.live_graph:
             generations_list.put(generations)
             best_fitness.put(population[0].performance)
@@ -145,6 +170,16 @@ def main():
             pass
         sleep(5)
         process.terminate()
+    if config.diversity_graph:
+        while not init_population.empty():
+            pass
+        sleep(10)
+        process2.terminate()
+    if config.last_diversity_graph:
+        last_diversity.put([*map(map_performance, population)])
+        process3.start()
+        sleep(10)
+        process3.terminate()
     print(f'~ ~ ~ C O M P L E T E ~ ~ ~')
     print('Time averages:')
     print(fmt.format('Cut: ', avg(cut_list)))

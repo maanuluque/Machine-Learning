@@ -18,6 +18,10 @@ def rand_items(items_db):
     return items
 
 
+def map_performance(c):
+    return c.get_performance()
+
+
 def rand_height(max_h, min_h):
     return random.uniform(max_h, min_h)  # TODO round decimals?
 

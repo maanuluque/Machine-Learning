@@ -38,12 +38,14 @@
         "tournament_threshold": 0.7
     },
     "cut": {
-        "method": "generations_cut",
+        "method": "time_cut",
         "time_limit": 1,
         "acceptable_fitness": 19,
         "structure_percent": 0.8,
         "generations_limit": 1000,
         "fitness_decimals": 4
     },
-    "live_graph": false
+    "live_graph": false,
+    "diversity_graph": false,
+    "last_diversity_graph": true
 }
