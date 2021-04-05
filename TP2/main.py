@@ -6,6 +6,7 @@ from time import time, sleep
 
 from boxplot import plot_diversity, plot_last_diversity
 from graph import plot_gen
+from items_diversity_graph import plot_items_div
 from util import *
 
 import matplotlib; matplotlib.use("TkAgg")
@@ -61,7 +62,6 @@ def main():
 
     # Start program
     print('Starting algorithm...')
-    generations = 1
 
     if config.last_diversity_graph:
         last_diversity = multiprocessing.Queue()
@@ -86,6 +86,18 @@ def main():
         process2 = multiprocessing.Process(target=plot_diversity, args=(init_population, nth_population, last_population, labels))
         process2.start()
 
+    if config.items_div_graph:
+        shared_items_count = count_shared_items(population)
+        shared_items_q = multiprocessing.Queue()
+        generations_q = multiprocessing.Queue()
+
+        shared_items_q.put(shared_items_count)
+        generations_q.put(1)
+        process4 = multiprocessing.Process(target=plot_items_div, args=(shared_items_q, generations_q))
+        process4.start()
+
+
+    generations = 1
     fmt = '{:<10} {}'
     cut_list = []
     parents_list = []
@@ -165,10 +177,16 @@ def main():
             best_fitness.put(population[0].performance)
             avg_fitness.put(sum([i.performance for i in population]) / config.population_size)
 
+        if config.items_div_graph:
+            generations_q.put(generations)
+            shared_items_q.put(count_shared_items(population))
+
+    print(f'~ ~ ~ C O M P L E T E ~ ~ ~')
+
     if config.live_graph:
         while not best_fitness.empty():
             pass
-        sleep(5)
+        sleep(10)
         process.terminate()
     if config.diversity_graph:
         while not init_population.empty():
@@ -180,7 +198,12 @@ def main():
         process3.start()
         sleep(10)
         process3.terminate()
-    print(f'~ ~ ~ C O M P L E T E ~ ~ ~')
+    if config.items_div_graph:
+        while not shared_items_q.empty():
+            pass
+        sleep(10)
+        process4.terminate()
+    
     print('Time averages:')
     print(fmt.format('Cut: ', avg(cut_list)))
     print(fmt.format('Parents: ', avg(parents_list)))

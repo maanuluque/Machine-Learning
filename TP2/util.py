@@ -261,3 +261,45 @@ def avg(l: list):
     size = len(l)
     total = sum(l)
     return round(total/size, 6)
+
+def count_shared_items(population):
+    w_set  = set()
+    b_set  = set()
+    hm_set = set()
+    g_set  = set()
+    c_set  = set()
+    hg_set = set()
+    shared_items = 0
+    for char in population:
+        w_id  = char.items.equipment["weapon"].id 
+        b_id  = char.items.equipment["boots"].id 
+        hm_id = char.items.equipment["helmet"].id 
+        g_id  = char.items.equipment["gloves"].id 
+        c_id  = char.items.equipment["chest"].id 
+        hg_id = char.height
+        if w_id in w_set:
+            shared_items += 1
+        else:
+            w_set.add(w_id) 
+        if b_id in b_set:
+            shared_items += 1
+        else:
+            b_set.add(b_id) 
+        if hm_id in hm_set:
+            shared_items += 1
+        else:
+            hm_set.add(hm_id) 
+        if g_id in g_set:
+            shared_items += 1
+        else:
+            g_set.add(g_id) 
+        if c_id in c_set:
+            shared_items += 1
+        else:
+            c_set.add(c_id) 
+        if hg_id in hg_set:
+            shared_items += 1
+        else:
+            hg_set.add(hg_id) 
+   
+    return shared_items

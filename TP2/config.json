@@ -18,7 +18,7 @@
     },
     "select_parents": {
         "method_1": "elite",
-        "method_2": "boltzmann",
+        "method_2": "ranking",
         "percent_1": 0.7,
         "amount": 1000,
         "boltzmann_tc": 1,
@@ -39,13 +39,14 @@
     },
     "cut": {
         "method": "time_cut",
-        "time_limit": 1,
+        "time_limit": 20,
         "acceptable_fitness": 19,
-        "structure_percent": 0.8,
-        "generations_limit": 1000,
+        "structure_percent": 0.5,
+        "generations_limit": 5,
         "fitness_decimals": 4
     },
-    "live_graph": false,
-    "diversity_graph": false,
-    "last_diversity_graph": true
+    "live_graph": true,
+    "diversity_graph": true,
+    "last_diversity_graph": true,
+    "items_div_graph": true
 }

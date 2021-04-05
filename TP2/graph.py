@@ -11,18 +11,23 @@ def plot_gen(gen, best, avg):
 
     def animate(i):
         plt.cla()
-        x.append(gen.get())
-        y1.append(best.get())
-        y2.append(avg.get())
+        gen_size = gen.qsize()
+        best_size = best.qsize()
+        avg_size = avg.qsize()
+        min_size = min([gen_size, best_size, avg_size])
+        while min_size > 0:
+            x.append(gen.get())
+            y1.append(best.get())
+            y2.append(avg.get())
+            min_size -= 1
 
         plt.plot(x, y2, label='AVG')
         plt.plot(x, y1, label='Best')
-
         plt.legend(loc='upper left')
         plt.tight_layout()
-        plt.savefig('graph.png')
+        plt.savefig('fitness_graph.png')
 
-    ani = FuncAnimation(plt.gcf(), animate, interval=1000)
+    ani = FuncAnimation(plt.gcf(), animate)
 
     plt.tight_layout()
     plt.show()
