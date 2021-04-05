@@ -27,7 +27,7 @@ class Ranking(Selection):
         total_fitness = sum(self.acc_rank_performances)
         accumulated_performance = 0
         performances_dict = {}
-        for idx, character in enumerate(population):
+        for idx, character in enumerate(ranking):
             accumulated_performance += (self.acc_rank_performances[idx] / total_fitness)
             self.acc_rank_performances[idx] = accumulated_performance
             performances_dict[accumulated_performance] = character
