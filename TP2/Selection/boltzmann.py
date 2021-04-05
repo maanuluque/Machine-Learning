@@ -7,6 +7,7 @@ import numpy as np
 class Boltzmann(Selection):
     def __init__(self, population_size, amount, tc, t0, k):
         super().__init__(population_size, amount)
+        print(f'BOLTZMANN: {amount}')
         self.tc = tc
         self.t0 = t0
         self.k = k

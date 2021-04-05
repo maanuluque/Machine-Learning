@@ -5,7 +5,8 @@ class ProbabilisticTournament(Selection):
     def __init__(self, population_size, amount, threshold):
         super().__init__(population_size, amount)
         self.threshold = threshold
-
+        print(f'PTOUR: {amount}')
+        
     def select(self, population):
         population_size = self.population_size
 
