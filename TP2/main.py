@@ -174,7 +174,7 @@ def main():
 
         if config.live_graph:
             generations_list.put(generations)
-            best_fitness.put(population[0].performance)
+            best_fitness.put(min(population).performance)
             avg_fitness.put(sum([i.performance for i in population]) / config.population_size)
 
         if config.items_div_graph:
