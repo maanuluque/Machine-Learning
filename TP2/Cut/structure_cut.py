@@ -15,7 +15,7 @@ class StructureCut(Cut):
         pop_kept = 0
         for i, prev in enumerate(self.prev_pop):
             curr = curr_pop[i]
-            diff = round(abs(prev - curr))
+            diff = round(abs(prev - curr), self.decimals)
             if diff == 0:
                 pop_kept += 1   
 
