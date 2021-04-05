@@ -227,19 +227,19 @@ def select_algorithms(config, population, items_db):
         
     if config.select_children.method_2 == 'select_all':
         sc_2 = SelectAll(old_gen_size, B2)
-    if config.select_children.method_1 == 'roulette':
+    if config.select_children.method_2 == 'roulette':
         sc_2 = Roulette(old_gen_size, B2)
-    if config.select_children.method_1 == 'elite':
+    if config.select_children.method_2 == 'elite':
         sc_2 = Elite(old_gen_size, B2)
-    if config.select_children.method_1 == 'universal':
+    if config.select_children.method_2 == 'universal':
         sc_2 = Universal(old_gen_size, B2)
-    if config.select_children.method_1 == 'ranking':
+    if config.select_children.method_2 == 'ranking':
         sc_2 = Ranking(old_gen_size, B2)
-    if config.select_children.method_1 == 'd_tournament':
+    if config.select_children.method_2 == 'd_tournament':
         sc_2 = DeterministicTournament(old_gen_size, B2, tournament_group_children)
-    if config.select_children.method_1 == 'p_tournament':
+    if config.select_children.method_2 == 'p_tournament':
         sc_2 = ProbabilisticTournament(old_gen_size, B2, threshold_children)
-    if config.select_children.method_1 == 'boltzmann':
+    if config.select_children.method_2 == 'boltzmann':
         sc_2 = Boltzmann(old_gen_size, B2, tc, t0, k)
 
     algs.select_children = DoubleSelection(sc_1, sc_2)
