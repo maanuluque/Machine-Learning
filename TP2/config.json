@@ -30,7 +30,7 @@
     "select_children": {
         "method_1": "boltzmann",
         "method_2": "ranking",
-        "percent_1": 1,
+        "percent_1": 0.7,
         "boltzmann_tc": 1,
         "boltzmann_t0": 20,
         "boltzmann_k": 0.1,
