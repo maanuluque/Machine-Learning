@@ -7,7 +7,6 @@ class Ranking(Selection):
     def __init__(self, population_size, amount):
         super().__init__(population_size, amount)
         self.acc_rank_performances = np.zeros(population_size)
-        print(f'RANKING {amount}')
 
     def select(self, population):
         population_size = self.population_size

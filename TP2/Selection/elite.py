@@ -3,7 +3,6 @@ from Selection.selection import Selection
 class Elite(Selection):
     def __init__(self, population_size, amount):
         super().__init__(population_size, amount)
-        print(f'ELITE: {amount}')
 
     def select(self, population):
         if self.amount == self.population_size:

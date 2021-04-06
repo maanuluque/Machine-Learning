@@ -6,7 +6,6 @@ class DeterministicTournament(Selection):
     def __init__(self, population_size, amount, tournament_group_size):
         super().__init__(population_size, amount)
         self.tournament_group_size = tournament_group_size
-        print(f'DTOUR: {self.amount}')
 
     def select(self, population):
         population_size = self.population_size

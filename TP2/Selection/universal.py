@@ -6,7 +6,6 @@ class Universal(Selection):
     def __init__(self, population_size, amount):
         super().__init__(population_size, amount)
         self.acc_performances = np.zeros(population_size)
-        print(f'UNIVERSAL {amount}')
 
     def select(self, population):
         total_performance = 0
