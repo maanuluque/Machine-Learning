@@ -1,10 +1,9 @@
 from math import copysign
 
 class SimplePerceptron:
-    def __init__(self, weights, threshold, dimension, learning_rate):   
+    def __init__(self, weights, threshold, learning_rate):   
         self.weights = weights
         self.threshold = threshold
-        self.dimension = dimension
         self.learning_rate = learning_rate
 
     def predict(self, point):
@@ -35,4 +34,4 @@ class SimplePerceptron:
         nl = '\n'
         op = '{'
         cl = '}'
-        return f'{op}{nl} weights: {self.weights}{nl} threshold: {self.threshold}{nl} dimension: {self.dimension}{nl} rate: {self.learning_rate}{nl}{cl}'
+        return f'{op}{nl} weights: {self.weights}{nl} threshold: {self.threshold}{nl} rate: {self.learning_rate}{nl}{cl}'
