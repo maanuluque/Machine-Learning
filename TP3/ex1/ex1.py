@@ -1,3 +1,5 @@
+import sys
+sys.path.append(".")
 from simpleperceptron import SimplePerceptron
 
 w = [0, 0]
@@ -14,7 +16,7 @@ expected_list = [
     1,
 ]
 
-sp = SimplePerceptron(w1, 0, 2, 0.5)
+sp = SimplePerceptron(w, 0, 2, 0.5)
 print('Initial predictions:')
 print('Perceptron:')
 print(sp)
