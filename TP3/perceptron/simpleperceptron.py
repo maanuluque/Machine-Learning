@@ -10,8 +10,7 @@ class SimplePerceptron:
         h = 0
         for idx, coord in enumerate(point):
             h += coord*self.weights[idx]
-        o = copysign(1, (h - self.threshold))
-        return o
+        return copysign(1, (h - self.threshold))
     
     def train(self, point, expected):
         predicted = self.predict(point)
