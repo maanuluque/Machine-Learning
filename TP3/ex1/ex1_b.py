@@ -16,7 +16,7 @@ def ex1_b():
     ]
 
     print('LOGICAL XOR:')
-    sp = SimplePerceptron(w, 0, 0.1)
+    sp = SimplePerceptron(w, 0.1)
     print('Initial Perceptron:')
     print(sp)
     print('Initial predictions:')

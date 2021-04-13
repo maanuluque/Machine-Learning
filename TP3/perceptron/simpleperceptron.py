@@ -1,23 +1,22 @@
 from math import copysign
 
 class SimplePerceptron:
-    def __init__(self, weights, threshold, learning_rate):   
+    def __init__(self, weights, learning_rate):   
         self.weights = weights
-        self.threshold = threshold
         self.learning_rate = learning_rate
 
     def predict(self, point):
         h = 0
         for idx, coord in enumerate(point):
             h += coord*self.weights[idx]
-        return copysign(1, (h - self.threshold))
+        return copysign(1, h)
     
     def train(self, point, expected):
         predicted = self.predict(point)
         for idx, coord in enumerate(point):
-            delta_w = self.learning_rate * (expected - predicted) * coord
+            n = self.learning_rate * (expected - predicted)
+            delta_w = n * coord
             self.weights[idx] = self.weights[idx] + delta_w 
-        self.threshold = sum(self.weights)
 
     def predict_list(self, point_list):
         predicted_list = list()
@@ -33,4 +32,4 @@ class SimplePerceptron:
         nl = '\n'
         op = '{'
         cl = '}'
-        return f'{op}{nl} weights: {self.weights}{nl} threshold: {self.threshold}{nl} rate: {self.learning_rate}{nl}{cl}'
+        return f'{op}{nl} weights: {self.weights}{nl} rate: {self.learning_rate}{nl}{cl}'
