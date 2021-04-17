@@ -1,38 +1,39 @@
 import numpy as np
+from numpy import ndarray
 from matplotlib import pyplot as plt
 from copy import deepcopy as cp
 from perceptron.simpleperceptron import SimplePerceptron
 
 def ex1_a():
-    w = [0, 0, 0]
-    train_list = [
+    w: ndarray = np.array([0, 0, 0], dtype=float)
+    train_list: ndarray = np.array([
         [1, -1, 1],
         [1, 1, -1],
         [1, -1, -1],
         [1, 1, 1]
-    ]
-    expected_list = [
+    ], dtype=float)
+    expected_list: ndarray = np.array([
         -1,
         -1,
         -1,
         1,
-    ]
+    ], dtype=float)
 
     print('LOGICAL AND')
     sp = SimplePerceptron(w, 0.2)
     print('Initial Perceptron:')
     print(sp)
     print('Initial predictions:')
-    print(f'-1  1 : {sp.predict([1, -1, 1])}')
-    print(f' 1 -1 : {sp.predict([1, 1, -1])}')
-    print(f'-1 -1 : {sp.predict([1, -1, -1])}')
-    print(f' 1  1 : {sp.predict([1, 1, 1])}')
+    print(f'-1  1 : {sp.predict(np.array([1, -1,  1]))}')
+    print(f' 1 -1 : {sp.predict(np.array([1,  1, -1]))}')
+    print(f'-1 -1 : {sp.predict(np.array([1, -1, -1]))}')
+    print(f' 1  1 : {sp.predict(np.array([1,  1,  1]))}')
     w_last = cp(sp.weights)
     max_iter = 100
     i = 0
     while i < max_iter:
         sp.train_list(train_list, expected_list)
-        if w_last == sp.weights:
+        if np.array_equal(w_last, sp.weights):
             print(f'\nConverged at iter {i}\n')
             break
         w_last = cp(sp.weights)
@@ -42,10 +43,10 @@ def ex1_a():
     print('Final Perceptron:')
     print(sp)
     print('Final predictions:')
-    print(f'-1  1 : {sp.predict([1, -1, 1])}')
-    print(f' 1 -1 : {sp.predict([1, 1, -1])}')
-    print(f'-1 -1 : {sp.predict([1, -1, -1])}')
-    print(f' 1  1 : {sp.predict([1, 1, 1])}')
+    print(f'-1  1 : {sp.predict(np.array([1, -1,  1]))}')
+    print(f' 1 -1 : {sp.predict(np.array([1,  1, -1]))}')
+    print(f'-1 -1 : {sp.predict(np.array([1, -1, -1]))}')
+    print(f' 1  1 : {sp.predict(np.array([1,  1,  1]))}')
 
     # Plot
 

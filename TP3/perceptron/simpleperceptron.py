@@ -1,30 +1,28 @@
 from math import copysign
+import numpy as np
+from numpy import ndarray 
 
 class SimplePerceptron:
-    def __init__(self, weights, learning_rate):   
-        self.weights = weights
-        self.learning_rate = learning_rate
+    def __init__(self, weights: ndarray, learning_rate: float):   
+        self.weights: ndarray = weights
+        self.learning_rate: float = learning_rate
 
-    def predict(self, point):
-        h = 0
-        for idx, coord in enumerate(point):
-            h += coord*self.weights[idx]
+    def predict(self, point: ndarray):
+        h: float = self.weights.dot(point)
         return copysign(1, h)
     
-    def train(self, point, expected):
-        predicted = self.predict(point)
-        for idx, coord in enumerate(point):
-            n = self.learning_rate * (expected - predicted)
-            delta_w = n * coord
-            self.weights[idx] = self.weights[idx] + delta_w 
+    def train(self, point: ndarray, expected: float):
+        predicted: float = self.predict(point)
+        delta_w = self.learning_rate * (expected - predicted) * point
+        self.weights += delta_w 
 
-    def predict_list(self, point_list):
-        predicted_list = list()
-        for point in point_list:
-            predicted_list.append(self.predict(point))
+    def predict_list(self, point_list: ndarray):
+        predicted_list: ndarray = np.zeros(point_list.size)
+        for idx, point in enumerate(point_list):
+            predicted_list.put(idx, self.predict(point))
         return predicted_list
             
-    def train_list(self, point_list, expected_list):
+    def train_list(self, point_list: ndarray, expected_list: ndarray):
         for idx, point in enumerate(point_list):
             self.train(point, expected_list[idx])
 
