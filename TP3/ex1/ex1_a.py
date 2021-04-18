@@ -20,7 +20,7 @@ def ex1_a():
     ], dtype=float)
 
     print('LOGICAL AND')
-    sp = SimplePerceptron(w, 0.2)
+    sp = SimplePerceptron(w, 0.2, 1, "step")
     print('Initial Perceptron:')
     print(sp)
     print('Initial predictions:')

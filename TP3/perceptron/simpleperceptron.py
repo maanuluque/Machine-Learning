@@ -28,7 +28,6 @@ class SimplePerceptron:
         predicted: float = self.predict(point)
         delta_w = self.calculate_delta_w(expected, predicted, point)
         self.weights += delta_w 
-        self.weights = self.weights / np.linalg.norm(self.weights)
 
     def predict_list(self, point_list: ndarray):
         predicted_list: ndarray = np.zeros(point_list.shape[0])
