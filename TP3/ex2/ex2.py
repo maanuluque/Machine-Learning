@@ -1,11 +1,38 @@
 import numpy as np
 from numpy import ndarray
-from perceptron.simpleperceptron import SimplePerceptron
+from perceptron.multiperceptron import MultiPerceptron
 import random
+from math import copysign
 
+# Functions
+def step_function(x):
+    return copysign(1, x)
+
+def linear_function(x):
+    return x
+
+def tanh_function(x):
+    return np.math.tanh(x)
+
+def sigmoid_function(x):
+    return 1 / (1 + np.math.exp(-2 * x))
+
+# Derivatives
+def step_derivative(x):
+    return 1
+
+def linear_derivative(x):
+    return 1
+
+# Assuming y = tanh(x)
+def tanh_derivative(y):
+    return 1 - (y**2)
+
+# Assuming y = sigm(x)
+def sigmoid_derivative(y):
+    return 2 * y * (1 - y)
 
 def ex2(data_rows: int, data_cols: int, training_amount: int):
-    weights: ndarray = np.zeros(data_cols + 1)
     data_list = list()
     expected_list: ndarray = np.zeros(data_rows)
     bias: float = 1
@@ -24,7 +51,8 @@ def ex2(data_rows: int, data_cols: int, training_amount: int):
             data = line.split()
             expected_list[r] = float(data[0])
 
-    expected_list = list(expected_list / expected_list.max())
+    expected_list: list = list(expected_list / expected_list.max())
+    expected_list = list(map(lambda exp: [exp], expected_list ))
     training_list = list()
     training_expected_list = list()
     testing_list = list()
@@ -40,19 +68,20 @@ def ex2(data_rows: int, data_cols: int, training_amount: int):
     testing_list = np.array(data_list)
     testing_expected_list = np.array(expected_list)
 
-    sp = SimplePerceptron(weights, 0.0001, 1, "linear")
+    mp = MultiPerceptron(linear_function, linear_derivative, learning_rate=0.2, beta=1, layers=1, layer_dims=[1], data_dim=4)
 
-    times = 10000
+    times = 1
     while times > 0:
-        sp.train_list(training_list, training_expected_list)
+        idx = random.randint(0, training_amount-1)
+        mp.train(training_list[idx], training_expected_list[idx])
         times -= 1
 
-    training_predicted_list: ndarray = sp.predict_list(training_list)
+    training_predicted_list: ndarray = mp.predict_list(training_list)
     training_errors: ndarray = np.array(np.abs(training_expected_list - training_predicted_list))
     training_errors: ndarray = (1 / 2) * (training_errors ** 2)
     training_err = training_errors.mean()
 
-    testing_predicted_list: ndarray = sp.predict_list(testing_list)
+    testing_predicted_list: ndarray = mp.predict_list(testing_list)
     testing_errors: ndarray = np.array(np.abs(testing_expected_list - testing_predicted_list))
     testing_errors: ndarray = (1 / 2) * (testing_errors ** 2)
     testing_err = testing_errors.mean()
@@ -112,7 +141,6 @@ def cross_validation(k, epochs):
 
     group_size = data_max // k
 
-    weights: ndarray = np.zeros(data_cols + 1)
     data_list = list()
     expected_list: ndarray = np.zeros(data_max)
     bias: float = 1
@@ -150,7 +178,7 @@ def cross_validation(k, epochs):
     min_group_error = np.inf
     lowest_error_found = {'Group': -1, 'Epoch': -1}
     for i in range(k):
-        sp = SimplePerceptron(weights, 0.0001, 1, "linear")
+        mp = MultiPerceptron(linear_function, linear_derivative, learning_rate=0.0001, beta=1, layers=1, layer_dims=[1], data_dim=4)
         training_list = list()
         training_expected_list = list()
         for j in range(k):
@@ -170,15 +198,15 @@ def cross_validation(k, epochs):
             # Train Perceptron
             training_list = np.array(training_list)
             training_expected_list = np.array(training_expected_list)
-            sp.train_list(training_list, training_expected_list)
+            mp.train_list(training_list, training_expected_list)
 
             # Evaluate
-            training_predicted_list: ndarray = sp.predict_list(training_list)
+            training_predicted_list: ndarray = mp.predict_list(training_list)
             training_errors: ndarray = np.array(np.abs(training_expected_list - training_predicted_list))
             training_errors: ndarray = (1 / 2) * (training_errors ** 2)
             training_err = training_errors.mean()
 
-            testing_predicted_list: ndarray = sp.predict_list(np.array(k_data_groups[i]))
+            testing_predicted_list: ndarray = mp.predict_list(np.array(k_data_groups[i]))
             testing_errors: ndarray = np.array(np.abs(np.array(k_expected_groups[i]) - testing_predicted_list))
             testing_errors: ndarray = (1 / 2) * (testing_errors ** 2)
             testing_err = testing_errors.mean()

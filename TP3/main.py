@@ -5,15 +5,19 @@ from ex1.ex1_a import ex1_a
 from ex1.ex1_b import ex1_b
 from ex2.ex2 import ex2, ex2_stats, cross_validation
 
-# print('EXERCISE 1 A:')
-# ex1_a()
-# print()
+print('\nEXERCISE 1 A:\n')
+ex1_a()
+print()
 
-# print('EXERCISE 1 B:')
-# ex1_b()
-
-print('EXERCISE 2:')
-lowest_error, err_list = cross_validation(4, 100)
+print('\nEXERCISE 1 B:\n')
+ex1_b()
+ 
+print('\nEXERCISE 2:\n')
+ex2(data_rows=200, data_cols=3, training_amount=150)
+print('\n~~ Stats:\n')
+ex2_stats()
+print('\n~~ Cross validation:\n')
+lowest_error, err_list = cross_validation(4, 500)
 group = lowest_error['Group']
 epoch = lowest_error['Epoch']
 print(f'Lowest error found in: Group: {group}, Epoch: {epoch}')
@@ -25,7 +29,7 @@ for elem in err_list:
     epochs = err_list[1]['epoch']
 
     fig, ax = plt.subplots()
-    ax.set_ylim([0, 0.05])  # TODO: adjust
+    ax.set_ylim([0, 0.5])  # TODO: adjust
 
     plt.plot(epochs, training_err, label="Training")
     plt.plot(epochs, testing_err, label="Testing")

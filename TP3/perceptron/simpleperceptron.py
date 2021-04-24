@@ -2,6 +2,7 @@ from math import copysign
 import numpy as np
 from numpy import ndarray 
 
+#### NO LONGER USED ###########################################################
 class SimplePerceptron:
     def __init__(self, weights: ndarray, learning_rate: float, beta: float, prediction_method: str):   
         self.weights: ndarray = weights

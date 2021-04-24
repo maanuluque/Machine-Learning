@@ -2,10 +2,18 @@ import numpy as np
 from numpy import ndarray
 from matplotlib import pyplot as plt
 from copy import deepcopy as cp
-from perceptron.simpleperceptron import SimplePerceptron
+from math import copysign
+from perceptron.multiperceptron import MultiPerceptron
+
+# Functions
+def step_function(x):
+    return copysign(1, x)
+
+# Derivatives
+def step_derivative(x):
+    return 1
 
 def ex1_a():
-    w: ndarray = np.array([0, 0, 0], dtype=float)
     train_list: ndarray = np.array([
         [1, -1, 1],
         [1, 1, -1],
@@ -13,42 +21,39 @@ def ex1_a():
         [1, 1, 1]
     ], dtype=float)
     expected_list: ndarray = np.array([
-        -1,
-        -1,
-        -1,
-        1,
+        [-1],
+        [-1],
+        [-1],
+        [1],
     ], dtype=float)
 
     print('LOGICAL AND')
-    sp = SimplePerceptron(w, 0.2, 1, "step")
+    mp = MultiPerceptron(step_function, step_derivative, learning_rate=0.2, beta=1, layers=1, layer_dims=[1], data_dim=3)
     print('Initial Perceptron:')
-    print(sp)
+    print(mp)
     print('Initial predictions:')
-    print(f'-1  1 : {sp.predict(np.array([1, -1,  1]))}')
-    print(f' 1 -1 : {sp.predict(np.array([1,  1, -1]))}')
-    print(f'-1 -1 : {sp.predict(np.array([1, -1, -1]))}')
-    print(f' 1  1 : {sp.predict(np.array([1,  1,  1]))}')
-    w_last = cp(sp.weights)
-    max_iter = 100
+    print(f'-1  1 : {mp.predict(np.array([1, -1,  1]))}')
+    print(f' 1 -1 : {mp.predict(np.array([1,  1, -1]))}')
+    print(f'-1 -1 : {mp.predict(np.array([1, -1, -1]))}')
+    print(f' 1  1 : {mp.predict(np.array([1,  1,  1]))}')
+    max_iter = 10000
     i = 0
     while i < max_iter:
-        sp.train_list(train_list, expected_list)
-        if np.array_equal(w_last, sp.weights):
-            print(f'\nConverged at iter {i}\n')
-            break
-        w_last = cp(sp.weights)
+        mp.train_list(train_list, expected_list)
         i += 1
 
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     print('Final Perceptron:')
-    print(sp)
+    print(mp)
     print('Final predictions:')
-    print(f'-1  1 : {sp.predict(np.array([1, -1,  1]))}')
-    print(f' 1 -1 : {sp.predict(np.array([1,  1, -1]))}')
-    print(f'-1 -1 : {sp.predict(np.array([1, -1, -1]))}')
-    print(f' 1  1 : {sp.predict(np.array([1,  1,  1]))}')
+    print(f'-1  1 : {mp.predict(np.array([1, -1,  1]))}')
+    print(f' 1 -1 : {mp.predict(np.array([1,  1, -1]))}')
+    print(f'-1 -1 : {mp.predict(np.array([1, -1, -1]))}')
+    print(f' 1  1 : {mp.predict(np.array([1,  1,  1]))}')
 
     # Plot
+
+    weights = mp.layers[0].weights[0]
 
     fig, ax = plt.subplots()
     x_min, x_max = -2, 2
@@ -60,8 +65,8 @@ def ex1_a():
             ax.scatter(point[1], point[2], color="r")
     ax.set_xlim([x_min, x_max])
     ax.set_ylim([-2, 2])
-    m = -sp.weights[1] / sp.weights[2]
-    b = -sp.weights[0] / sp.weights[2]
+    m = -weights[1] / weights[2]
+    b = -weights[0] / weights[2]
     ax.plot(x, m * x + b)
     plt.xlabel('X1')
     plt.ylabel('X2')
