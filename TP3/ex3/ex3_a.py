@@ -38,7 +38,7 @@ def transfer_deriv(y):
 
 def ex3_a():
     mp = MultiPerceptron(tanh_function, tanh_derivative, learning_rate=0.1, 
-                        beta=1, layers=3, layer_dims=[2, 3, 1], data_dim=3)
+                        beta=1, layers=3, layer_dims=[3, 3, 1], data_dim=3)
 
     data = np.array([[1, 1, 1], [1, -1, -1], [1, -1, 1], [1, 1, -1]])
     expected = np.array([[-1], [-1], [1], [1]])

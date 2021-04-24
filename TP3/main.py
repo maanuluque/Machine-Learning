@@ -5,6 +5,7 @@ from ex1.ex1_a import ex1_a
 from ex1.ex1_b import ex1_b
 from ex2.ex2 import ex2, ex2_stats, cross_validation
 from ex3.ex3_a import ex3_a
+from ex3.ex3_b import ex3_b
 
 print('\nEXERCISE 1 A:\n')
 ex1_a()
@@ -42,3 +43,6 @@ for elem in err_list:
 
 print('\nEXERCISE 3 A:\n')
 ex3_a()
+
+print('\nEXERCISE 3 B:\n')
+ex3_b()

@@ -73,8 +73,10 @@ class MultiPerceptron:
         final_layer.errors = final_error
         prev_errors = final_layer.calculate_errors()
         # Skip first layer (final perceptron layer)
-        for layer in reversed_layers[1:]:
+        for idx, layer in enumerate(reversed_layers[1:]):
             layer.errors = prev_errors
+            if idx == (len(reversed_layers)-2):
+                break
             prev_errors = layer.calculate_errors()
 
     # Update weight values for each layer based on calculated errors
