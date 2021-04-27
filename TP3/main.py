@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from numpy import ndarray
 from ex1.ex1_a import ex1_a
-from ex1.ex1_b import ex1_b
+from ex1.ex1_b import ex1_b, ex1_b_2
 from ex2.ex2 import ex2, ex2_stats, cross_validation
 from ex3.ex3_a import ex3_a
 from ex3.ex3_b import ex3_b
@@ -13,6 +13,8 @@ print()
 
 print('\nEXERCISE 1 B:\n')
 ex1_b()
+print('\nEXERCISE 1 B Extension:\n')
+ex1_b_2()
  
 print('\nEXERCISE 2:\n')
 ex2(data_rows=200, data_cols=3, training_amount=150)

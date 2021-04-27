@@ -66,7 +66,7 @@ def ex1_b_2():
     ], dtype=float)
 
     print(train_list)
-    print('LOGICAL XOR KERNEL:')
+    print('LOGICAL XOR:')
     mp = MultiPerceptron(step_function, step_derivative, learning_rate=0.2, beta=1, layers=1, layer_dims=[1], data_dim=4)
     print('Initial Perceptron:')
     print(mp)
