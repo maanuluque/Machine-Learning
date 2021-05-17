@@ -1,7 +1,9 @@
 import json
 from types import SimpleNamespace as Obj
 from ex1.ex1_a import ex1_a
-from ex2.ex_2 import ex2_a
+from ex2.ex_2 import *
+from ex2.ex_2_alternative import *
+from ex2.ex_2_alternative_2 import *
 
 def main():
     with open('config.json') as config_file:
@@ -12,8 +14,9 @@ def main():
 
     print("Exercise 2:")
     print()
-    ex2_a()
-
+    #ex2_a()
+    #ex_2_a_alternative()
+    ex_2_a_alternative_2()
 
 
 if __name__ == "__main__":
