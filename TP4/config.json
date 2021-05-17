@@ -1,12 +1,12 @@
 {
     "ex1": {
-        "k": 5,
+        "k": 3,
         "input_len": 7,
         "input_amount": 28,
         "w_init_mode": "random",
-        "init_radius": 50,
-        "radius_modifier": 0.01,
+        "init_radius": 9,
+        "radius_modifier": 0.002,
         "init_lrate": 1,
-        "lrate_modifier": 0.003
+        "lrate_modifier": 0.02
     }
 }

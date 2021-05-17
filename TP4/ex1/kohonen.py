@@ -42,7 +42,7 @@ class Kohonen:
         self.update_weights(neuron_nhbs, closest_neuron, std_inputs)
         self.iter += 1
         self.radius = 1 + (self.init_radius - 1)*(np.e**(-self.radius_modifier*self.iter))
-        self.lrate = 1/(self.iter*self.lrate_modifier)
+        self.lrate = 1/((self.iter*self.lrate_modifier)+1)
         
     def find_closest_neuron(self, inputs):
         closest_neuron: arr = None
