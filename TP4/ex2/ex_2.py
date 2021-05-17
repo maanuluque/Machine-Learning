@@ -85,9 +85,13 @@ def ex2_a():
         print_pattern(test_pattern)
 
         original_shape = test_pattern.shape
-        data = update_asynch(weight=w_, vector=vector, theta=0.0, times=1000000)
+        data = update_asynch(weight=w_, vector=vector, theta=0.0, times=100)
         updated_vector = data[0]
         vector2matrix = updated_vector.reshape(original_shape)
         print("RESULT: ")
         print()
         print_pattern(vector2matrix)
+        plt.plot(data[1], data[2])
+        plt.ylabel("energy")
+        plt.xlabel("update times")
+        plt.show()
