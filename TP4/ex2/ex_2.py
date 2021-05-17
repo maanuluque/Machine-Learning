@@ -34,8 +34,11 @@ def update_asynch(weight,vector,theta=0.5,times=1000000):
     times_.append(0)
     for i in range(times):
         length = len(vector)
+        # DANGER ZONE
         update_num = random.randint(0,length-1)
         next_time_value = np.dot(weight[update_num][:],vector)  - theta
+        #next_time_value = np.dot(weight,vector)  - theta
+        # END DANGER ZONE
         if next_time_value>=0:
             vector[update_num] = 1
         if next_time_value<0:
@@ -66,7 +69,7 @@ def ex2_a():
             w_ = w_ + create_W_single_pattern(vector)
         counter += 1
         
-    w_ = w_/counter
+    w_ = w_/(len(vector))
     print("Weight matrix is prepared")
     print()
     
@@ -78,8 +81,8 @@ def ex2_a():
         print()
         print_pattern(test_pattern)
 
-        original_shape = pattern.shape
-        data = update_asynch(weight=w_,vector=vector,theta = 0.5 ,times=1000000)
+        original_shape = test_pattern.shape
+        data = update_asynch(weight=w_,vector=vector,theta = 0.0 ,times=1000000)
         updated_vector = data[0]
         vector2matrix = updated_vector.reshape(original_shape)
         print("RESULT: ")
