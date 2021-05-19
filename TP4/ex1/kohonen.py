@@ -82,6 +82,22 @@ class Kohonen:
             for idx, w in enumerate(weights):
                 weights[idx] = w + self.lrate * (inputs[idx] - w)
 
+    def get_u_matrix(self):
+        net_shape = self.net.shape
+        k = net_shape[0]
+        u_matrix = np.zeros((k, k))
+        for i, row in enumerate(self.net):
+            for j, neuron in enumerate(row): 
+                nbhd_dist = list()
+                for nhb in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+                    nhb_i = i + nhb[0]
+                    nhb_j = j + nhb[1]
+                    if (nhb_i >= 0 and nhb_i < k and nhb_j >= 0 and nhb_j < k):
+                        nbhd_dist.append(np.linalg.norm(neuron - self.net[nhb_i][nhb_j]))
+                avg = np.average(np.array(nbhd_dist))
+                u_matrix[i][j] = avg  
+        return u_matrix
+
 
     def __str__(self):
         nl = '\n'

@@ -15,34 +15,56 @@ def ex1_a(config):
 
     print(f'R: {kohonen.radius} | N: {kohonen.lrate}')
     for itr in range(0, 500*len(data)):
-        # print(f'R: {kohonen.radius} | N: {kohonen.lrate}')
         rand_idx = np.random.randint(config.input_amount)
         kohonen.train(data[rand_idx])
     print(f'R: {kohonen.radius} | N: {kohonen.lrate}')
 
-    X = []
-    Y = []
     groups = {}
-    
+    points = []
     for idx, country in enumerate(countries):
         w, group = kohonen.predict(data[idx])
-        X.append(group[0])
-        Y.append(group[1])
         if group not in groups:
-            groups[group] = []
-        groups[group].append(country)
+            groups[group] = Obj()
+            groups[group].countries = []
+            groups[group].point = (group[0], group[1])
+        groups[group].countries.append(country)
 
-    for group in groups:
-        print(f'Group: {group}:')
-        print(groups[group])
 
-    X = np.array(X)
-    Y = np.array(Y)
-
+    X = []
+    Y = []
+    labels = []
+    count = []
     i = 0
     for group in groups:
-        plt.annotate("".join(groups[group]), (X[i], Y[i]))
+        strings = "\n".join(groups[group].countries)
+        x = groups[group].point[0]
+        y = groups[group].point[1]
+        X.append(x)
+        Y.append(y)
+        labels.append(strings)
+        c = len(groups[group].countries)
+        count.append(c)
+        print(f'Group ({x},{y}): {c} countries')
+        print(strings)
+        strings = strings + "\n" + str(c)
+        plt.annotate(strings, groups[group].point)
         i += 1
+    plt.scatter(X, Y)
+    im = np.zeros((config.k, config.k))
+    for x, y, c in zip(X, Y, count):
+        im[x, y] = c
 
-    plt.scatter(X,Y)
+    plt.imshow(im.T, cmap=plt.cm.get_cmap('summer', 28))
+    plt.colorbar()
+    plt.title("Country groups")
+    plt.show()
+
+    # U-MATRIX ~~ DANGER ZONE ~~
+    u_matrix = kohonen.get_u_matrix()
+    print('U Matrix:')
+    print(u_matrix)
+    plt.title("U matrix")
+    plt.imshow(u_matrix, cmap='gray')
+    plt.colorbar()
+
     plt.show()
