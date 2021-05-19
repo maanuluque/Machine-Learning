@@ -88,7 +88,7 @@ def ex_2_a_alternative_2():
         print("Pattern to test:")
         print()
         print_pattern(test_pattern)
-        updated_vector = iteration_function(w_, vector, times=100000)
+        updated_vector = iteration_function(w_, vector, times=1000000)
         # updated_vector = data[0]
         vector2matrix = updated_vector.reshape(original_shape)
         print("RESULT: ")

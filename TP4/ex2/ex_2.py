@@ -49,7 +49,7 @@ def update_asynch(weight, vector, theta=0.5, times=1000000):
         times_.append(i)
         energy_.append(energy(weight, vector))
         # print_pattern()
-    return (vector, times_, energy_)
+    return vector, times_, energy_
 
 
 def ex2_a():
@@ -85,7 +85,7 @@ def ex2_a():
         print_pattern(test_pattern)
 
         original_shape = test_pattern.shape
-        data = update_asynch(weight=w_, vector=vector, theta=0.0, times=100)
+        data = update_asynch(weight=w_, vector=vector, theta=0.0, times=1000000)
         updated_vector = data[0]
         vector2matrix = updated_vector.reshape(original_shape)
         print("RESULT: ")
