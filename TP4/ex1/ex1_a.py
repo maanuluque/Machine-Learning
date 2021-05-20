@@ -14,7 +14,7 @@ def ex1_a(config):
                     config.lrate_modifier, config.input_len, config.w_init_mode, data)
 
     print(f'R: {kohonen.radius} | N: {kohonen.lrate}')
-    for itr in range(0, 500*len(data)):
+    for itr in range(0, config.iters*len(data)):
         rand_idx = np.random.randint(config.input_amount)
         kohonen.train(data[rand_idx])
     print(f'R: {kohonen.radius} | N: {kohonen.lrate}')
