@@ -33,14 +33,16 @@ class MultiPerceptron:
                  layer_dims: list, data_dim: int):
         # Array of layers, each layers input is previous layers dimension
         layer_list = list()
-        layer = None
+        latent_layer = math.floor(layers / 2) + 1
+        counter = 1
         prev_dim = data_dim
         for dim in layer_dims:
             layer = Layer(dim, prev_dim, activation_deriv)
             layer_list.append(layer)
             prev_dim = dim
-            if dim == 2:
+            if counter == latent_layer:
                 layer.latent = True
+            counter = counter + 1
         self.layers = np.array(layer_list)
         self.learning_rate: float = learning_rate
         self.beta = beta
@@ -68,10 +70,6 @@ class MultiPerceptron:
         self.propagate_error(expected, predicted)
         self.update_weights()
 
-    # For one input (e.g [1, 1, 1, -1])
-    # def train2(self, input: ndarray, expected: ndarray):
-
-
     def predict_list(self, point_list: ndarray):
         predicted_list: ndarray = np.zeros(point_list.shape[0])
         for idx, point in enumerate(point_list):
@@ -87,17 +85,14 @@ class MultiPerceptron:
         # reverse layers array for backpropagation
         reversed_layers = np.flip(self.layers, 0)
         final_layer = reversed_layers[0]
-        #final_error = (expected - predicted) * self.beta * self.activation_deriv(predicted)
+        # final_error = (expected - predicted) * self.beta * self.activation_deriv(predicted)
 
         # Autoencoder error function
         sum = 0
-        diff_vector = expected-predicted
+        diff_vector = expected - predicted
         for idx in range(0, diff_vector.size):
             sum = sum + math.pow(diff_vector[idx], 2)
         final_error = expected - predicted
-        # print(expected)
-        # print(predicted)
-        # print(expected - predicted)
 
         final_layer.errors = final_error
         prev_errors = final_layer.calculate_errors()

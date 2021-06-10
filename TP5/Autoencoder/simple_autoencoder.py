@@ -21,7 +21,7 @@ def ex_1a():
         idx = randint(0, rows - 1)
         mp.train(dataset[idx], dataset[idx])
 
+    # Show latent layer output
     latent_layer = mp.return_latent()
-    # print(latent_layer)
+    print(latent_layer.outputs)
 
-    # print(f' c : {mp.predict(dataset[3])}')
