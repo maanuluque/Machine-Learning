@@ -1,10 +1,9 @@
-import functions
 from multiperceptron import MultiPerceptron
-import fonts as fts
+from FileUtils import fonts as fts, functions
 from random import randint
 
 
-def simple_autoencoder():
+def ex_1a():
     # Load classes and set variables
     fonts = fts.Font()
     training_iterations = 10000
@@ -25,4 +24,4 @@ def simple_autoencoder():
     latent_layer = mp.return_latent()
     # print(latent_layer)
 
-    #print(f' c : {mp.predict(dataset[3])}')
+    # print(f' c : {mp.predict(dataset[3])}')

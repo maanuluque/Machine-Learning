@@ -1,9 +1,7 @@
-import autoencoder
-
+from Autoencoder import simple_autoencoder
 
 def main():
-    autoencoder.simple_autoencoder()
-
+    simple_autoencoder.ex_1a()
 
 if __name__ == "__main__":
     main()
