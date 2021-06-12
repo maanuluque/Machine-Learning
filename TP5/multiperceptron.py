@@ -62,7 +62,7 @@ class MultiPerceptron:
             layer.outputs = layer.weights.dot(layer.inputs)
             layer.activations = self.activation_func(self.beta * layer.outputs)
             layer_inputs = layer.activations
-        return self.layers[-1].outputs
+        return self.layers[-1].activations
 
     # Train weights with output for a given point coordenates (inputs)
     def train(self, inputs: ndarray, expected: float):
@@ -88,11 +88,11 @@ class MultiPerceptron:
         # final_error = (expected - predicted) * self.beta * self.activation_deriv(predicted)
 
         # Autoencoder error function
-        sum = 0
-        diff_vector = expected - predicted
-        for idx in range(0, diff_vector.size):
-            sum = sum + math.pow(diff_vector[idx], 2)
-        final_error = expected - predicted
+        final_error = (expected-predicted)
+        abs(final_error)
+        # for idx in range(0, final_error.size-1):
+        #     final_error[idx] = math.pow(final_error[idx], 2)
+        #    # print(final_error[idx])
 
         final_layer.errors = final_error
         prev_errors = final_layer.calculate_errors()
