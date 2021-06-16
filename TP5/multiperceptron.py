@@ -3,6 +3,7 @@ import math
 from math import copysign
 import numpy as np
 from numpy import ndarray
+from scipy.optimize import minimize
 
 
 class Layer:
@@ -95,12 +96,23 @@ class MultiPerceptron:
         for idx, point in enumerate(point_list):
             self.train(point, expected_list[idx])
 
+    def cost(self, x, y):
+        diff = x - y
+        sum = 0
+        for i in range(len(diff)):
+            sum += (diff[i] ** 2)
+        return sum / len(diff)
+
     # Propagate backwards, first input_error equals final total perceptron error
     def propagate_error(self, expected, predicted):
         # reverse layers array for backpropagation
         reversed_layers = np.flip(self.layers, 0)
         final_layer = reversed_layers[0]
-        final_error = (expected - predicted) * self.beta * self.activation_deriv(predicted)
+
+        diff = (expected - predicted)
+        final_error = diff * self.beta * self.activation_deriv(predicted)
+        #final_error = minimize(self.cost, predicted, args=expected, method='powell',
+        #                       options={'maxiter': 1000}).x
         final_layer.errors = final_error
         prev_errors = final_layer.calculate_errors()
         # Skip first layer (final perceptron layer)
