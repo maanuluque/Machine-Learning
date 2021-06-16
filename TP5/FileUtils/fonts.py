@@ -23,6 +23,20 @@ def import_font(font):
     dataset = dataset.reshape(32, 35)
     return dataset
 
+def pre_tanh(dataset):
+    rows, cols = dataset.shape
+    for row in range(rows):
+        for col in range(cols):
+            if dataset[row][col] == 0:
+                dataset[row][col] = -1
+    return dataset
+
+def accepted(min_error, expected, output):
+    for i in range(len(expected)):
+        if abs(expected[i] - output[i]) > min_error:
+            return False
+    return True
+
 
 class Font:
     # All sizes are [32][7]

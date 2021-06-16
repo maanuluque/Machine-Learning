@@ -1,4 +1,5 @@
 import math
+
 from math import copysign
 import numpy as np
 from numpy import ndarray
@@ -9,6 +10,7 @@ class Layer:
         self.activation_deriv = activation_deriv
         # Weights matrix, each row represents each neurons weights
         self.weights = np.random.rand(neurons_amount, input_amount) * 2 - 1
+        # self.weights = np.zeros((neurons_amount, input_amount), float)*2 - 1
         # Arrays with each neurons information (input/output/activation/error)
         self.inputs = None
         self.outputs = None
@@ -62,7 +64,20 @@ class MultiPerceptron:
             layer.outputs = layer.weights.dot(layer.inputs)
             layer.activations = self.activation_func(self.beta * layer.outputs)
             layer_inputs = layer.activations
-        return self.layers[-1].activations
+        return layer_inputs
+
+    def predict_from_latent(self, inputs: ndarray):
+        layer_inputs = inputs
+        start = False
+        for layer in self.layers:
+            if layer.latent:
+                start = True
+            if start:
+                layer.inputs = layer_inputs
+                layer.outputs = layer.weights.dot(layer.inputs)
+                layer.activations = self.activation_func(self.beta * layer.outputs)
+                layer_inputs = layer.activations
+        return layer_inputs
 
     # Train weights with output for a given point coordenates (inputs)
     def train(self, inputs: ndarray, expected: float):
@@ -85,15 +100,7 @@ class MultiPerceptron:
         # reverse layers array for backpropagation
         reversed_layers = np.flip(self.layers, 0)
         final_layer = reversed_layers[0]
-        # final_error = (expected - predicted) * self.beta * self.activation_deriv(predicted)
-
-        # Autoencoder error function
-        final_error = (expected-predicted)
-        abs(final_error)
-        # for idx in range(0, final_error.size-1):
-        #     final_error[idx] = math.pow(final_error[idx], 2)
-        #    # print(final_error[idx])
-
+        final_error = (expected - predicted) * self.beta * self.activation_deriv(predicted)
         final_layer.errors = final_error
         prev_errors = final_layer.calculate_errors()
         # Skip first layer (final perceptron layer)
