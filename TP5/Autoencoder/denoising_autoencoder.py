@@ -1,6 +1,7 @@
 import numpy
 from sklearn.preprocessing import minmax_scale
 
+from FileUtils.fonts import count_accepted
 from multiperceptron import MultiPerceptron
 from FileUtils import fonts as fts, functions
 from random import randint
@@ -9,9 +10,10 @@ import matplotlib.pyplot as plt
 
 def ex_1b(noise_method, noise_magnitude, noise_probability, mean, sigma):
 
+    print("EXERCISE 1.B:")
     # Load classes and set variables
     fonts = fts.Font()
-    training_iterations = 100000
+    training_iterations = 1000
     # Choose dataset
     chosen_font = fonts.font2
     # Convert to legible font
@@ -19,67 +21,42 @@ def ex_1b(noise_method, noise_magnitude, noise_probability, mean, sigma):
     letter_dimension = dataset[0].size
     rows, cols = dataset.shape
 
+    # Pre-processing
+    dataset = fts.pre_tanh(dataset)
+
+    predictions_limit = 5
+    data = []
+    noise = []
+    for i in range(1, predictions_limit + 1):
+        data.append(dataset[i])
+        noise.append(add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, dataset[i]))
+    noise = numpy.array(noise)
+    data = numpy.array(data)
+
     # Create autoencoder
-    mp = MultiPerceptron(functions.sigmoid_function, functions.sigmoid_derivative, learning_rate=0.3, beta=1, layers=5,
-                         layer_dims=[letter_dimension, 10, 2, 10, letter_dimension], data_dim=letter_dimension)
+    mp = MultiPerceptron.new_optimized(tanh_function, tanh_derivative, learning_rate=0.001, beta=1, layers=11,
+                                       layer_dims=[letter_dimension, 25, 17, 10, 5, 2, 5, 10, 17, 25, letter_dimension],
+                                       data_dim=letter_dimension, inputs=noise, expected=data)
 
-    # Set limit for training/testing
-    predictions_limit = 10
-    # predictions_limit = rows-1
-    noisy = add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, dataset[1])
-    print(dataset[1].reshape(7, 5))
-    np = numpy.asarray(noisy)
-    noisy = np.reshape(7, 5)
-    print(noisy)
-
-    return
-
-    # Training stage
-    for _ in range(0, training_iterations):
-        idx = randint(0, predictions_limit)
-        mp.train(dataset[idx], dataset[idx])
-
-    # predictions_limit = dataset.shape[0]
-    latent_output_x = []
-    latent_output_y = []
+    # prediction
+    accepted_values = 0
     for i in range(predictions_limit):
-        mp.predict(dataset[i])
-        latent_output_x.append(mp.return_latent().activations[0])
-        latent_output_y.append(mp.return_latent().activations[1])
-
-    print(latent_output_x)
-    print()
-    print(latent_output_y)
-    # Labels (characters for plot)
-    character = 0x40
-    labels = []
-    number_of_characters = predictions_limit
-    for i in range(number_of_characters):
-        # print(chr(character))
-        character = character + 1
-        labels.append(chr(character))
-
-    # Graphs
-    plt.style.use('seaborn')
-    plt.scatter(latent_output_x, latent_output_y)
-    # fig, ax = plt.subplots()
-    # ax.scatter(latent_output_x, latent_output_y)
-    for i in range(len(latent_output_x)):
-        plt.annotate(labels[i], (latent_output_x[i], latent_output_y[i]+0.05))
-    plt.xlim(-0.01, 1.1)
-    plt.ylim(-0.01, 1.1)
-    plt.show()
-
-    # Autoencoder functionality testing
-    print(dataset[1].reshape(7, 5))
-    print()
-    mp.predict(dataset[1])
-    print(mp.layers[-1].activations.reshape(7, 5))
-    print()
-    mp.predict(dataset[2])
-    print(dataset[2].reshape(7, 5))
-    print(mp.layers[-1].activations.reshape(7, 5))
-
+        print("No noise:")
+        print(data[i].reshape(7, 5))
+        print()
+        print("With noise:")
+        print(noise[i].reshape(7, 5))
+        print("------------")
+        mp.predict(noise[i])
+        output = mp.layers[-1].activations
+        print("Output:")
+        print(output.reshape(7, 5))
+        print()
+        accepted = fts.count_accepted(0.1, data[i], output)
+        print(accepted)
+        if accepted: accepted_values += 1
+        print()
+    print(f'Accepted: {accepted_values}')
 
 def add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, x):
     noisy = []
@@ -95,7 +72,7 @@ def add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, x):
             prob = numpy.random.uniform(0, 1)
             if prob >= noise_probability:
                 if x[i] == 1:
-                    noisy.append(0)
+                    noisy.append(-1)
                 else:
                     noisy.append(1)
             else:
@@ -106,3 +83,11 @@ def add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, x):
             noisy.append(x[i] + gaussian[i])
         noisy = minmax_scale(noisy, feature_range=(0, 1))
     return noisy
+
+
+def tanh_function(x):
+    return numpy.tanh(x)
+
+# Assuming y = tanh(x)
+def tanh_derivative(y):
+    return 1 - (y ** 2)
