@@ -17,7 +17,7 @@ def tanh_derivative(y):
 def ex_1a():
     # Load classes and set variables
     fonts = fts.Font()
-    training_iterations = 100000
+    training_iterations = 1000
     # Choose dataset
     chosen_font = fonts.font2
     # Convert to legible font
@@ -28,23 +28,27 @@ def ex_1a():
     # Pre-processing
     dataset = fts.pre_tanh(dataset)
 
-    mp = MultiPerceptron(tanh_function, tanh_derivative, learning_rate=0.001,
-                         beta=1, layers=7, layer_dims=[letter_dimension, 10, 2, 10, letter_dimension],
-                         data_dim=letter_dimension)
-
-    predictions_limit = 3
+    predictions_limit = 32
     data = []
     for i in range(predictions_limit):
         data.append(dataset[i])
         print(i, end=' ')
     print()
 
-    # Set limit for training/testing
-    for _ in range(100000):
-        # idx = randint(0, predictions_limit-1)
-        # mp.train(data[idx], data[idx])
-        for i in range(predictions_limit):
-            mp.train(data[i], data[i])
+    # mp = MultiPerceptron.new(tanh_function, tanh_derivative, learning_rate=0.001,
+    #                      beta=1, layers=11, layer_dims=[letter_dimension, 35, 25, 17, 10, 5, 2, 5, 10, 17, 25, 35, letter_dimension],
+    #                      data_dim=letter_dimension)
+
+    # # Set limit for training/testing
+    # for _ in range(training_iterations):
+    #     # idx = randint(0, 1, 4-1)
+    #     # mp.train(data[idx], data[idx])
+    #     for i in range(3):
+    #         mp.train(data[i], data[i])
+    data = np.array(data)
+    mp = MultiPerceptron.new_optimized(tanh_function, tanh_derivative, learning_rate=0.001,
+                         beta=1, layers=11, layer_dims=[letter_dimension, 25, 17, 10, 5, 2, 5, 10, 17, 25, letter_dimension],
+                         data_dim=letter_dimension, inputs=data, expected=data)
 
     latent_output_x = []
     latent_output_y = []
@@ -57,9 +61,10 @@ def ex_1a():
         print()
         mp.predict(dataset[i])
         output = mp.layers[-1].activations
-        print(mp.layers[-1].activations.reshape(7, 5))
+        # output = fts.cast_delta(0.5, output)
+        print(output.reshape(7, 5))
         print()
-        accepted = fts.accepted(min_error, dataset[i], output)
+        accepted = fts.count_accepted(min_error, dataset[i], output)
         print(accepted)
         if accepted: accepted_values += 1
         print()

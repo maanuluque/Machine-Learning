@@ -37,6 +37,25 @@ def accepted(min_error, expected, output):
             return False
     return True
 
+def cast_delta(delta, output):
+    for i in range(len(output)):
+        if output[i] > delta:
+            output[i] = 1
+        elif output[i] < -delta:
+            output[i] = -1
+    return output
+
+def count_accepted(min_error, expected, output):
+    vec = [0 for _ in range(len(expected))]
+    falses = 0
+    for i in range(len(expected)):
+        if abs(expected[i] - output[i]) > min_error:
+            vec[i] = False
+            falses += 1
+        else:
+            vec[i] = True
+    print(f'Falses: {falses}')
+    return vec
 
 class Font:
     # All sizes are [32][7]
