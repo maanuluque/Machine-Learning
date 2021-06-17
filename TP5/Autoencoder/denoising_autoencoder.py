@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 
 
 def ex_1b(noise_method, noise_magnitude, noise_probability, mean, sigma):
-
     print("EXERCISE 1.B:")
     # Load classes and set variables
     fonts = fts.Font()
@@ -32,6 +31,7 @@ def ex_1b(noise_method, noise_magnitude, noise_probability, mean, sigma):
         noise.append(add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, dataset[i]))
     noise = numpy.array(noise)
     data = numpy.array(data)
+
 
     # Create autoencoder
     mp = MultiPerceptron.new_optimized(tanh_function, tanh_derivative, learning_rate=0.001, beta=1, layers=11,
@@ -58,16 +58,11 @@ def ex_1b(noise_method, noise_magnitude, noise_probability, mean, sigma):
         print()
     print(f'Accepted: {accepted_values}')
 
+
 def add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, x):
     noisy = []
-    if noise_method == 'uniform':
-        for i in range(len(x)):
-            delta = numpy.random.uniform(0, noise_magnitude)
-            if x[i] == 1:
-                noisy.append(x[i] - delta)
-            else:
-                noisy.append(x[i] + delta)
-    elif noise_method == 's&p':
+
+    if noise_method == 's&p':
         for i in range(len(x)):
             prob = numpy.random.uniform(0, 1)
             if prob >= noise_probability:
@@ -81,12 +76,20 @@ def add_noise(noise_method, noise_magnitude, noise_probability, mean, sigma, x):
         for i in range(len(x)):
             gaussian = numpy.random.normal(mean, sigma, x.shape)
             noisy.append(x[i] + gaussian[i])
-        noisy = minmax_scale(noisy, feature_range=(0, 1))
+        noisy = minmax_scale(noisy, feature_range=(-1, 1))
+    else:
+        for i in range(len(x)):
+            delta = numpy.random.uniform(0, noise_magnitude)
+            if x[i] == 1:
+                noisy.append(x[i] - delta)
+            else:
+                noisy.append(x[i] + delta)
     return noisy
 
 
 def tanh_function(x):
     return numpy.tanh(x)
+
 
 # Assuming y = tanh(x)
 def tanh_derivative(y):
