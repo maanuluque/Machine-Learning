@@ -95,7 +95,7 @@ class MultiPerceptron:
     
     @staticmethod
     def new_optimized(activation_func, activation_deriv, learning_rate: float, beta: float, layers: int,
-                 layer_dims: list, data_dim: int, inputs, expected, options):
+                 layer_dims: list, data_dim: int, inputs, expected, options=None):
         mp = MultiPerceptron.new(activation_func, activation_deriv, learning_rate, beta, layers, layer_dims, data_dim)
         weights = []
         for layer in mp.layers:

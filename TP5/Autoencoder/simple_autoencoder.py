@@ -28,12 +28,10 @@ def ex_1a():
     # Pre-processing
     dataset = fts.pre_tanh(dataset)
 
-    predictions_limit = 32
+    predictions_limit = 2
     data = []
     for i in range(predictions_limit):
         data.append(dataset[i])
-        print(i, end=' ')
-    print()
 
     # mp = MultiPerceptron.new(tanh_function, tanh_derivative, learning_rate=0.001,
     #                      beta=1, layers=11, layer_dims=[letter_dimension, 35, 25, 17, 10, 5, 2, 5, 10, 17, 25, 35, letter_dimension],
