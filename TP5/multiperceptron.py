@@ -4,6 +4,8 @@ import numpy as np
 from numpy import ndarray
 from scipy.optimize import minimize
 import functools
+import time
+
 
 class Layer:
     @staticmethod
@@ -32,7 +34,6 @@ class Layer:
         layer.latent = False
         return layer
 
-
     def calculate_errors(self):
         # Calculate previous layer errors
         errors = self.errors.dot(self.weights)[0] * self.activation_deriv(self.inputs)
@@ -48,7 +49,7 @@ class Layer:
 class MultiPerceptron:
     @staticmethod
     def new(activation_func, activation_deriv, learning_rate: float, beta: float, layers: int,
-                 layer_dims: list, data_dim: int):
+            layer_dims: list, data_dim: int):
         mp = MultiPerceptron()
         # Array of layers, each layers input is previous layers dimension
         layer_list = list()
@@ -72,7 +73,6 @@ class MultiPerceptron:
         mp.layer_shapes = layer_shapes
         return mp
 
-
     @staticmethod
     def new_from_weights(weights: ndarray, activation_func, activation_deriv, learning_rate, beta):
         mp = MultiPerceptron()
@@ -92,29 +92,29 @@ class MultiPerceptron:
         mp.activation_deriv = activation_deriv
         return mp
 
-    
     @staticmethod
     def new_optimized(activation_func, activation_deriv, learning_rate: float, beta: float, layers: int,
-                 layer_dims: list, data_dim: int, inputs, expected, options=None):
+                      layer_dims: list, data_dim: int, inputs, expected, options=None):
         mp = MultiPerceptron.new(activation_func, activation_deriv, learning_rate, beta, layers, layer_dims, data_dim)
         weights = []
         for layer in mp.layers:
             weights.append(layer.weights)
         weights = np.array(weights)
+
         def optimize(weights):
             weights = MultiPerceptron.reshape_weights(weights, mp.layer_shapes)
-            perceptron = MultiPerceptron.new_from_weights(weights, activation_func, activation_deriv, learning_rate, beta)
+            perceptron = MultiPerceptron.new_from_weights(weights, activation_func, activation_deriv, learning_rate,
+                                                          beta)
             output = perceptron.predict_list(inputs)
             error_list = MultiPerceptron.cost(output, expected)
             expected_error = [0 for _ in error_list]
             error = MultiPerceptron.cost(error_list, expected_error)
             return error
-        
+
         flat_weights = MultiPerceptron.flatten_weights(weights)
-        flat_opt_weights = minimize(optimize, flat_weights, method='powell', options=options)
+        flat_opt_weights = minimize(optimize, flat_weights, method='powell', options={'maxiter': 100})
         opt_weights = MultiPerceptron.reshape_weights(flat_opt_weights.x, mp.layer_shapes)
         return MultiPerceptron.new_from_weights(opt_weights, activation_func, activation_deriv, learning_rate, beta)
-
 
     @staticmethod
     def reshape_weights(weights, dims):
@@ -122,7 +122,7 @@ class MultiPerceptron:
         offset = 0
         for dim in dims:
             amount = dim[0] * dim[1]
-            w = weights[offset : offset+amount]
+            w = weights[offset: offset + amount]
             reshape.append(w.reshape(dim[0], dim[1]))
             offset += amount
         return reshape
@@ -154,14 +154,17 @@ class MultiPerceptron:
     def predict_from_latent(self, inputs: ndarray):
         layer_inputs = inputs
         start = False
+        reached_latent = False
         for layer in self.layers:
             if layer.latent:
-                start = True
+                reached_latent = True
             if start:
                 layer.inputs = layer_inputs
                 layer.outputs = layer.weights.dot(layer.inputs)
                 layer.activations = self.activation_func(self.beta * layer.outputs)
                 layer_inputs = layer.activations
+            if reached_latent:
+                start = True
         return layer_inputs
 
     # Train weights with output for a given point coordenates (inputs)
@@ -179,7 +182,6 @@ class MultiPerceptron:
     def train_list(self, point_list: ndarray, expected_list: ndarray):
         for idx, point in enumerate(point_list):
             self.train(point, expected_list[idx])
-
 
     @staticmethod
     def cost(x, y):

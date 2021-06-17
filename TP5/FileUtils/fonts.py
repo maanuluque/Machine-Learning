@@ -31,10 +31,12 @@ def pre_tanh(dataset):
                 dataset[row][col] = -1
     return dataset
 
-def accepted(min_error, expected, output):
+def accepted(min_error, tolerance, expected, output):
     for i in range(len(expected)):
         if abs(expected[i] - output[i]) > min_error:
-            return False
+            tolerance = tolerance - 1
+            if tolerance <= 0:
+                return False
     return True
 
 def cast_delta(delta, output):
@@ -44,6 +46,14 @@ def cast_delta(delta, output):
         elif output[i] < -delta:
             output[i] = -1
     return output
+
+def check_equals(expected, output, tolerance):
+    for i in range(len(expected)):
+        if expected[i] != output[i]:
+            tolerance = tolerance-1
+            if tolerance <= 0:
+                return False
+    return True
 
 def count_accepted(min_error, expected, output):
     vec = [0 for _ in range(len(expected))]
@@ -56,6 +66,15 @@ def count_accepted(min_error, expected, output):
             vec[i] = True
     print(f'Falses: {falses}')
     return vec
+
+def print_generated_values(value):
+    for i in range(len(value)):
+        for j in range(len(value[i])):
+            if input[i][j] > 0:
+                print(1, end='')
+            else:
+                print(0, end='')
+        print()
 
 class Font:
     # All sizes are [32][7]

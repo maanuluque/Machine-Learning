@@ -1,18 +1,22 @@
 from typing import List
 import numpy as np
 from scipy.optimize import minimize
+import time
 
 from multiperceptron import MultiPerceptron
 from FileUtils import fonts as fts, functions
 from random import randint
 import matplotlib.pyplot as plt
 
+
 def tanh_function(x):
     return np.tanh(x)
+
 
 # Assuming y = tanh(x)
 def tanh_derivative(y):
     return 1 - (y ** 2)
+
 
 def ex_1a():
     # Load classes and set variables
@@ -28,7 +32,7 @@ def ex_1a():
     # Pre-processing
     dataset = fts.pre_tanh(dataset)
 
-    predictions_limit = 2
+    predictions_limit = 32
     data = []
     for i in range(predictions_limit):
         data.append(dataset[i])
@@ -44,13 +48,17 @@ def ex_1a():
     #     for i in range(3):
     #         mp.train(data[i], data[i])
     data = np.array(data)
-    mp = MultiPerceptron.new_optimized(tanh_function, tanh_derivative, learning_rate=0.001,
-                         beta=1, layers=11, layer_dims=[letter_dimension, 25, 17, 10, 5, 2, 5, 10, 17, 25, letter_dimension],
-                         data_dim=letter_dimension, inputs=data, expected=data)
 
+    start_time = time.time()
+    mp = MultiPerceptron.new_optimized(tanh_function, tanh_derivative, learning_rate=0.001,
+                                       beta=1, layers=11,
+                                       layer_dims=[letter_dimension, 25, 17, 10, 5, 2, 5, 10, 17, 25, letter_dimension],
+                                       data_dim=letter_dimension, inputs=data, expected=data)
+    end_time = time.time()
+    program_time = (end_time - start_time)
     latent_output_x = []
     latent_output_y = []
-
+    tolerance = 4
     # Autoencoder testing and 2D Graph
     min_error = 0.5
     accepted_values = 0
@@ -59,10 +67,12 @@ def ex_1a():
         print()
         mp.predict(dataset[i])
         output = mp.layers[-1].activations
+        output = fts.cast_delta(0, output)
         # output = fts.cast_delta(0.5, output)
         print(output.reshape(7, 5))
         print()
-        accepted = fts.count_accepted(min_error, dataset[i], output)
+        # accepted = fts.accepted(min_error, tolerance, dataset[i], output)
+        accepted = fts.check_equals(dataset[i], output, tolerance=4)
         print(accepted)
         if accepted: accepted_values += 1
         print()
@@ -90,11 +100,17 @@ def ex_1a():
     plt.show()
     print("Accepted values are: " + str(accepted_values))
 
+    print("Time: " + str(program_time))
     # Generate a new value
 
-    # point = [0.2, 0.3]
-    # print("Generating new value..")
-    # print("Input: " + str(point))
-    # mp.predict_from_latent(np.array(point))
-    # print(mp.layers[-1].activations.reshape(7, 5))
-
+    point = [0.2, 0.3]
+    point2 = [-0.25, 0.75]
+    print("Generating new value..")
+    print("Input: " + str(point))
+    generated_value = mp.predict_from_latent(np.array(point))
+    print(generated_value.reshape(7, 5))
+    print()
+    print("Generating new value..")
+    print("Input: " + str(point2))
+    generated_value = mp.predict_from_latent(np.array(point))
+    print(generated_value.reshape(7, 5))
